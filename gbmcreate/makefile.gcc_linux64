@@ -1,0 +1,32 @@
+# Generalised Bitmap Module
+
+# This makefile is for GCC on Linux 64 bit.
+
+ifdef debug
+
+all:;   $(MAKE) -f makefile.gcc_linux32 all m64=yes debug=yes
+
+clean:;  	$(MAKE) -f makefile.gcc_linux32 clean
+
+clobber:; 	$(MAKE) -f makefile.gcc_linux32 clobber
+
+install:;	$(MAKE) -f makefile.gcc_linux32 install
+
+package:; 	$(MAKE) -f makefile.gcc_linux32 package
+
+else
+
+all:;   $(MAKE) -f makefile.gcc_linux32 all m64=yes
+
+clean:;  	$(MAKE) -f makefile.gcc_linux32 clean
+
+clobber:; 	$(MAKE) -f makefile.gcc_linux32 clobber
+
+install:;	$(MAKE) -f makefile.gcc_linux32 install
+
+package:; 	$(MAKE) -f makefile.gcc_linux32 package
+
+endif
+
+
+

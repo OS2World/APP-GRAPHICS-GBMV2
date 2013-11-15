@@ -1,0 +1,25 @@
+
+all:
+!ifdef debug
+      (cd common     && nmake -c -f makefile.ms_w32 debug=yes)
+      (cd gbmmozilla && nmake -c -f makefile.ms_w32 debug=yes)
+!else
+      (cd common     && nmake -c -f makefile.ms_w32)
+      (cd gbmmozilla && nmake -c -f makefile.ms_w32)
+!endif
+
+clean:
+      (cd common     && nmake -c -f makefile.ms_w32 clean)
+      (cd gbmmozilla && nmake -c -f makefile.ms_w32 clean)
+
+clobber:
+      (cd common     && nmake -c -f makefile.ms_w32 clobber)
+      (cd gbmmozilla && nmake -c -f makefile.ms_w32 clobber)
+
+exepack:
+
+install:
+
+package:
+
+

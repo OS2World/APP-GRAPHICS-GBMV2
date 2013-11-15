@@ -1,0 +1,48 @@
+# This makefile is for GCC 3.x on OS/2 32bit.
+
+# Location of gbm libs and public header files
+GBM = ..\gbm
+
+CWARNS     = -Wall -Werror
+CFLAGS     = -c $(CWARNS) -I$(GBM) -mcpu=i686 -m32 -O2 -Zomf -DOS2 -DENABLE_J2K -DENABLE_JBIG
+CFLAGS_DBG = -c $(CWARNS) -I$(GBM) -mcpu=i686 -m32 -Zomf -g  -DOS2 -DENABLE_J2K -DENABLE_JBIG -DDEBUG
+
+LFLAGS         = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /EXEPACK:2 -Zlinker /OPTFUNC -Zlinker /PACKCODE -Zlinker /PACKDATA
+LFLAGS_DBG     = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /DEBUG -Zlinker /DBGPACK
+LFLAGS_EXE     = $(LFLAGS) -Zlinker /BASE:0x10000 -Zlinker /STACK:0x10000 -Zlinker /PMTYPE:VIO
+LFLAGS_EXE_DBG = $(LFLAGS_DBG) -Zlinker /BASE:0x10000 -Zlinker /STACK:0x10000 -Zlinker /PMTYPE:VIO
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS     = $(CFLAGS_DBG)
+LFLAGS_EXE = $(LFLAGS_EXE_DBG)
+!endif
+
+.SUFFIXES:	.c .o
+
+.c.o:
+		gcc $(CFLAGS) $*.c
+
+#
+
+all:    gbmtest.exe
+
+#
+
+
+gbmtest.exe: gbmtest.o $(GBM)\gbm.lib $(GBM)\gbmmem.lib
+	     gcc $(LFLAGS_EXE) -o $@ gbmtest.o -L$(GBM) -lgbm.lib -lgbmmem.lib
+
+gbmtest.o: gbmtest.c $(GBM)\gbm.h
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+     -del /F /N *.o 2>nul
+
+clobber:
+     -del /F /N *.o *.exe 2>nul
+

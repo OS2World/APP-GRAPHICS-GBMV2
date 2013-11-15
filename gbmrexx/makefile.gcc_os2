@@ -1,0 +1,87 @@
+#
+# Generalised Bitmap Module REXX adapter
+#
+# This makefile is for GCC 3.x on OS/2 32bit.
+#
+# Builds REXX adapter library for GBM.DLL and GBMDLG.DLL.
+# As GBM.DLL is built multithreaded, all users should also be multithreaded.
+#
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\make.opt
+
+# Location of gbm libs and public header files
+GBM    = ..\gbm
+GBMDLG = ..\gbmv_pm\gbmdlg
+
+# ------------------
+# Configure compiler
+# ------------------
+CWARNS         = -Wall -Werror
+CFLAGS         = -c $(CWARNS) -I$(GBM) -I$(GBMDLG) -mcpu=i686 -m32 -O2 -Zomf -DOS2 -DNDEBUG
+CFLAGS_DBG     = -c $(CWARNS) -I$(GBM) -I$(GBMDLG) -mcpu=i686 -m32 -Zomf -g  -DOS2 -DDEBUG
+CFLAGS_DLL     = $(CFLAGS)
+CFLAGS_DLL_DBG = $(CFLAGS_DBG)
+
+LFLAGS         = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /EXEPACK:2 -Zlinker /OPTFUNC -Zlinker /PACKCODE -Zlinker /PACKDATA
+LFLAGS_DBG     = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /DEBUG -Zlinker /DBGPACK
+LFLAGS_DLL     = $(LFLAGS) -Zdll
+LFLAGS_DLL_DBG = $(LFLAGS_DBG) -Zdll
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS_DLL     = $(CFLAGS_DLL_DBG)
+LFLAGS_DLL     = $(LFLAGS_DLL_DBG)
+!endif
+
+.SUFFIXES:	.c .o
+
+.c.o:
+		gcc $(CFLAGS_DLL) $*.c
+
+#
+
+all:           gbmdlgrx.res gbmdlgrx.dll gbmrx.dll
+
+#
+
+gbmdlgrx.dll:  rexxhlp.o gbmdlgrx.o gbmdlgrx_gcc.def
+               gcc $(LFLAGS_DLL) -o $@ $** -L$(OS2TK)\lib -l$(GBM)\gbm.lib -l$(GBMDLG)\gbmdlg.lib -lrexx
+               rc -n -x2 gbmdlgrx.res gbmdlgrx.dll
+
+gbmrx.dll:     rexxhlp.o gbmrx.o gbmrx_gcc.def
+               gcc $(LFLAGS_DLL) -o $@ $** -L$(OS2TK)\lib -l$(GBM)\gbm.lib -l$(GBM)\gbmmem.lib -l$(GBM)\gbmmthrd.lib -l$(GBM)\gbmscale.lib -l$(GBM)\gbmmir.lib -lrexx
+
+gbmdlgrx.o:  gbmdlgrx.c gbmdlgrx_gcc.def $(GBM)\gbm.h $(GBMDLG)\gbmdlg.h
+
+gbmrx.o:     gbmrx.c gbmrx_gcc.def $(GBM)\gbm.h $(GBM)\gbmmem.h $(GBM)\gbmscale.h $(GBM)\gbmmir.h
+
+rexxhlp.o:   rexxhlp.c rexxhlp.h
+
+gbmdlgrx.res:  gbmdlgrx.rc gbmdlgrx.h
+               rc -n -r -x2 gbmdlgrx.rc
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+	 -del /F /N *.o *.res 2>nul
+
+clobber:
+	 -del /F /N *.o *.res *.dll 2>nul
+
+#
+
+install:
+
+#
+
+exepack:
+         $(DLL_PACKER) *.dll
+
+#
+
+package:
+

@@ -1,0 +1,29 @@
+
+# Main Makefile for build GBM on Linux (32Bit) with GCC.
+# (maintains correct sub-makefile for the platform)
+
+# directory of the platform makefiles
+MAKEFILE_SRC = makefile.linux
+
+all:
+ifdef debug
+		 @make -f $(MAKEFILE_SRC)/makefile.gcc32 debug=yes
+else
+		 @make -f $(MAKEFILE_SRC)/makefile.gcc32
+endif
+
+clean:
+		 @make -f $(MAKEFILE_SRC)/makefile.gcc32 clean
+
+clobber:
+		 @make -f $(MAKEFILE_SRC)/makefile.gcc32 clobber
+
+exepack:
+		 @echo "Packing of executables is not supported"
+
+install:
+		 @make -f $(MAKEFILE_SRC)/makefile.gcc32 install
+
+package:
+		 @make -f $(MAKEFILE_SRC)/makefile.gcc32 package
+

@@ -1,0 +1,62 @@
+# This makefile is for Open Watcom C++ on OS/2.
+
+# Location of gbm libs and public header files
+GBM  = ..\gbm
+
+# ------------------
+# Configure compiler
+# ------------------
+
+#
+# Using Open Watcom C++:
+#
+CC      = wcc386
+CL      = wlink
+
+# Builds gbm objects which are compiled multithreaded
+# Therefore all users should also be multithreaded
+CWARNS     = -wx -we
+CFLAGS     = $(CWARNS) -i$(GBM) -bt=os2 -zq -onatxh -sg -ei -6r -fp5 -bm -mf
+CFLAGS_DBG = $(CWARNS) -i$(GBM) -bt=os2 -zq -sg -ei -6r -fp5 -bm -mf -d2 /DDEBUG
+
+LFLAGS     = SYSTEM os2v2 op q op el op stack=0x10000
+LFLAGS_DBG = SYSTEM os2v2 op q d all op stack=0x10000
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS     = $(CFLAGS_DBG)
+LFLAGS     = $(LFLAGS_DBG)
+!endif
+
+#
+
+.SUFFIXES:	.c .obj
+
+.c.obj:
+		$(CC) $(CFLAGS) $*.c
+
+#
+
+all:    gbmcreate.exe
+
+
+# ------------
+# Bitmap tools
+# ------------
+
+gbmcreate.exe:	gbmcreate.obj $(GBM)\gbm.lib
+		$(CL) $(LFLAGS) name $@ file gbmcreate.obj library $(GBM)\gbm.lib
+
+gbmcreate.obj:	gbmcreate.c $(GBM)\gbm.h
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+	 -del /F /N *.obj 2>nul
+
+clobber:
+	 -del /F /N *.obj *.exe 2>nul
+

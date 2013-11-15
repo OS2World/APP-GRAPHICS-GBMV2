@@ -1,0 +1,36 @@
+
+all:
+ifdef debug
+		@(cd gbm        && make -f makefile.gcc_linux64 debug=yes)
+		@(cd gbmtest    && make -f makefile.gcc_linux64 debug=yes)
+		@(cd gbmcreate  && make -f makefile.gcc_linux64 debug=yes)
+		@(cd j2kcodec   && make -f makefile.gcc_linux64 debug=yes)
+else
+		@(cd gbm        && make -f makefile.gcc_linux64)
+		@(cd gbmtest    && make -f makefile.gcc_linux64)
+		@(cd gbmcreate  && make -f makefile.gcc_linux64)
+		@(cd j2kcodec   && make -f makefile.gcc_linux64)
+endif
+
+clean:
+		@(cd gbm        && make -f makefile.gcc_linux64 clean)
+		@(cd gbmtest    && make -f makefile.gcc_linux64 clean)
+		@(cd gbmcreate  && make -f makefile.gcc_linux64 clean)
+		@(cd j2kcodec   && make -f makefile.gcc_linux64 clean)
+
+clobber:
+		@(cd gbm        && make -f makefile.gcc_linux64 clobber)
+		@(cd gbmtest    && make -f makefile.gcc_linux64 clobber)
+		@(cd gbmcreate  && make -f makefile.gcc_linux64 clobber)
+		@(cd j2kcodec   && make -f makefile.gcc_linux64 clobber)
+
+exepack:
+
+install:
+		@(cd gbm        && make -f makefile.gcc_linux64 install)
+		@(cd j2kcodec   && make -f makefile.gcc_linux64 install)
+
+package:
+		@(cd gbm        && make -f makefile.gcc_linux64 package)
+		@(cd j2kcodec   && make -f makefile.gcc_linux64 package)
+

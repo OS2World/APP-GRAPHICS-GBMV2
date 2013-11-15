@@ -1,0 +1,60 @@
+# This makefile is for Open Watcom C++ on Windows 32 bit.
+
+# Location of gbm libs and public header files
+GBM = ..\gbm
+
+#
+# Using Open Watcom C++:
+#
+CC      = wcc386
+CL      = wlink
+CLIB    = wlib
+
+# Builds libpng objects which are compiled multithreaded
+# Therefore all users should also be multithreaded
+CWARNS         = -wx -we
+CFLAGS         = $(CWARNS) -i$(GBM) -zq -bt=nt -onatxh -sg -ei -6r -fp6 -fpi87 -bm -mf /DENABLE_J2K /DENABLE_JBIG /DWIN32
+CFLAGS_DBG     = $(CWARNS) -i$(GBM) -zq -bt=nt -sg -ei -6r -fp6 -fpi87 -bm -mf -d2 /DENABLE_J2K /DENABLE_JBIG /DDEBUG /DWIN32
+CFLAGS_EXE     = $(CFLAGS)
+CFLAGS_EXE_DBG = $(CFLAGS_DBG)
+
+LFLAGS         = op q op el op stack=0x10000
+LFLAGS_DBG     = op q d all op stack=0x10000
+LFLAGS_EXE     = SYSTEM nt $(LFLAGS)
+LFLAGS_EXE_DBG = SYSTEM nt $(LFLAGS_DBG)
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS_EXE     = $(CFLAGS_EXE_DBG)
+LFLAGS_EXE     = $(LFLAGS_EXE_DBG)
+!endif
+
+#
+
+.SUFFIXES:	.c .obj
+
+.c.obj:
+		$(CC) $(CFLAGS_EXE) $*.c
+
+#
+
+all:    gbmtest.exe
+
+#
+
+gbmtest.exe:  gbmtest.obj $(GBM)\gbm.lib $(GBM)\gbmmem.lib
+ 	      $(CL) $(LFLAGS_EXE) name $@ file gbmtest.obj library $(GBM)\gbm.lib,$(GBM)\gbmmem.lib
+
+gbmtest.obj:  gbmtest.c
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+	-del /F /Q *.obj 2>nul
+
+clobber:
+	 -del /F /Q *.obj *.exe 2>nul
+

@@ -1,0 +1,48 @@
+
+all:
+!ifdef debug
+		@(cd gbm         && nmake -c -f makefile.vac_os2 debug=yes)
+		@(cd gbmv_pm     && nmake -c -f makefile.vac     debug=yes)
+		@(cd gbmrexx     && nmake -c -f makefile.vac_os2 debug=yes)
+		@(cd gbmplugins  && nmake -c -f makefile.vac_os2 debug=yes)
+		@(cd gbmtest     && nmake -c -f makefile.vac_os2 debug=yes)
+		@(cd gbmcreate   && nmake -c -f makefile.vac_os2 debug=yes)
+!else
+		@(cd gbm         && nmake -c -f makefile.vac_os2)
+		@(cd gbmv_pm     && nmake -c -f makefile.vac)
+		@(cd gbmrexx     && nmake -c -f makefile.vac_os2)
+		@(cd gbmplugins  && nmake -c -f makefile.vac_os2)
+		@(cd gbmtest     && nmake -c -f makefile.vac_os2)
+		@(cd gbmcreate   && nmake -c -f makefile.vac_os2)
+!endif
+
+clean:
+		@(cd gbm         && nmake -c -f makefile.vac_os2 clean)
+		@(cd gbmv_pm     && nmake -c -f makefile.vac     clean)
+		@(cd gbmrexx     && nmake -c -f makefile.vac_os2 clean)
+		@(cd gbmplugins  && nmake -c -f makefile.vac_os2 clean)
+		@(cd gbmtest     && nmake -c -f makefile.vac_os2 clean)
+		@(cd gbmcreate   && nmake -c -f makefile.vac_os2 clean)
+
+clobber:
+		@(cd gbm         && nmake -c -f makefile.vac_os2 clobber)
+		@(cd gbmv_pm     && nmake -c -f makefile.vac     clobber)
+		@(cd gbmrexx     && nmake -c -f makefile.vac_os2 clobber)
+		@(cd gbmplugins  && nmake -c -f makefile.vac_os2 clobber)
+		@(cd gbmtest     && nmake -c -f makefile.vac_os2 clobber)
+		@(cd gbmcreate   && nmake -c -f makefile.vac_os2 clobber)
+
+exepack:
+		@(cd gbm         && nmake -c -f makefile.vac_os2 exepack)
+		@(cd gbmv_pm     && nmake -c -f makefile.vac     exepack)
+		@(cd gbmrexx     && nmake -c -f makefile.vac_os2 exepack)
+		@(cd gbmplugins  && nmake -c -f makefile.vac_os2 exepack)
+
+install:
+		@(cd gbm         && nmake -c -f makefile.vac_os2 install)
+		@(cd gbmv_pm     && nmake -c -f makefile.vac     install)
+
+package:
+		@(cd gbm         && nmake -c -f makefile.vac_os2 package)
+		@(cd gbmv_pm     && nmake -c -f makefile.vac     package)
+

@@ -1,0 +1,61 @@
+# This makefile is for MS Visual C++ on Windows 64 bit.
+
+# Location of gbm libs and public header files
+GBM = ..\gbm
+
+#
+# Using MS Visual C++:
+#
+CC      = cl
+CL      = link
+
+# Builds gbm objects which are compiled multithreaded
+CWARNS         = /W3 /WX
+CFLAGS         = /c $(CWARNS) /I$(GBM) /O2 /nologo /MT /DWIN32 /D_CRT_SECURE_NO_DEPRECATE /DENABLE_J2K /DENABLE_JBIG /DNDEBUG
+CFLAGS_DBG     = /c $(CWARNS) /I$(GBM) /nologo /Od /Zi /GS /RTC1 /MTd /DWIN32 /D_CRT_SECURE_NO_DEPRECATE /DENABLE_J2K /DENABLE_JBIG /DDEBUG
+CFLAGS_EXE     = $(CFLAGS)
+CFLAGS_EXE_DBG = $(CFLAGS_DBG)
+
+LFLAGS         = /NOLOGO /INCREMENTAL:NO /STACK:0x10000 /NXCOMPAT /LARGEADDRESSAWARE
+LFLAGS_DBG     = /NOLOGO /INCREMENTAL:NO /STACK:0x10000 /NXCOMPAT /LARGEADDRESSAWARE /DEBUG
+LFLAGS_EXE     = $(LFLAGS)
+LFLAGS_EXE_DBG = $(LFLAGS_DBG)
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS_EXE     = $(CFLAGS_EXE_DBG)
+LFLAGS_EXE     = $(LFLAGS_EXE_DBG)
+!endif
+
+#
+
+.SUFFIXES:	.c .obj
+
+.c.obj:
+		$(CC) $(CFLAGS_EXE) $*.c
+
+#
+
+all:    gbmtest.exe
+
+#
+
+gbmtest.exe:  gbmtest.obj $(GBM)\gbm.lib $(GBM)\gbmmem.lib
+ 	      $(CL) $(LFLAGS_EXE) /OUT:$@ $**
+
+gbmtest.obj:  gbmtest.c
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+	-del /F /Q *.obj 2>nul
+	-del /F /Q *.pdb 2>nul
+
+clobber:
+	-del /F /Q *.obj *.exe 2>nul
+	-del /F /Q *.pdb 2>nul
+
+

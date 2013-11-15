@@ -1,0 +1,29 @@
+
+# Main Makefile for build GBM on OS/2 (32Bit) with GCC 3.x.
+# (maintains correct sub-makefile for the platform)
+
+# directory of the platform makefiles
+MAKEFILE_SRC = makefile.os2
+
+all:
+!ifdef debug
+		 @nmake /f $(MAKEFILE_SRC)\makefile.gcc debug=yes
+!else
+		 @nmake /f $(MAKEFILE_SRC)\makefile.gcc
+!endif
+
+clean:
+		 @nmake /f $(MAKEFILE_SRC)\makefile.gcc clean
+
+clobber:
+		 @nmake /f $(MAKEFILE_SRC)\makefile.gcc clobber
+
+exepack:
+		 @nmake /f $(MAKEFILE_SRC)\makefile.gcc exepack
+
+install:
+		 @nmake /f $(MAKEFILE_SRC)\makefile.gcc install
+
+package:
+		 @nmake /f $(MAKEFILE_SRC)\makefile.gcc package
+

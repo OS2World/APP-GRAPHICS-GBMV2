@@ -1,0 +1,31 @@
+
+all:
+!ifdef debug
+      (cd common     && nmake -c -f makefile.gcc_os2 debug=yes)
+      (cd gbmmozilla && nmake -c -f makefile.gcc_os2 debug=yes)
+      (cd gbmlucide  && nmake -c -f makefile.gcc     debug=yes)
+!else
+      (cd common     && nmake -c -f makefile.gcc_os2)
+      (cd gbmmozilla && nmake -c -f makefile.gcc_os2)
+      (cd gbmlucide  && nmake -c -f makefile.gcc)
+!endif
+
+clean:
+      (cd common     && nmake -c -f makefile.gcc_os2 clean)
+      (cd gbmmozilla && nmake -c -f makefile.gcc_os2 clean)
+      (cd gbmlucide  && nmake -c -f makefile.gcc     clean)
+
+clobber:
+      (cd common     && nmake -c -f makefile.gcc_os2 clobber)
+      (cd gbmmozilla && nmake -c -f makefile.gcc_os2 clobber)
+      (cd gbmlucide  && nmake -c -f makefile.gcc     clobber)
+
+exepack:
+      (cd gbmmozilla && nmake -c -f makefile.gcc_os2 exepack)
+      (cd gbmlucide  && nmake -c -f makefile.gcc     exepack)
+
+install:
+
+package:
+
+

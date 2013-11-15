@@ -1,0 +1,37 @@
+; -----------------
+; GBMRX.DLL exports
+; -----------------
+
+LIBRARY GBMRX INITINSTANCE TERMINSTANCE
+
+DESCRIPTION '@#Heiko Nitzsche:1.16#@ GBM for REXX (GBMRX,GCC)'
+
+DATA MULTIPLE NONSHARED READWRITE
+
+CODE PRELOAD EXECUTEREAD
+
+EXPORTS
+  GBM_LOADFUNCS          = GBM_LoadFuncs
+  GBM_DROPFUNCS          = GBM_DropFuncs
+
+  GBM_VERSION            = GBM_Version
+  GBM_VERSIONREXX        = GBM_VersionRexx
+  GBM_TYPES              = GBM_Types
+  GBM_ISBPPSUPPORTED     = GBM_IsBppSupported
+
+  GBM_FILETYPE           = GBM_FileType
+  GBM_FILEPAGES          = GBM_FilePages
+  GBM_FILEHEADER         = GBM_FileHeader
+  GBM_FILEPALETTE        = GBM_FilePalette
+  GBM_FILEDATA           = GBM_FileData
+  GBM_FILEWRITE          = GBM_FileWrite
+
+  GBM_SCALEALGORITHMS    = GBM_ScaleAlgorithms
+  GBM_SCALEISSUPPORTED   = GBM_ScaleIsSupported
+  GBM_SCALE              = GBM_Scale
+
+  GBM_REFLECT            = GBM_Reflect
+  GBM_ROTATE             = GBM_Rotate
+
+  GBM_PALETTEDATATO24BPP = GBM_PaletteDataTo24bpp
+

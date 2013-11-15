@@ -1,0 +1,53 @@
+# This makefile is for IBM VisualAge C++ with FP8 on OS/2.
+
+# Location of gbm libs and public header files
+GBM = ..\gbm
+
+#
+# IBM Visual Age C++:
+#
+CWARNS         = /W3 /Wcnd+cns+dcl+ord+par+pro+rea+ret+use+
+CFLAGS         = /C+ $(CWARNS) /I$(GBM) /DOS2 /G5 /Gd-m+ /Q+ /O+ /Os- /Gf+ /DENABLE_J2K /DENABLE_JBIG
+CFLAGS_DBG     = /C+ $(CWARNS) /I$(GBM) /DOS2 /G5 /Gd-m+ /Q+ /Gf+ /Ti+ /Tm+ /DENABLE_J2K /DENABLE_JBIG /DDEBUG
+CFLAGS_EXE     = $(CFLAGS) /Ge+
+CFLAGS_EXE_DBG = $(CFLAGS_DBG) /Ge+
+
+LFLAGS         = /NOI /NOLOGO /EXEPACK:2 /OPTFUNC /PACKCODE /PACKDATA
+LFLAGS_DBG     = /NOI /NOLOGO /DEBUG /DBGPACK
+LFLAGS_EXE     = $(LFLAGS) /BASE:0x10000 /STACK:0x10000 /PMTYPE:VIO
+LFLAGS_EXE_DBG = $(LFLAGS_DBG) /BASE:0x10000 /STACK:0x10000 /PMTYPE:VIO
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS_EXE = $(CFLAGS_EXE_DBG)
+LFLAGS_EXE = $(LFLAGS_EXE_DBG)
+!endif
+
+.SUFFIXES:	.c .obj
+
+.c.obj:
+		icc $(CFLAGS_EXE) $*.c
+
+#
+
+all:    gbmtest.exe
+
+#
+
+
+gbmtest.exe: gbmtest.obj $(GBM)\gbm.lib $(GBM)\gbmmem.lib
+	     ilink $(LFLAGS_EXE) /OUT:$@ $**
+
+gbmtest.obj: gbmtest.c
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+     -del /F /N *.obj 2>nul
+
+clobber:
+     -del /F /N *.obj *.exe 2>nul
+

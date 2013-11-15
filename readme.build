@@ -1,0 +1,114 @@
+
+How to build
+============
+
+First set path to lxlite executable/dll compressor in make.opt
+if you want to compress all EXEs and DLLs. This is only supported
+for OS/2 build target. For Windows (32/64bit) and Linux (32/64bit)
+targets no changes are required in this file.
+
+
+Executables and libs that can be built for the platforms
+--------------------------------------------------------
+OS/2    (32 bit)   : All
+Windows (32/4 bit) : gbm, gbmcreate, gbmtest, j2kcodec,
+                     gbmmozilla (MS C++ 32bit only)
+Linux   (32/64 bit): gbm, gbmcreate, gbmtest, j2kcodec
+
+Cross-Compiling OS/2 <-> Win32 is supported with OpenWatcom.
+Just ensure that both compiler targets are installed via the
+OpenWatcom installer. For clobber and clean targets, please
+use the makefiles for the host platform you're compiling on
+so that the platform specific delete commands are used.
+
+
+For building with IBM VAC++ 3.08
+--------------------------------
+IBM VAC++ 3.08 should be installed and all environment variables
+should be set correctly before starting nmake.
+
+nmake /f makefile.vac_os2    (for OS/2 32 bit target)
+
+Other supported targets: all, clean, clobber, exepack, install, package
+
+Debug compile can be activated by specifying the parameter
+debug=on to the nmake call.
+
+
+For building with OpenWatcom 1.8
+--------------------------------
+OpenWatcom should be installed and all environment variables
+should be set correctly before starting wmake.
+
+The provided makefiles are in nmake style but you can use wmake's
+nmake compatibility mode:
+
+wmake -ms -h -f makefile.wat_os2    (for OS/2    32 bit target)
+wmake -ms -h -f makefile.wat_w32    (for Windows 32 bit target)
+
+Other supported targets: all, clean, clobber, exepack, install, package
+(exepack is only supported for OS/2 target)
+
+Debug compile can be activated by specifying the parameter
+debug=on to the nmake or wmake call.
+
+
+For building with GCC 3.3.5 or higher
+-------------------------------------
+GCC should be installed and all environment variables
+should be set correctly before starting nmake. The executables
+and dlls on OS/2 target need libc063.dll afterwards to run.
+
+nmake /f makefile.gcc_os2      (for OS/2  32 bit target)
+ make -f makefile.gcc_linux32  (for Linux 32 bit target)
+ make -f makefile.gcc_linux64  (for Linux 64 bit target)
+
+Other supported targets: all, clean, clobber, exepack, install, package
+(exepack is only supported for OS/2 target)
+
+Debug compile can be activated by specifying the parameter
+debug=on to the nmake call. The archive libs are build as OMF libs.
+
+
+For building with Microsoft Visual C++
+--------------------------------------
+MS Visual C++ should be installed and all environment variables
+should be set correctly before starting nmake. You need to
+prepare the environment with "setenv /x86 /release" or
+"setenv /x64 /release" in order to select the right compiler
+set for 32bit or 64bit.
+
+nmake /f makefile.ms_w32    (for Windows 32 bit target)
+nmake /f makefile.ms_w64    (for Windows 64 bit target)
+
+Other supported targets: all, clean, clobber, install, package
+
+Debug compile can be activated by specifying the parameter
+debug=on to the nmake call.
+
+For the GBM Mozilla plugin you may specify vista=on for makefile
+in gbmmozilla\win directory to enable the new Vista/Win7 file dialog
+together with an additional options field in the file dialog to specify
+GBM specific export options. Note that the plugin will no longer work
+on Windows 2000/XP then.
+
+The Mozilla plugin can so far only be compiled for 32bit until there
+is a 64bit browser/API available.
+
+
+Notes
+-----
+You can build all sources at once by starting nmake/wmake/make in the root
+directory of the source archive.
+
+The created import library for GBM.DLL can be used with any other OS/2 or
+Windows linker. On Linux libgbm.so can directly be linked.
+
+Beware that the utility archive libraries are compiler dependent and thus can
+only be linked with the compiler that created them.
+
+Beside GBM.DLL/libgbm.so also a static lib is created (gbms.lib/gbm.a).
+Though it is not recommended for general use due to upgrading limitation
+when new GBM versions will be released and also because of potential
+symbol conflicts with the linking executable.
+

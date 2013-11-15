@@ -1,0 +1,41 @@
+
+all:
+!ifdef debug
+		@(cd gbm        && nmake /C /f makefile.ms_w32 debug=yes)
+		@(cd gbmplugins && nmake /C -f makefile.ms_w32 debug=yes)
+		@(cd gbmtest    && nmake /C /f makefile.ms_w32 debug=yes)
+		@(cd gbmcreate  && nmake /C /f makefile.ms_w32 debug=yes)
+		@(cd j2kcodec   && nmake /C /f makefile.ms_w32 debug=yes)
+!else
+		@(cd gbm        && nmake /C /f makefile.ms_w32)
+		@(cd gbmplugins && nmake /C -f makefile.ms_w32)
+		@(cd gbmtest    && nmake /C /f makefile.ms_w32)
+		@(cd gbmcreate  && nmake /C /f makefile.ms_w32)
+		@(cd j2kcodec   && nmake /C /f makefile.ms_w32)
+!endif
+
+clean:
+		@(cd gbm        && nmake /C /f makefile.ms_w32 clean)
+		@(cd gbmplugins && nmake /C -f makefile.ms_w32 clean)
+		@(cd gbmtest    && nmake /C /f makefile.ms_w32 clean)
+		@(cd gbmcreate  && nmake /C /f makefile.ms_w32 clean)
+		@(cd j2kcodec   && nmake /C /f makefile.ms_w32 clean)
+
+clobber:
+		@(cd gbm        && nmake /C /f makefile.ms_w32 clobber)
+		@(cd gbmplugins && nmake /C -f makefile.ms_w32 clobber)
+		@(cd gbmtest    && nmake /C /f makefile.ms_w32 clobber)
+		@(cd gbmcreate  && nmake /C /f makefile.ms_w32 clobber)
+		@(cd j2kcodec   && nmake /C /f makefile.ms_w32 clobber)
+
+exepack:
+
+install:
+		@(cd gbm        && nmake /C /f makefile.ms_w32 install)
+		@(cd j2kcodec   && nmake /C /f makefile.ms_w32 install)
+
+package:
+		@(cd gbm        && nmake /C /f makefile.ms_w32 package)
+		@(cd j2kcodec   && nmake /C /f makefile.ms_w32 package)
+
+

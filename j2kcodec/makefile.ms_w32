@@ -1,0 +1,110 @@
+# This makefile is for MS Visual C++ on Windows 32/64bit.
+# (with JPWL support)
+
+# Location of gbm libs and public header files
+GBM   = ..\gbm
+IJG   = $(GBM)\libjpeg
+OJPEG = $(GBM)\libojpeg
+TIFF  = $(GBM)\libtiff
+ZLIB  = $(GBM)\zlib
+JBIG  = $(GBM)\libjbig
+LPNG  = $(GBM)\libpng
+
+# Installation directory
+IDIR = bin
+
+DOCDIR = doc
+
+# ------------------
+# Configure compiler
+# ------------------
+
+#
+# MS Visual C++:
+#
+CC      = cl
+CL      = link
+
+# Builds gbm objects which are compiled multithreaded
+
+CWARNS         = /W3 /WX
+CFLAGS         = /c $(CWARNS) /I$(GBM) /I$(OJPEG) /I$(TIFF) /I$(LPNG) /I$(ZLIB) /O2 /nologo /MT /D_CRT_SECURE_NO_DEPRECATE /DOPJ_STATIC /DUSE_JPWL /DNDEBUG /DWIN32
+CFLAGS_DBG     = /c $(CWARNS) /I$(GBM) /I$(OJPEG) /I$(TIFF) /I$(LPNG) /I$(ZLIB) /Od /nologo /Zi /GS /RTC1 /MTd /D_CRT_SECURE_NO_DEPRECATE /DOPJ_STATIC /DUSE_JPWL /DDEBUG /DWIN32
+LFLAGS         = /NOLOGO /INCREMENTAL:NO /STACK:0x20000 /NXCOMPAT /LARGEADDRESSAWARE /RELEASE
+LFLAGS_DBG     = /NOLOGO /INCREMENTAL:NO /STACK:0x20000 /NXCOMPAT /LARGEADDRESSAWARE /DEBUG
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS     = $(CFLAGS_DBG)
+LFLAGS     = $(LFLAGS_DBG)
+!endif
+
+#
+
+.SUFFIXES:	.c .obj
+
+.c.obj:
+		$(CC) $(CFLAGS) $*.c
+
+#
+
+all:    image_to_j2k.exe \
+        j2k_to_image.exe
+
+
+# ------------
+# Bitmap tools
+# ------------
+
+image_to_j2k.exe:	image_to_j2k.obj index.obj convert.obj opj_getopt.obj color.obj
+		$(CL) $(LFLAGS) /OUT:$@ $** $(OJPEG)\ojpeg.lib $(TIFF)\tiff.lib $(IJG)\jpeg.lib $(ZLIB)\z.lib $(JBIG)\jbig.lib $(LPNG)\png.lib
+
+j2k_to_image.exe:	j2k_to_image.obj index.obj convert.obj opj_getopt.obj color.obj
+		$(CL) $(LFLAGS) /OUT:$@ $** $(OJPEG)\ojpeg.lib $(TIFF)\tiff.lib $(IJG)\jpeg.lib $(ZLIB)\z.lib $(JBIG)\jbig.lib $(LPNG)\png.lib
+
+image_to_j2k.obj:	image_to_j2k.c format_defs.h
+
+j2k_to_image.obj:	j2k_to_image.c format_defs.h
+
+index.obj:	index.c index.h
+
+convert.obj:	convert.c convert.h
+
+opj_getopt.obj: opj_getopt.c opj_getopt.h
+
+color.obj: color.c color.h
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+	 -del /F /Q *.obj 2>nul
+	 -del /F /Q *.err 2>nul
+	 -del /F /Q *.pdb 2>nul
+
+clobber:
+	 -del /F /Q *.obj 2>nul
+	 -del /F /Q *.exe 2>nul
+	 -del /F /Q *.err 2>nul
+	 -del /F /Q *.pdb 2>nul
+	 -del /F /Q $(IDIR)\* 2>nul
+
+#
+
+install:
+         copy *.exe $(IDIR)
+         copy $(DOCDIR)\readme_j2k.txt $(IDIR)
+
+#
+
+exepack:
+		 @echo "Packing of executables is not supported"
+
+#
+
+package:
+        -del /F $(IDIR)\j2kcodec.zip 2>nul
+        zip -9 $(IDIR)\j2kcodec.zip *.exe $(DOCDIR)\readme_j2k.txt
+
+

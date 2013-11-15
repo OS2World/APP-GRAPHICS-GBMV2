@@ -1,0 +1,29 @@
+
+# Main Makefile for build GBM on OS/2 (32Bit) with IBM Visual Age C++.
+# (maintains correct sub-makefile for the platform)
+
+# directory of the platform makefiles
+MAKEFILE_SRC = makefile.os2
+
+all:     
+!ifdef debug
+		 @nmake /f $(MAKEFILE_SRC)\makefile.vac debug=yes
+!else
+		 @nmake /f $(MAKEFILE_SRC)\makefile.vac
+!endif
+
+clean:   
+		 @nmake /f $(MAKEFILE_SRC)\makefile.vac clean
+
+clobber: 
+		 @nmake /f $(MAKEFILE_SRC)\makefile.vac clobber
+
+exepack: 
+		 @nmake /f $(MAKEFILE_SRC)\makefile.vac exepack
+
+install: 
+		 @nmake /f $(MAKEFILE_SRC)\makefile.vac install
+
+package: 
+		 @nmake /f $(MAKEFILE_SRC)\makefile.vac package
+

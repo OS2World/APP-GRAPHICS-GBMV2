@@ -1,0 +1,21 @@
+
+all:
+!ifdef debug
+      (cd common     && nmake -c -f makefile.ms_w64 debug=yes)
+!else
+      (cd common     && nmake -c -f makefile.ms_w64)
+!endif
+
+clean:
+      (cd common     && nmake -c -f makefile.ms_w64 clean)
+
+clobber:
+      (cd common     && nmake -c -f makefile.ms_w64 clobber)
+
+exepack:
+
+install:
+
+package:
+
+

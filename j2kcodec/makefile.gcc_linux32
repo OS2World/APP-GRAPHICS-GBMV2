@@ -1,0 +1,99 @@
+# This makefile is for GCC on Linux 32/64 bit.
+# (with JPWL support)
+
+# Location of gbm libs and public header files
+GBM   = ../gbm
+IJG   = $(GBM)/libjpeg
+OJPEG = $(GBM)/libojpeg
+TIFF  = $(GBM)/libtiff
+ZLIB  = $(GBM)/zlib
+JBIG  = $(GBM)/libjbig
+LPNG  = $(GBM)/libpng
+
+# Installation directory
+IDIR = bin
+
+DOCDIR = doc
+
+# For 64bit compile call make with m64=on
+ifdef m64
+  CFLAGS_MACHINE = -m64
+else
+  CFLAGS_MACHINE = -m32
+endif
+
+CWARNS         = -Wall -Werror
+CFLAGS         = -c $(CWARNS) -I$(GBM) -I$(OJPEG) -I$(TIFF) -I$(LPNG) -I$(ZLIB) $(CFLAGS_MACHINE) -mfpmath=sse -msse -O3 -DLINUX -DOPJ_STATIC -DUSE_JPWL -DNDEBUG
+CFLAGS_DBG     = -c $(CWARNS) -I$(GBM) -I$(OJPEG) -I$(TIFF) -I$(LPNG) -I$(ZLIB) $(CFLAGS_MACHINE) -mfpmath=sse -msse -fbounds-check -g -DLINUX -DOPJ_STATIC -DUSE_JPWL -DDEBUG
+LFLAGS         = $(CFLAGS_MACHINE) -s -lm
+LFLAGS_DBG     = $(CFLAGS_MACHINE) -g -lm
+
+# For debugging call make with debug=on
+ifdef debug
+  CFLAGS       = $(CFLAGS_DBG)
+  LFLAGS       = $(LFLAGS_DBG)
+endif
+
+#
+
+.SUFFIXES:	.c .o
+
+.c.o:
+		gcc $(CFLAGS) $*.c
+
+#
+
+all:	image_to_j2k j2k_to_image
+
+# ------------
+# Bitmap tools
+# ------------
+
+image_to_j2k:	image_to_j2k.o index.o convert.o opj_getopt.o color.o
+	gcc $(LFLAGS) -o $@ image_to_j2k.o index.o convert.o opj_getopt.o color.o -L. $(OJPEG)/ojpeg.a $(TIFF)/tiff.a $(IJG)/jpeg.a $(JBIG)/jbig.a $(ZLIB)/z.a $(LPNG)/png.a
+
+j2k_to_image:	j2k_to_image.o index.o convert.o opj_getopt.o color.o
+	gcc $(LFLAGS) -o $@ j2k_to_image.o index.o convert.o opj_getopt.o color.o -L. $(OJPEG)/ojpeg.a $(TIFF)/tiff.a $(IJG)/jpeg.a $(JBIG)/jbig.a $(ZLIB)/z.a $(LPNG)/png.a
+
+image_to_j2k.o:	image_to_j2k.c format_defs.h
+
+j2k_to_image.o:	j2k_to_image.c format_defs.h
+
+index.o:	index.c index.h
+
+convert.o:	convert.c convert.h
+
+opj_getopt.o:	opj_getopt.c opj_getopt.h
+
+color.o:	color.c color.h
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+	@rm -f *.o 2>/dev/null
+
+clobber:
+		@rm -f image_to_j2k j2k_to_image *.o 2>/dev/null
+		@rm -f $(IDIR)/* 2>/dev/null
+
+#
+
+exepack:
+		 @echo "Packing of executables is not supported"
+
+#
+
+install:
+		@cp image_to_j2k $(IDIR)
+		@cp j2k_to_image $(IDIR)
+		@cp $(DOCDIR)/readme_j2k.txt $(IDIR)
+
+#
+
+package:
+		@rm -f $(IDIR)/j2kcodec.tar.gz 2>/dev/null
+		@tar zcvf $(IDIR)/j2kcodec.tar.gz image_to_j2k j2k_to_image $(DOCDIR)/readme_j2k.txt
+
+

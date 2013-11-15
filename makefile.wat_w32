@@ -1,0 +1,37 @@
+
+all:
+!ifdef debug
+		@(cd gbm        && wmake -c -ms -h -f makefile.wat_w32 debug=yes)
+		@(cd gbmtest    && wmake -c -ms -h -f makefile.wat_w32 debug=yes)
+		@(cd gbmcreate  && wmake -c -ms -h -f makefile.wat_w32 debug=yes)
+		@(cd j2kcodec   && wmake -c -ms -h -f makefile.wat_w32 debug=yes)
+!else
+		@(cd gbm        && wmake -c -ms -h -f makefile.wat_w32)
+		@(cd gbmtest    && wmake -c -ms -h -f makefile.wat_w32)
+		@(cd gbmcreate  && wmake -c -ms -h -f makefile.wat_w32)
+		@(cd j2kcodec   && wmake -c -ms -h -f makefile.wat_w32)
+!endif
+
+clean:
+		@(cd gbm        && wmake -c -ms -h -f makefile.wat_w32 clean)
+		@(cd gbmtest    && wmake -c -ms -h -f makefile.wat_w32 clean)
+		@(cd gbmcreate  && wmake -c -ms -h -f makefile.wat_w32 clean)
+		@(cd j2kcodec   && wmake -c -ms -h -f makefile.wat_w32 clean)
+
+clobber:
+		@(cd gbm        && wmake -c -ms -h -f makefile.wat_w32 clobber)
+		@(cd gbmtest    && wmake -c -ms -h -f makefile.wat_w32 clobber)
+		@(cd gbmcreate  && wmake -c -ms -h -f makefile.wat_w32 clobber)
+		@(cd j2kcodec   && wmake -c -ms -h -f makefile.wat_w32 clobber)
+
+exepack:
+
+install:
+		@(cd gbm        && wmake -c -ms -h -f makefile.wat_w32 install)
+		@(cd j2kcodec   && wmake -c -ms -h -f makefile.wat_w32 install)
+
+package:
+		@(cd gbm        && wmake -c -ms -h -f makefile.wat_w32 package)
+		@(cd j2kcodec   && wmake -c -ms -h -f makefile.wat_w32 package)
+
+

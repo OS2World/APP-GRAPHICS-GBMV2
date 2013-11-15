@@ -1,0 +1,8 @@
+# Set the OS/2 Developer Toolkit root directory
+OS2TK = E:\Development\OS2TK45
+
+# Modify this line to point to the executable file compressor
+EXE_PACKER = e:\Archiver\LX-LITE\lxlite.exe /B-
+DLL_PACKER = e:\Archiver\LX-LITE\lxlite.exe /B- /D+ /nbl /t /zs:0
+
+

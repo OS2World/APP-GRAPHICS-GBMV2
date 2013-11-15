@@ -1,0 +1,107 @@
+#
+# Generalised Bitmap Module REXX adapter
+#
+# This makefile is for Open Watcom C++ on OS/2.
+#
+# Builds REXX adapter library for GBM.DLL and GBMDLG.DLL.
+# As GBM.DLL is built multithreaded, all users should also be multithreaded.
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\make.opt
+
+# Location of gbm libs and public header files
+GBM    = ..\gbm
+GBMDLG = ..\gbmv_pm\gbmdlg
+
+# ------------------
+# Configure compiler
+# ------------------
+
+#
+# Using Open Watcom C++:
+#
+CC      = wcc386
+CL      = wlink
+RC      = wrc
+
+# Builds gbm objects which are compiled multithreaded
+# Therefore all users should also be multithreaded
+CWARNS         = -wx -we
+CFLAGS         = $(CWARNS) -bt=os2 -zq -onatxh -sg -ei -6r -fp6 -fpi87 -bm -mf -i$(GBM) -i$(GBMDLG) /DNDEBUG
+CFLAGS_DBG     = $(CWARNS) -bt=os2 -zq -sg -ei -6r -fp6 -fpi87 -bm -mf -i$(GBM) -i$(GBMDLG) -d2 /DDEBUG
+CFLAGS_DLL     = -bd $(CFLAGS)
+CFLAGS_DLL_DBG = -bd $(CFLAGS_DBG)
+
+LFLAGS         = op q op el
+LFLAGS_DBG     = op q d all
+LFLAGS_DLL     = sys os2v2_dll initi termi op many op caseexact $(LFLAGS)
+LFLAGS_DLL_DBG = sys os2v2_dll initi termi op many op caseexact $(LFLAGS_DBG)
+
+LIBFLAGS       = -q -n -b -c
+
+RCCFLAGS       = -q -r -zm
+RCLFLAGS       = -q
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS_DLL     = $(CFLAGS_DLL_DBG)
+LFLAGS_DLL     = $(LFLAGS_DLL_DBG)
+!endif
+
+# Enable for Pentium profiling (also combined with debug above)
+#CFLAGS_DLL     = $(CFLAGS_DLL) -et
+
+#
+
+.SUFFIXES:	.c .obj
+
+.c.obj:
+		$(CC) $(CFLAGS_DLL) $*.c
+
+#
+
+all:           gbmdlgrx.res gbmdlgrx.dll gbmrx.dll
+
+#
+
+gbmdlgrx.dll:  rexxhlp.obj gbmdlgrx.obj gbmdlgrx.lnk
+               $(CL) $(LFLAGS_DLL) @gbmdlgrx name $@ file rexxhlp.obj,gbmdlgrx.obj,$(GBM)\gbm.lib,$(GBMDLG)\gbmdlg.lib
+               $(RC) $(RCLFLAGS) gbmdlgrx.res $@
+
+gbmrx.dll:     rexxhlp.obj gbmrx.obj gbmrx.lnk
+               $(CL) $(LFLAGS_DLL) @gbmrx name $@ file rexxhlp.obj,gbmrx.obj,$(GBM)\gbm.lib,$(GBM)\gbmmem.lib,$(GBM)\gbmmthrd.lib,$(GBM)\gbmscale.lib,$(GBM)\gbmmir.lib
+
+gbmdlgrx.obj:  gbmdlgrx.c $(GBM)\gbm.h $(GBMDLG)\gbmdlg.h
+               $(CC) $(CFLAGS_DLL) $*.c
+
+gbmrx.obj:     gbmrx.c $(GBM)\gbm.h $(GBM)\gbmmem.h $(GBM)\gbmscale.h $(GBM)\gbmmir.h
+               $(CC) $(CFLAGS_DLL) $*.c
+
+rexxhlp.obj:   rexxhlp.c rexxhlp.h
+               $(CC) $(CFLAGS_DLL) $*.c
+
+gbmdlgrx.res:  gbmdlgrx.rc gbmdlgrx.h
+               $(RC) $(RCCFLAGS) gbmdlgrx.rc
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+	 -del /F /N *.obj *.res 2>nul
+
+clobber:
+	 -del /F /N *.obj *.res *.dll 2>nul
+
+#
+
+install:
+
+#
+
+exepack:
+         $(DLL_PACKER) *.dll
+
+#
+
+package:

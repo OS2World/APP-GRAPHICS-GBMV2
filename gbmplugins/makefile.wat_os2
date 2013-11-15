@@ -1,0 +1,31 @@
+
+all:
+!ifdef debug
+      (cd common     && wmake -c -ms -h -f makefile.wat_os2 debug=yes)
+      (cd gbmmozilla && wmake -c -ms -h -f makefile.wat_os2 debug=yes)
+      (cd gbmlucide  && wmake -c -ms -h -f makefile.wat debug=yes)
+!else
+      (cd common     && wmake -c -ms -h -f makefile.wat_os2)
+      (cd gbmmozilla && wmake -c -ms -h -f makefile.wat_os2)
+      (cd gbmlucide  && wmake -c -ms -h -f makefile.wat)
+!endif
+
+clean:
+      (cd common     && wmake -c -ms -h -f makefile.wat_os2 clean)
+      (cd gbmmozilla && wmake -c -ms -h -f makefile.wat_os2 clean)
+      (cd gbmlucide  && wmake -c -ms -h -f makefile.wat     clean)
+
+clobber:
+      (cd common     && wmake -c -ms -h -f makefile.wat_os2 clobber)
+      (cd gbmmozilla && wmake -c -ms -h -f makefile.wat_os2 clobber)
+      (cd gbmlucide  && wmake -c -ms -h -f makefile.wat     clobber)
+
+exepack:
+      (cd gbmmozilla && wmake -c -ms -h -f makefile.wat_os2 exepack)
+      (cd gbmlucide  && wmake -c -ms -h -f makefile.wat     exepack)
+
+install:
+
+package:
+
+

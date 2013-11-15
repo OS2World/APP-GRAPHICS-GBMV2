@@ -1,0 +1,14 @@
+# --------------------
+# GBMDLGRX.DLL exports
+# --------------------
+
+OPTION DESCRIPTION '@#Heiko Nitzsche:1.04#@ GBM File Dialog for REXX (GBMDLGRX,WAT)'
+
+EXPORT GBMDLG_LOADFUNCS     = GBMDLG_LoadFuncs
+EXPORT GBMDLG_DROPFUNCS     = GBMDLG_DropFuncs
+
+EXPORT GBMDLG_OPENFILEDLG   = GBMDLG_OpenFileDlg
+EXPORT GBMDLG_SAVEASFILEDLG = GBMDLG_SaveAsFileDlg
+
+EXPORT GBMDLG_VERSIONREXX   = GBMDLG_VersionRexx
+

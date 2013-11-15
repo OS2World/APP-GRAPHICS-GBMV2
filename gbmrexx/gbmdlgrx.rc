@@ -1,0 +1,19 @@
+
+#include "gbmdlgrx.h"
+#include <os2.h>
+
+
+HELPTABLE HELP_TABLE_GBMDLGRX
+{
+  /* ID of frame/dialog, ID of HELPSUBTABLE, help panel */
+  HELPITEM RID_GBM_FILEDLG, RID_GBM_FILEDLG, HID_GBM_FILEDLG
+}
+
+
+
+HELPSUBTABLE RID_GBM_FILEDLG
+{
+  /* id of control/menuitem, help panel */
+  HELPSUBITEM DID_GBM_FILEDLG, HID_GBM_FILEDLG
+}
+

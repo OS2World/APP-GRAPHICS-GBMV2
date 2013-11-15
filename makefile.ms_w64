@@ -1,0 +1,41 @@
+
+all:
+!ifdef debug
+		@(cd gbm        && nmake /C /f makefile.ms_w64 debug=yes)
+		@(cd gbmplugins && nmake /C -f makefile.ms_w64 debug=yes)
+		@(cd gbmtest    && nmake /C /f makefile.ms_w64 debug=yes)
+		@(cd gbmcreate  && nmake /C /f makefile.ms_w64 debug=yes)
+		@(cd j2kcodec   && nmake /C /f makefile.ms_w64 debug=yes)
+!else
+		@(cd gbm        && nmake /C /f makefile.ms_w64)
+		@(cd gbmplugins && nmake /C -f makefile.ms_w64)
+		@(cd gbmtest    && nmake /C /f makefile.ms_w64)
+		@(cd gbmcreate  && nmake /C /f makefile.ms_w64)
+		@(cd j2kcodec   && nmake /C /f makefile.ms_w64)
+!endif
+
+clean:
+		@(cd gbm        && nmake /C /f makefile.ms_w64 clean)
+		@(cd gbmplugins && nmake /C -f makefile.ms_w64 clean)
+		@(cd gbmtest    && nmake /C /f makefile.ms_w64 clean)
+		@(cd gbmcreate  && nmake /C /f makefile.ms_w64 clean)
+		@(cd j2kcodec   && nmake /C /f makefile.ms_w64 clean)
+
+clobber:
+		@(cd gbm        && nmake /C /f makefile.ms_w64 clobber)
+		@(cd gbmplugins && nmake /C -f makefile.ms_w64 clobber)
+		@(cd gbmtest    && nmake /C /f makefile.ms_w64 clobber)
+		@(cd gbmcreate  && nmake /C /f makefile.ms_w64 clobber)
+		@(cd j2kcodec   && nmake /C /f makefile.ms_w64 clobber)
+
+exepack:
+
+install:
+		@(cd gbm        && nmake /C /f makefile.ms_w64 install)
+		@(cd j2kcodec   && nmake /C /f makefile.ms_w64 install)
+
+package:
+		@(cd gbm        && nmake /C /f makefile.ms_w64 package)
+		@(cd j2kcodec   && nmake /C /f makefile.ms_w64 package)
+
+

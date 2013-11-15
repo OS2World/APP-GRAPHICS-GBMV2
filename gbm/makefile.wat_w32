@@ -1,0 +1,29 @@
+
+# Main Makefile for build GBM on Windows (32Bit) with OpenWatcom.
+# (maintains correct sub-makefile for the platform)
+
+# directory of the platform makefiles
+MAKEFILE_SRC = makefile.win
+
+all:     
+!ifdef debug
+		 @wmake -c -ms -h -f $(MAKEFILE_SRC)\makefile.wat debug=yes
+!else
+		 @wmake -c -ms -h -f $(MAKEFILE_SRC)\makefile.wat
+!endif
+
+clean:   
+		 @wmake -c -ms -h -f $(MAKEFILE_SRC)\makefile.wat clean
+
+clobber: 
+		 @wmake -c -ms -h -f $(MAKEFILE_SRC)\makefile.wat clobber
+
+exepack: 
+		 @echo "Packing of executables is not supported"
+
+install: 
+		 @wmake -c -ms -h -f $(MAKEFILE_SRC)\makefile.wat install
+
+package: 
+		 @wmake -c -ms -h -f $(MAKEFILE_SRC)\makefile.wat package
+

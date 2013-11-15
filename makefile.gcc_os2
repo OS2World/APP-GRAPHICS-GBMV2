@@ -1,0 +1,55 @@
+
+all:
+!ifdef debug
+		@(cd gbm        && nmake /f makefile.gcc_os2 debug=yes)
+		@(cd gbmv_pm    && nmake /f makefile.gcc     debug=yes)
+		@(cd gbmrexx    && nmake /f makefile.gcc_os2 debug=yes)
+		@(cd gbmplugins && nmake /f makefile.gcc_os2 debug=yes)
+		@(cd gbmtest    && nmake /f makefile.gcc_os2 debug=yes)
+		@(cd gbmcreate  && nmake /f makefile.gcc_os2 debug=yes)
+		@(cd j2kcodec   && nmake /f makefile.gcc_os2 debug=yes)
+!else
+		@(cd gbm        && nmake /f makefile.gcc_os2)
+		@(cd gbmv_pm    && nmake /f makefile.gcc)
+		@(cd gbmrexx    && nmake /f makefile.gcc_os2)
+		@(cd gbmplugins && nmake /f makefile.gcc_os2)
+		@(cd gbmtest    && nmake /f makefile.gcc_os2)
+		@(cd gbmcreate  && nmake /f makefile.gcc_os2)
+		@(cd j2kcodec   && nmake /f makefile.gcc_os2)
+!endif
+
+clean:
+		@(cd gbm        && nmake /f makefile.gcc_os2 clean)
+		@(cd gbmv_pm    && nmake /f makefile.gcc     clean)
+		@(cd gbmrexx    && nmake /f makefile.gcc_os2 clean)
+		@(cd gbmplugins && nmake /f makefile.gcc_os2 clean)
+		@(cd gbmtest    && nmake /f makefile.gcc_os2 clean)
+		@(cd gbmcreate  && nmake /f makefile.gcc_os2 clean)
+		@(cd j2kcodec   && nmake /f makefile.gcc_os2 clean)
+
+clobber:
+		@(cd gbm        && nmake /f makefile.gcc_os2 clobber)
+		@(cd gbmv_pm    && nmake /f makefile.gcc     clobber)
+		@(cd gbmrexx    && nmake /f makefile.gcc_os2 clobber)
+		@(cd gbmplugins && nmake /f makefile.gcc_os2 clobber)
+		@(cd gbmtest    && nmake /f makefile.gcc_os2 clobber)
+		@(cd gbmcreate  && nmake /f makefile.gcc_os2 clobber)
+		@(cd j2kcodec   && nmake /f makefile.gcc_os2 clobber)
+
+exepack:
+		@(cd gbm        && nmake /f makefile.gcc_os2 exepack)
+		@(cd gbmv_pm    && nmake /f makefile.gcc     exepack)
+		@(cd gbmrexx    && nmake /f makefile.gcc_os2 exepack)
+		@(cd gbmplugins && nmake /f makefile.gcc_os2 exepack)
+		@(cd j2kcodec   && nmake /f makefile.gcc_os2 exepack)
+
+install:
+		@(cd gbm        && nmake /f makefile.gcc_os2 install)
+		@(cd gbmv_pm    && nmake /f makefile.gcc     install)
+		@(cd j2kcodec   && nmake /f makefile.gcc_os2 install)
+
+package:
+		@(cd gbm        && nmake /f makefile.gcc_os2 package)
+		@(cd gbmv_pm    && nmake /f makefile.gcc     package)
+		@(cd j2kcodec   && nmake /f makefile.gcc_os2 package)
+

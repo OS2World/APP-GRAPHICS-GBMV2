@@ -1,0 +1,55 @@
+
+all:
+!ifdef debug
+		@(cd gbm        && wmake -c -ms -h -f makefile.wat_os2 debug=yes)
+		@(cd gbmv_pm    && wmake -c -ms -h -f makefile.wat     debug=yes)
+		@(cd gbmrexx    && wmake -c -ms -h -f makefile.wat_os2 debug=yes)
+		@(cd gbmplugins && wmake -c -ms -h -f makefile.wat_os2 debug=yes)
+		@(cd gbmtest    && wmake -c -ms -h -f makefile.wat_os2 debug=yes)
+		@(cd gbmcreate  && wmake -c -ms -h -f makefile.wat_os2 debug=yes)
+		@(cd j2kcodec   && wmake -c -ms -h -f makefile.wat_os2 debug=yes)
+!else
+		@(cd gbm        && wmake -c -ms -h -f makefile.wat_os2)
+		@(cd gbmv_pm    && wmake -c -ms -h -f makefile.wat)
+		@(cd gbmrexx    && wmake -c -ms -h -f makefile.wat_os2)
+		@(cd gbmplugins && wmake -c -ms -h -f makefile.wat_os2)
+		@(cd gbmtest    && wmake -c -ms -h -f makefile.wat_os2)
+		@(cd gbmcreate  && wmake -c -ms -h -f makefile.wat_os2)
+		@(cd j2kcodec   && wmake -c -ms -h -f makefile.wat_os2)
+!endif
+
+clean:
+		@(cd gbm        && wmake -c -ms -h -f makefile.wat_os2 clean)
+		@(cd gbmv_pm    && wmake -c -ms -h -f makefile.wat     clean)
+		@(cd gbmrexx    && wmake -c -ms -h -f makefile.wat_os2 clean)
+		@(cd gbmplugins && wmake -c -ms -h -f makefile.wat_os2 clean)
+		@(cd gbmtest    && wmake -c -ms -h -f makefile.wat_os2 clean)
+		@(cd gbmcreate  && wmake -c -ms -h -f makefile.wat_os2 clean)
+		@(cd j2kcodec   && wmake -c -ms -h -f makefile.wat_os2 clean)
+
+clobber:
+		@(cd gbm        && wmake -c -ms -h -f makefile.wat_os2 clobber)
+		@(cd gbmv_pm    && wmake -c -ms -h -f makefile.wat     clobber)
+		@(cd gbmrexx    && wmake -c -ms -h -f makefile.wat_os2 clobber)
+		@(cd gbmplugins && wmake -c -ms -h -f makefile.wat_os2 clobber)
+		@(cd gbmtest    && wmake -c -ms -h -f makefile.wat_os2 clobber)
+		@(cd gbmcreate  && wmake -c -ms -h -f makefile.wat_os2 clobber)
+		@(cd j2kcodec   && wmake -c -ms -h -f makefile.wat_os2 clobber)
+
+exepack:
+		@(cd gbm        && wmake -c -ms -h -f makefile.wat_os2 exepack)
+		@(cd gbmv_pm    && wmake -c -ms -h -f makefile.wat     exepack)
+		@(cd gbmrexx    && wmake -c -ms -h -f makefile.wat_os2 exepack)
+		@(cd gbmplugins && wmake -c -ms -h -f makefile.wat_os2 exepack)
+		@(cd j2kcodec   && wmake -c -ms -h -f makefile.wat_os2 exepack)
+
+install:
+		@(cd gbm        && wmake -c -ms -h -f makefile.wat_os2 install)
+		@(cd gbmv_pm    && wmake -c -ms -h -f makefile.wat     install)
+		@(cd j2kcodec   && wmake -c -ms -h -f makefile.wat_os2 install)
+
+package:
+		@(cd gbm        && wmake -c -ms -h -f makefile.wat_os2 package)
+		@(cd gbmv_pm    && wmake -c -ms -h -f makefile.wat     package)
+		@(cd j2kcodec   && wmake -c -ms -h -f makefile.wat_os2 package)
+

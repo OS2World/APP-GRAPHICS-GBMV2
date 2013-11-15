@@ -1,0 +1,68 @@
+# Generalised Bitmap Module
+# This makefile is for GCC on Linux 32/64 bit.
+
+# Location of gbm libs and public header files
+GBM     = ../gbm
+
+# For 64bit compile call make with m64=on
+ifdef m64
+  CFLAGS_MACHINE   = -m64
+  MAKEOPTS_MACHINE = "m64=yes"
+else
+  CFLAGS_MACHINE = -m32
+  MAKEOPTS_MACHINE =
+endif
+
+CWARNS         = -Wall -Werror
+CFLAGS         = -c $(CWARNS) $(CFLAGS_MACHINE) -I$(GBM) -O3 -DLINUX -DENABLE_J2K -DENABLE_JBIG -DNDEBUG
+CFLAGS_DBG     = -c $(CWARNS) $(CFLAGS_MACHINE) -I$(GBM) -fbounds-check -g -DLINUX -DENABLE_J2K -DENABLE_JBIG -DDEBUG
+
+LFLAGS         = $(CFLAGS_MACHINE)
+LFLAGS_DBG     = $(CFLAGS_MACHINE)
+LFLAGS_EXE     = $(LFLAGS)
+LFLAGS_EXE_DBG = $(LFLAGS_DBG)
+
+# For debugging call nmake or wmake with debug=on
+ifdef debug
+  CFLAGS       = $(CFLAGS_DBG)
+  LFLAGS_EXE   = $(LFLAGS_EXE_DBG)
+  MAKEOPTS_DBG = debug=yes
+endif
+
+MAKEOPTS = $(MAKEOPTS_MACHINE) $(MAKEOPTS_DBG)
+
+
+.SUFFIXES:	.c .o
+
+.c.o:
+		gcc $(CFLAGS) $*.c
+
+#
+
+all:    gbmtest
+
+
+# ------------
+# Bitmap tools
+# ------------
+
+
+gbmtest:	gbmtest.o $(GBM)/libgbm.so $(GBM)/gbmmem.a
+		gcc $(LFLAGS_EXE) -o $@ gbmtest.o $(GBM)/gbmmem.a -L$(GBM) -lgbm
+
+gbmtest.o:	gbmtest.c $(GBM)/gbm.h
+
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+	@rm -f *.o 2>/dev/null
+
+clobber:
+	@rm -f *.o 2>/dev/null
+	@rm -f gbmtest 2>/dev/null
+
+

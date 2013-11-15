@@ -1,0 +1,57 @@
+IDIR = bin
+
+
+all:
+!ifdef debug
+		(cd gbmdlg  && nmake -c -f makefile.gcc debug=yes)
+		(cd gbmv    && nmake -c -f makefile.gcc debug=yes)
+		(cd gbmv2   && nmake -c -f makefile.gcc debug=yes)
+		(cd gbmvfsa && nmake -c -f makefile.gcc debug=yes)
+		(cd gbmlogo && nmake -c -f makefile.gcc debug=yes)
+!else
+		(cd gbmdlg  && nmake -c -f makefile.gcc)
+		(cd gbmv    && nmake -c -f makefile.gcc)
+		(cd gbmv2   && nmake -c -f makefile.gcc)
+		(cd gbmvfsa && nmake -c -f makefile.gcc)
+		(cd gbmlogo && nmake -c -f makefile.gcc)
+!endif
+
+clean:
+		(cd gbmv    && nmake -c -f makefile.gcc clean)
+		(cd gbmdlg  && nmake -c -f makefile.gcc clean)
+		(cd gbmv2   && nmake -c -f makefile.gcc clean)
+		(cd gbmvfsa && nmake -c -f makefile.gcc clean)
+		(cd gbmlogo && nmake -c -f makefile.gcc clean)
+
+clobber:
+		(cd gbmv    && nmake -c -f makefile.gcc clobber)
+		(cd gbmdlg  && nmake -c -f makefile.gcc clobber)
+		(cd gbmv2   && nmake -c -f makefile.gcc clobber)
+		(cd gbmvfsa && nmake -c -f makefile.gcc clobber)
+		(cd gbmlogo && nmake -c -f makefile.gcc clobber)
+		-del /N $(IDIR)\*   2>nul
+
+install:
+		(cd gbmv    && nmake -c -f makefile.gcc install)
+		(cd gbmdlg  && nmake -c -f makefile.gcc install)
+		(cd gbmv2   && nmake -c -f makefile.gcc install)
+		(cd gbmvfsa && nmake -c -f makefile.gcc install)
+		(cd gbmlogo && nmake -c -f makefile.gcc install)
+		copy gbmwpobj.cmd            $(IDIR)
+		copy doc\readme_gbmos2pm.txt $(IDIR)
+
+exepack:
+		(cd gbmv    && nmake -c -f makefile.gcc exepack)
+		(cd gbmdlg  && nmake -c -f makefile.gcc exepack)
+		(cd gbmv2   && nmake -c -f makefile.gcc exepack)
+		(cd gbmvfsa && nmake -c -f makefile.gcc exepack)
+		(cd gbmlogo && nmake -c -f makefile.gcc exepack)
+
+package:
+		(cd gbmv    && nmake -c -f makefile.gcc package)
+		(cd gbmdlg  && nmake -c -f makefile.gcc package)
+		(cd gbmv2   && nmake -c -f makefile.gcc package)
+		(cd gbmvfsa && nmake -c -f makefile.gcc package)
+		(cd gbmlogo && nmake -c -f makefile.gcc package)
+
+

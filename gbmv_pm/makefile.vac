@@ -1,0 +1,57 @@
+IDIR = bin
+
+
+all:
+!ifdef debug
+		(cd gbmdlg  && nmake -c -f makefile.vac debug=yes)
+		(cd gbmv    && nmake -c -f makefile.vac debug=yes)
+		(cd gbmv2   && nmake -c -f makefile.vac debug=yes)
+		(cd gbmvfsa && nmake -c -f makefile.vac debug=yes)
+		(cd gbmlogo && nmake -c -f makefile.vac debug=yes)
+!else
+		(cd gbmdlg  && nmake -c -f makefile.vac)
+		(cd gbmv    && nmake -c -f makefile.vac)
+		(cd gbmv2   && nmake -c -f makefile.vac)
+		(cd gbmvfsa && nmake -c -f makefile.vac)
+		(cd gbmlogo && nmake -c -f makefile.vac)
+!endif
+
+clean:
+		(cd gbmv    && nmake -c -f makefile.vac clean)
+		(cd gbmdlg  && nmake -c -f makefile.vac clean)
+		(cd gbmv2   && nmake -c -f makefile.vac clean)
+		(cd gbmvfsa && nmake -c -f makefile.vac clean)
+		(cd gbmlogo && nmake -c -f makefile.vac clean)
+
+clobber:
+		(cd gbmv    && nmake -c -f makefile.vac clobber)
+		(cd gbmdlg  && nmake -c -f makefile.vac clobber)
+		(cd gbmv2   && nmake -c -f makefile.vac clobber)
+		(cd gbmvfsa && nmake -c -f makefile.vac clobber)
+		(cd gbmlogo && nmake -c -f makefile.vac clobber)
+		-del /N $(IDIR)\*   2>nul
+
+install:
+		(cd gbmv    && nmake -c -f makefile.vac install)
+		(cd gbmdlg  && nmake -c -f makefile.vac install)
+		(cd gbmv2   && nmake -c -f makefile.vac install)
+		(cd gbmvfsa && nmake -c -f makefile.vac install)
+		(cd gbmlogo && nmake -c -f makefile.vac install)
+		copy gbmwpobj.cmd            $(IDIR)
+		copy doc\readme_gbmos2pm.txt $(IDIR)
+
+exepack:
+		(cd gbmv    && nmake -c -f makefile.vac exepack)
+		(cd gbmdlg  && nmake -c -f makefile.vac exepack)
+		(cd gbmv2   && nmake -c -f makefile.vac exepack)
+		(cd gbmvfsa && nmake -c -f makefile.vac exepack)
+		(cd gbmlogo && nmake -c -f makefile.vac exepack)
+
+package:
+		(cd gbmv    && nmake -c -f makefile.vac package)
+		(cd gbmdlg  && nmake -c -f makefile.vac package)
+		(cd gbmv2   && nmake -c -f makefile.vac package)
+		(cd gbmvfsa && nmake -c -f makefile.vac package)
+		(cd gbmlogo && nmake -c -f makefile.vac package)
+
+

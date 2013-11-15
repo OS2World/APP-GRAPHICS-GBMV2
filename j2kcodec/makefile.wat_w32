@@ -1,0 +1,107 @@
+# This makefile is for Open Watcom C++ on Windows NT/2000/XP.
+# (with JPWL support)
+
+# Location of gbm libs and public header files
+GBM   = ..\gbm
+IJG   = $(GBM)\libjpeg
+OJPEG = $(GBM)\libojpeg
+TIFF  = $(GBM)\libtiff
+ZLIB  = $(GBM)\zlib
+JBIG  = $(GBM)\libjbig
+LPNG  = $(GBM)\libpng
+
+# Installation directory
+IDIR = bin
+
+DOCDIR = doc
+
+# ------------------
+# Configure compiler
+# ------------------
+
+#
+# Using Open Watcom C++:
+#
+CC      = wcc386
+CL      = wlink
+
+# Builds gbm objects which are compiled multithreaded
+# Therefore all users should also be multithreaded
+CWARNS     = -wx -wcd=202 -we
+CFLAGS     = $(CWARNS) -i$(GBM) -i$(OJPEG) -i$(TIFF) -i$(LPNG) -i$(ZLIB) -bt=nt -zq -onatxh -sg -ei -6r -fp5 -bm -mf /DOPJ_STATIC /DUSE_JPWL /DWIN32
+CFLAGS_DBG = $(CWARNS) -i$(GBM) -i$(OJPEG) -i$(TIFF) -i$(LPNG) -i$(ZLIB) -bt=nt -zq -sg -ei -6r -fp5 -bm -mf -d2 /DOPJ_STATIC /DUSE_JPWL /DWIN32 /DDEBUG
+
+LFLAGS     = SYSTEM nt op q op el op stack=0x20000
+LFLAGS_DBG = SYSTEM nt op q d all op stack=0x20000
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS     = $(CFLAGS_DBG)
+LFLAGS     = $(LFLAGS_DBG)
+!endif
+
+#
+
+.SUFFIXES:	.c .obj
+
+.c.obj:
+		$(CC) $(CFLAGS) $*.c
+
+#
+
+all:    image_to_j2k.exe \
+        j2k_to_image.exe
+
+
+# ------------
+# Bitmap tools
+# ------------
+
+image_to_j2k.exe:	image_to_j2k.obj index.obj convert.obj opj_getopt.obj color.obj
+		$(CL) $(LFLAGS) name $@ file image_to_j2k.obj,index.obj,convert.obj,opj_getopt.obj,color.obj library $(OJPEG)\ojpeg.lib,$(TIFF)\tiff.lib,$(IJG)\jpeg.lib,$(ZLIB)\z.lib,$(JBIG)\jbig.lib,$(LPNG)\png.lib
+
+j2k_to_image.exe:	j2k_to_image.obj index.obj convert.obj opj_getopt.obj color.obj
+		$(CL) $(LFLAGS) name $@ file j2k_to_image.obj,index.obj,convert.obj,opj_getopt.obj,color.obj library $(OJPEG)\ojpeg.lib,$(TIFF)\tiff.lib,$(IJG)\jpeg.lib,$(ZLIB)\z.lib,$(JBIG)\jbig.lib,$(LPNG)\png.lib
+
+image_to_j2k.obj:	image_to_j2k.c format_defs.h
+
+j2k_to_image.obj:	j2k_to_image.c format_defs.h
+
+index.obj:	index.c index.h
+
+convert.obj:	convert.c convert.h
+
+opj_getopt.obj: opj_getopt.c opj_getopt.h
+
+color.obj: color.c color.h
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+	 -del /F /Q *.obj 2>nul
+	 -del /F /Q *.err 2>nul
+
+clobber:
+	 -del /F /Q *.obj 2>nul
+	 -del /F /Q *.exe 2>nul
+	 -del /F /Q *.err 2>nul
+	 -del /F /Q $(IDIR)\* 2>nul
+
+#
+
+install:
+         copy *.exe $(IDIR)
+         copy $(DOCDIR)\readme_j2k.txt $(IDIR)
+
+#
+
+exepack:
+
+#
+
+package:
+        -del /F $(IDIR)\j2kcodec.zip 2>nul
+        zip -9 $(IDIR)\j2kcodec.zip *.exe $(DOCDIR)\readme_j2k.txt
+

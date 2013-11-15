@@ -1,0 +1,24 @@
+#
+
+all:
+ifdef debug
+		@(make -f makefile.gcc_linux32 m64=yes debug=yes)
+else
+		@(make -f makefile.gcc_linux32 m64=yes)
+endif
+
+clean:
+		@(make -f makefile.gcc_linux32 clean)
+
+clobber:
+		@(make -f makefile.gcc_linux32 clobber)
+
+exepack:
+		 @echo "Packing of executables is not supported"
+
+install:
+		@(make -f makefile.gcc_linux32 install)
+
+package:
+		@(make -f makefile.gcc_linux32 package)
+

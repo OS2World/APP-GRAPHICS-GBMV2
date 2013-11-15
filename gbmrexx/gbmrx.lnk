@@ -1,0 +1,30 @@
+# -----------------
+# GBMRX.DLL exports
+# -----------------
+
+OPTION DESCRIPTION '@#Heiko Nitzsche:1.16#@ GBM for REXX (GBMRX,WAT)'
+
+EXPORT GBM_LOADFUNCS          = GBM_LoadFuncs
+EXPORT GBM_DROPFUNCS          = GBM_DropFuncs
+
+EXPORT GBM_VERSION            = GBM_Version
+EXPORT GBM_VERSIONREXX        = GBM_VersionRexx
+EXPORT GBM_TYPES              = GBM_Types
+EXPORT GBM_ISBPPSUPPORTED     = GBM_IsBppSupported
+
+EXPORT GBM_FILEPAGES          = GBM_FilePages
+EXPORT GBM_FILETYPE           = GBM_FileType
+EXPORT GBM_FILEHEADER         = GBM_FileHeader
+EXPORT GBM_FILEPALETTE        = GBM_FilePalette
+EXPORT GBM_FILEDATA           = GBM_FileData
+EXPORT GBM_FILEWRITE          = GBM_FileWrite
+
+EXPORT GBM_SCALEALGORITHMS    = GBM_ScaleAlgorithms
+EXPORT GBM_SCALEISSUPPORTED   = GBM_ScaleIsSupported
+EXPORT GBM_SCALE              = GBM_Scale
+
+EXPORT GBM_REFLECT            = GBM_Reflect
+EXPORT GBM_ROTATE             = GBM_Rotate
+
+EXPORT GBM_PALETTEDATATO24BPP = GBM_PaletteDataTo24bpp
+

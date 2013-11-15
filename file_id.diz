@@ -1,0 +1,57 @@
+--------------------------------------------------------------------------------------
+OS/2, Windows 2000/XP/Vista/7 (32/64bit) and Linux (32/64bit):
+* GBM.DLL 1.76
+* GBM command line tools
+* OpenJPEG J2K command line tools
+* Sources
+
+OS/2:
+* GBMV/GBMV2 1.60
+* GBMDLG 1.60, GBMRX 1.16, GBMDLGRX 1.04
+* GBM plugin for Netscape/Mozilla/Firefox/SeaMonkey 1.47
+* GBM plugin for Lucide 1.43
+
+Windows 2000/XP/Vista/7 (32bit):
+* GBM plugin for Netscape/Mozilla/Firefox/SeaMonkey 1.47
+
+--------------------------------------------------------------------------------------
+(Public Domain)
+
+GBMV2 is a fast and simple bitmap viewer and editor for the OS/2 Presentation Manager.
+
+Enhanced release of the GBMV2-Viewer from the GBMOS2PM package:
+* An English and a German version of GBMV2 is included.
+* An English and a German version of the GBM file dialog is included.
+* New features have been added
+
+GBM File Dialog (GBMDLG.DLL) has been extended by:
+* Bitmap preview within the file dialog
+* Redesign to fit eComStation file dialog style
+
+Both parts got new resources that better fit to the Warp 4 and
+eComStation look & feel. The source package comes with resources
+for fonts 8.Helv and 9.WarpSans for both, German and English.
+Several extensions for keyboard shortcuts have been added.
+
+---
+
+GBM (Generalised Bitmap Module) is a library for handling many different
+bitmap file formats. In this version, extended BMP, PBM, PGM, PPM, PNM,
+PNG, TIF, JPG, JPEG2000, XPM, JBIG and RAW support is additionally included.
+
+It also includes JPEG support from latest IJG library 8d, Libpng 1.5.13,
+Zlib 1.2.7, Libtiff 3.9.5, OpenJPEG 1.5.1, LibRaw 0.14.7 and JBIG 2.0.
+
+---
+
+GBMRX   is a REXX adapter DLL for using GBM.DLL in REXX programs.
+GBMDLRX is a REXX adapter DLL for using GBM File Dialog (GBMDLG.DLL) in REXX programs.
+
+---
+
+For further details please have a look at the included documentation or
+at the website http://heikon.home.tlink.de.
+
+The original GBMOS2 and GBMOS2PM packages can be found on Hobbes or on
+the homepage of the original author Andy Key (http://www.nyangau.fsnet.co.uk).
+

@@ -1,0 +1,99 @@
+# This makefile is for GCC 3.x on OS/2 32bit.
+# (with JPWL support)
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\make.opt
+
+# Location of gbm libs and public header files
+GBM   = ..\gbm
+IJG   = $(GBM)\libjpeg
+OJPEG = $(GBM)\libojpeg
+TIFF  = $(GBM)\libtiff
+ZLIB  = $(GBM)\zlib
+JBIG  = $(GBM)\libjbig
+LPNG  = $(GBM)\libpng
+
+# Installation directory
+IDIR = bin
+
+DOCDIR = doc
+
+# Builds gbm objects which are compiled multithreaded
+# Therefore all users should also be multithreaded
+
+CWARNS     = -Wall -Werror
+CFLAGS     = -c $(CWARNS) -I$(GBM) -I$(OJPEG) -I$(TIFF) -I$(LPNG) -I$(ZLIB) -mcpu=i686 -m32 -mfpmath=sse -msse -O3 -Zomf -DOPJ_STATIC -DUSE_JPWL -DNDEBUG
+CFLAGS_DBG = -c $(CWARNS) -I$(GBM) -I$(OJPEG) -I$(TIFF) -I$(LPNG) -I$(ZLIB) -mcpu=i686 -m32 -mfpmath=sse -msse -Zomf -g -fbounds-check -DOPJ_STATIC -DUSE_JPWL -DDEBUG
+
+LFLAGS         = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /EXEPACK:2 -Zlinker /OPTFUNC -Zlinker /PACKCODE -Zlinker /PACKDATA
+LFLAGS_DBG     = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /DEBUG -Zlinker /DBGPACK
+LFLAGS_EXE     = $(LFLAGS) -Zlinker /BASE:0x10000 -Zlinker /STACK:0x30000 -Zlinker /PMTYPE:VIO
+LFLAGS_EXE_DBG = $(LFLAGS_DBG) -Zlinker /BASE:0x10000 -Zlinker /STACK:0x30000 -Zlinker /PMTYPE:VIO
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS     = $(CFLAGS_DBG)
+LFLAGS_EXE = $(LFLAGS_EXE_DBG)
+!endif
+
+#
+
+.SUFFIXES:	.c .o
+
+.c.o:
+		gcc $(CFLAGS) $*.c
+
+#
+
+all:    image_to_j2k.exe \
+        j2k_to_image.exe
+
+# ------------
+# Bitmap tools
+# ------------
+
+image_to_j2k.exe:	image_to_j2k.o index.o convert.o opj_getopt.o color.o $(GBM)\gbmmem.lib
+      gcc $(LFLAGS_EXE) -o $@ image_to_j2k.o index.o convert.o opj_getopt.o color.o -L. -l$(OJPEG)\ojpeg.lib -l$(TIFF)\tiff.lib -l$(IJG)\jpeg.lib -l$(JBIG)\jbig.lib -l$(ZLIB)\z.lib -l$(LPNG)\png.lib -l$(GBM)\gbmmem.lib
+
+j2k_to_image.exe:	j2k_to_image.o index.o convert.o opj_getopt.o color.o $(GBM)\gbmmem.lib
+      gcc $(LFLAGS_EXE) -o $@ j2k_to_image.o index.o convert.o opj_getopt.o color.o -L. -l$(OJPEG)\ojpeg.lib -l$(TIFF)\tiff.lib -l$(IJG)\jpeg.lib -l$(JBIG)\jbig.lib -l$(ZLIB)\z.lib -l$(LPNG)\png.lib -l$(GBM)\gbmmem.lib
+
+image_to_j2k.o:	image_to_j2k.c format_defs.h
+
+j2k_to_image.o:	j2k_to_image.c format_defs.h
+
+index.o:	index.c index.h
+
+convert.o:	convert.c convert.h
+
+opj_getopt.o: opj_getopt.c opj_getopt.h
+
+color.o: color.c color.h
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+	 -del /F /N *.o *.err 2>nul
+
+clobber:
+	 -del /F /N *.o *.exe *.err $(IDIR)\* 2>nul
+
+#
+
+install:
+         copy *.exe $(IDIR)
+         copy $(DOCDIR)\readme_j2k.txt $(IDIR)
+
+#
+
+exepack:
+         $(EXE_PACKER) *.exe
+
+#
+
+package:
+        -del /F /N $(IDIR)\j2kcodec.zip 2>nul
+        zip -9 $(IDIR)\j2kcodec.zip *.exe $(DOCDIR)\readme_j2k.txt
+

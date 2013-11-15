@@ -1,0 +1,99 @@
+#
+# Generalised Bitmap Module REXX adapter
+#
+# OS/2
+# IBM VisualAge C++, with FP8
+#
+# Builds REXX adapter library for GBM.DLL and GBMDLG.DLL.
+# As GBM.DLL is built multithreaded, all users should also be multithreaded.
+#
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\make.opt
+
+# Location of gbm libs and public header files
+GBM    = ..\gbm
+GBMDLG = ..\gbmv_pm\gbmdlg
+
+# ------------------
+# Configure compiler
+# ------------------
+
+#
+# IBM Visual Age C++:
+#
+CWARNS         = /W3 /Wcnd+cns+dcl+ord+par+pro+rea+ret+use+
+CFLAGS         = /C+ $(CWARNS) /G5 /Gd-m+ /Q+ /O+ /Os- /Gf+ /I$(GBM) /I$(GBMDLG) /DNDEBUG
+CFLAGS_DBG     = /C+ $(CWARNS) /G5 /Gd-m+ /Q+ /Gf+ /I$(GBM) /I$(GBMDLG) /Ti+ /Tm+ /DDEBUG
+CFLAGS_DLL     = $(CFLAGS) /Ge-
+CFLAGS_DLL_DBG = $(CFLAGS_DBG) /Ge-
+
+LFLAGS         = /NOI /NOLOGO /EXEPACK:2 /OPTFUNC /PACKCODE /PACKDATA
+LFLAGS_DBG     = /NOI /NOLOGO /DEBUG /DBGPACK
+LFLAGS_DLL     = $(LFLAGS) /NOE /DLL
+LFLAGS_DLL_DBG = $(LFLAGS_DBG) /NOE /DLL
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS_DLL     = $(CFLAGS_DLL_DBG)
+LFLAGS_DLL     = $(LFLAGS_DLL_DBG)
+!endif
+
+.SUFFIXES:	.c .obj
+
+.c.obj:
+		icc $(CFLAGS_DLL) $*.c
+
+#
+
+all:           gbmdlgrx.res gbmdlgrx.dll gbmrx.dll
+
+#
+
+gbmdlgrx.dll:  rexxhlp.obj gbmdlgrx.obj gbmdlgrx_vac.def
+               ilink $(LFLAGS_DLL) /OUT:$@ @<<
+                     $** $(GBM)\gbm.lib $(GBMDLG)\gbmdlg.lib rexx.lib
+<<
+               rc -n -x2 gbmdlgrx.res gbmdlgrx.dll
+
+gbmrx.dll:     rexxhlp.obj gbmrx.obj gbmrx_vac.def
+               ilink $(LFLAGS_DLL) /OUT:$@ @<<
+                     $** $(GBM)\gbm.lib $(GBM)\gbmmem.lib $(GBM)\gbmmthrd.lib $(GBM)\gbmscale.lib $(GBM)\gbmmir.lib rexx.lib
+<<
+
+gbmdlgrx.obj:  gbmdlgrx.c gbmdlgrx_vac.def $(GBM)\gbm.h $(GBMDLG)\gbmdlg.h
+               icc $(CFLAGS_DLL) $*.c
+
+gbmrx.obj:     gbmrx.c gbmrx_vac.def $(GBM)\gbm.h $(GBM)\gbmmem.h $(GBM)\gbmscale.h $(GBM)\gbmmir.h
+               icc $(CFLAGS_DLL) $*.c
+
+rexxhlp.obj:   rexxhlp.c rexxhlp.h
+               icc $(CFLAGS_DLL) $*.c
+
+gbmdlgrx.res:  gbmdlgrx.rc gbmdlgrx.h
+               rc -n -r -x2 gbmdlgrx.rc
+
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+	 -del /F /N *.obj *.res 2>nul
+
+clobber:
+	 -del /F /N *.obj *.res *.dll 2>nul
+
+#
+
+install:
+
+#
+
+exepack:
+         $(DLL_PACKER) *.dll
+
+#
+
+package:
