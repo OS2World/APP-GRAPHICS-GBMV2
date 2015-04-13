@@ -1,0 +1,585 @@
+#ifndef ludoc_idl
+#define ludoc_idl
+
+/*
+ *
+ *  LuDocument - base interface for Lucide documents
+ *
+ */
+
+#include <somobj.idl>
+#include <lupixbuf.idl>
+#include <luinode.idl>
+#include <lutypes.h>
+
+/**
+ * Note: all page numbers is zero-based.
+ */
+
+interface LuDocument : SOMObject
+{
+
+    typedef sequence <LuRectangle> LuRectSequence;
+    typedef sequence <LuLinkMapping> LuLinkMapSequence;
+    typedef sequence <LuFontInfo> LuFontInfoSequence;
+    typedef somMToken asynchCallbackFn;
+
+    /**
+     * loadFile
+     * filename: filename of the file to load
+     * password: password to unlock the file with, or NULL
+     * errorCode: Return location for an error code, or NULL
+     * error: Return location for an error, or NULL
+     *
+     * Loads the specified file.
+     *
+     * Return value: TRUE if file loaded, FALSE otherwise.
+     * Default return value: FALSE
+     *
+     * Note: error string allocated using SOMMalloc(),
+     *       use SOMFree() to free.
+     **/
+    boolean loadFile( in string filename, in string password,
+                      out long errorCode, inout string error );
+
+    /**
+     * getBpp
+     *
+     * Return value: Number of bytes per pixel used for draw.
+     *               Allowed values is 3 (24 bit) or 4 (32 bit).
+     *               4 bytes per pixel is same as 3, but padded
+     *               with dummy byte.
+     * Default return value: 0
+     **/
+    short getBpp();
+
+    /**
+     * isScalable
+     *
+     * (See renderPageToPixbuf(), scale)
+     *
+     * Return value: TRUE if document scalable, FALSE otherwise.
+     * Default return value: FALSE
+     **/
+    boolean isScalable();
+
+
+    /**
+     * isFixedImage
+     *
+     * Determines if upscaling doesn't improve image quality.
+     * Must return TRUE for fixed-size images/bitmaps.
+     * Must return FALSE for documents which renders fonts/vector images,
+     *   so upscaling improves quality of rendered image.
+     *
+     * Used to determine better printing parameters.
+     * Default return value: TRUE
+     **/
+    boolean isFixedImage();
+
+
+    /**
+     * isRotable
+     *
+     * (See renderPageToPixbuf(), rotation)
+     *
+     * Return value: TRUE if document can be rotated, FALSE otherwise.
+     * Default return value: FALSE
+     **/
+    boolean isRotable();
+
+
+    /**
+     * getPageCount
+     *
+     * Returns the number of pages in a loaded document.
+     *
+     * Return value: Number of pages
+     * Default return value: 0
+     **/
+    long getPageCount();
+
+
+    /**
+     * getPageSize
+     * pagenum: Page number
+     * width: return location for the width of page
+     *        (NULL if width not needed)
+     * height: return location for the height of page
+     *         (NULL if height not needed)
+     *
+     * Gets the size of specified page.
+     **/
+    void getPageSize( in long pagenum, inout double width, inout double height );
+
+
+    /**
+     * renderPageToPixbuf
+     * pagenum: the page to render from
+     * src_x: x coordinate of upper left corner
+     * src_y: y coordinate of upper left corner
+     * src_width: width of rectangle to render
+     * src_height: height of rectangle to render
+     * scale: scale specified as pixels per point
+     *        (if isScalable() is FALSE, scale ignored and assumed 1.0)
+     * rotation: rotate the document by the specified degree
+     *           allowed values is 0, 90, 180, 270
+     *        (if isRotable() is FALSE, rotation ignored and assumed 0)
+     * pixbuf: pixbuf to render into
+     * errorCode: Return location for an error/warning code, or NULL
+     * error: Return location for an error/warning, or NULL
+     *
+     * First scale the document to match the specified pixels per point,
+     * then render the rectangle given by the upper left corner at
+     * (src_x, src_y) and src_width and src_height.
+     **/
+    boolean renderPageToPixbuf( in long pagenum, in long src_x, in long src_y,
+                                in long src_width, in long src_height,
+                                in double scale, in long rotation, 
+                                in LuPixbuf pixbuf,  
+                                out long errorCode, inout string error );
+
+
+    /**
+     * isAsynchRenderingSupported
+     *
+     * See renderPageToPixbufAsynch()
+     *
+     * Return value: TRUE if document can be rendered asynchronously.
+     * Default return value: FALSE
+     **/
+    boolean isAsynchRenderingSupported();
+
+
+    /**
+     * renderPageToPixbufAsynch
+     *
+     * Same as renderPageToPixbuf(), but received pointers to
+     * draw function, abort function and functions data.
+     * Callback functions must be defined as
+     * long _System *asynchCallbackFn( void *data );
+     * errorCode: Return location for an error/warning code, or NULL
+     * error: Return location for an error/warning, or NULL
+     *
+     * Note: you must implement renderPageToPixbuf() also, as
+     *       it used during printing.
+     **/
+    void renderPageToPixbufAsynch( in long pagenum, in long src_x,
+                   in long src_y, in long src_width, in long src_height,
+                   in double scale, in long rotation, in LuPixbuf pixbuf,
+                   in asynchCallbackFn fnd, in asynchCallbackFn fna,
+                   in somToken fndata, 
+                   out long errorCode, inout string error );
+
+
+    /**
+     * isRenderIntoPS
+     *
+     * See renderPageToPS()
+     *
+     * Return value: TRUE if document will render directly into
+     *               presentation space using renderPageToPS().
+     *
+     * Note: You may not implement renderPageToPixbuf() if
+     *       isRenderIntoPS() is TRUE.
+     *
+     * Default return value: FALSE
+     **/
+    boolean isRenderIntoPS();
+
+
+    /**
+     * renderPageToPS
+     * pagenum: the page to render from
+     * src_x: x coordinate of upper left corner
+     * src_y: y coordinate of upper left corner
+     * src_width: width of rectangle to render
+     * src_height: height of rectangle to render
+     * scale: scale specified as pixels per point
+     *        (if isScalable() is FALSE, scale ignored and assumed 1.0)
+     * rotation: rotate the document by the specified degree
+     *           allowed values is 0, 90, 180, 270
+     *        (if isRotable() is FALSE, rotation ignored and assumed 0)
+     * hps: handle of presentation space to render into
+     * rect: pointer to RECTL structure, defines render area on HPS
+     * errorCode: Return location for an error/warning code, or NULL
+     * error: Return location for an error/warning, or NULL
+     *
+     * First scale the document to match the specified pixels per point,
+     * then render the rectangle given by the upper left corner at
+     * (src_x, src_y) and src_width and src_height.
+     **/
+    boolean renderPageToPS( in long pagenum, in long src_x, in long src_y,
+                   in long src_width, in long src_height,
+                   in double scale, in long rotation,
+                   in unsigned long hps, in somMToken rect,  
+                   out long errorCode, inout string error );
+
+
+    /**
+     * isHaveText
+     *
+     * See getSelectionRectangles(), searchText()
+     *
+     * Return value: TRUE if document contains text, which
+     *               can be selected by user, searched, etc,
+     *               FALSE otherwise.
+     * Default return value: FALSE
+     **/
+    boolean isHaveText();
+
+
+    /**
+     * getSelectionRectangles
+     * pagenum: page number
+     * selection: start and end point of selection as a rectangle
+     *
+     * Returns a sequence of rectangles containing the area that would
+     * be rendered as "selected"
+     * The returned sequence must be freed with freeRectangles()
+     *
+     * Return value: a newly allocated LuRectSequence, or NULL if
+     *               nothing selected or document doesn't have
+     *               selectable text
+     * Default return value: NULL
+     *
+     * Note: SOMMalloc() must be used for all memory allocations.
+     **/
+    LuRectSequence *getSelectionRectangles( in long pagenum,
+                                            in LuRectangle selection );
+
+
+    /**
+     * freeRectangles
+     *
+     * Deallocates a sequence of rectangles
+     * allocated by getSelectionRectangles() or searchText()
+     **/
+    void freeRectangles( in LuRectSequence rectangles );
+
+
+    /**
+     * getText:
+     * pagenum: page number
+     * selection: the rectangle including the text
+     *
+     * Retrieves the contents of the specified rectangle as text
+     *
+     * Return value: a pointer to the contents of the rectangle
+     *               as a string or NULL.
+     *               Pointer valid until next getText() call,
+     *               or until LuDocument object destroyed.
+     *
+     * Note: Charset of returned string must be UTF-8
+     * Default return value: NULL
+     **/
+    string getText( in long pagenum, in LuRectangle selection );
+
+
+    /**
+     * isHaveLinks
+     *
+     * See getLinkMapping()
+     *
+     * Return value: TRUE if document may contain navigable links,
+     *               FALSE otherwise.
+     * Default return value: FALSE
+     **/
+    boolean isHaveLinks();
+
+
+    /**
+     * getLinkMapping
+     * pagenum: page number
+     *
+     * Returns a sequence of LuLinkMapping items.
+     * This sequence must be freed
+     * with freeLinkMapping() when done.
+     *
+     * Return value: A pointer to sequence of LuLinkMapping.
+     *
+     * Note: SOMMalloc() must be used for all memory allocations.
+     * Default return value: pointer to empty LuLinkMapSequence
+     **/
+    LuLinkMapSequence *getLinkMapping( in long pagenum );
+
+
+    /**
+     * freeLinkMapping
+     * mapping: A sequence of LuLinkMapping
+     *
+     * Frees a sequence of LuLinkMapping allocated by
+     * getLinkMapping().
+     **/
+    void freeLinkMapping( in LuLinkMapSequence mapping );
+
+
+    /**
+     * isSaveable
+     *
+     * Return value: TRUE if document can be saved in same format
+     *               as original, FALSE otherwise.
+     * Default return value: FALSE
+     **/
+    boolean isSaveable();
+
+
+    /**
+     * saveAs
+     * filename: name of file to save
+     *
+     * Saves document.
+     *
+     * Return value: TRUE, if the document was successfully saved,
+     *               FALSE otherwise.
+     * Default return value: FALSE
+     **/
+    boolean saveAs( in string filename );
+
+
+    /**
+     * isPostScriptExportable
+     *
+     * Return value: TRUE if document can be exported to
+     *               PostScript, FALSE otherwise.
+     * Default return value: FALSE
+     **/
+    boolean isPostScriptExportable();
+
+
+    /**
+     * exportToPostScript
+     * filename: the path of the output filename
+     * first_page: the first page to print
+     * last_page: the last page to print
+     * width: the paper width in 1/72 inch
+     * height: the paper height in 1/72 inch
+     *        (These values will end up in the DocumentMedia, the
+     *        BoundingBox DSC comments and other places in the
+     *        generated PostScript)
+     * brkExport: pointer to boolean variable which must be checked
+     *            during generating postscript, if it's TRUE - interrupt
+     *            generation process.
+     *
+     * Create a new postscript file and render document to.
+     * Return value: TRUE if PS document was generated successfully or
+     *               generation was interrupted, FALSE otherwise.
+     * Default return value: FALSE
+     **/
+    boolean exportToPostScript( in string filename,
+                     in long first_page, in long last_page,
+                     in double width, in double height,
+                     inout boolean brkExport );
+
+
+    /**
+     * isHaveFontInfo
+     *
+     * See getFontInfo()
+     *
+     * Return value: TRUE if getFontInfo() can return information about
+     *               fonts used in document, FALSE otherwise.
+     * Default return value: FALSE
+     **/
+    boolean isHaveFontInfo();
+
+
+    /**
+     * getFontInfo
+     *
+     * Returns information about fonts used in document.
+     *
+     * Return value: A pointer to sequence of LuFontInfo
+     *               or NULL if no font information.
+     *
+     * Returned sequence must be freed with freeFontInfo() when done.
+     * Note: SOMMalloc() must be used for all memory allocations.
+     * Default return value: NULL
+     **/
+    LuFontInfoSequence *getFontInfo();
+
+
+    /**
+     * freeFontInfo
+     * fonts: A sequence of LuFontInfo
+     *
+     * Frees a sequence of LuFontInfo allocated by
+     * getFontInfo().
+     **/
+    void freeFontInfo( in LuFontInfoSequence fonts );
+
+
+    /**
+     * isHaveIndex
+     *
+     * Determines if document have an index associated with it.
+     *
+     * See getIndex()
+     *
+     * Return value: TRUE if document have index, FALSE otherwise.
+     * Default return value: FALSE
+     **/
+    boolean isHaveIndex();
+
+
+    /**
+     * getIndex
+     *
+     * Certain documents have an index associated with them.
+     * This index can be used to help the user navigate the document,
+     * and is similar to a table of contents. Each node in the index will
+     * contain a LuLink that can be displayed to the user.
+     *
+     * Here is a simple example of some code that walks the full index:
+     *
+     * void viewTree( int level, LuIndexNode *n )
+     * {
+     *     if ( n == NULL ) {
+     *         return;
+     *     }
+     *
+     *     somLPrintf( level, "title: %s\n", n->getLink(ev)->title );
+     *
+     *     LuIndexNode *cn = n->getFirstChild( ev );
+     *     while ( cn != NULL )
+     *     {
+     *         viewTree( level + 1, cn );
+     *         cn = n->getNextChild( ev );
+     *     }
+     * }
+     *
+     * Return value: a new LuIndexNode, which represents an index root,
+     *               or NULL, if document doesn't have an index.
+     * Default return value: NULL
+     **/
+    LuIndexNode getIndex();
+
+
+    /**
+     * getDocumentInfo
+     *
+     * Return value: a new LuDocumentInfo.
+     **/
+    LuDocumentInfo *getDocumentInfo();
+
+
+    /**
+     * freeDocumentInfo
+     * info: LuDocumentInfo structure allocated by getDocumentInfo()
+     *
+     * Frees a LuDocumentInfo structure allocated by getDocumentInfo().
+     **/
+    void freeDocumentInfo( in LuDocumentInfo info );
+
+
+    /**
+     * getThumbnailSize
+     * pagenum: page number
+     * suggested_width: if thumbnail doesn't have predefined width,
+     *                  it will be created with suggested_width.
+     * width: return location for width
+     * height: return location for height
+     *
+     * Returns TRUE if page has a thumbnail associated with it. It also
+     * fills in width and height with the width and height of the
+     * thumbnail. The values of width and height are not changed if no
+     * appropriate thumbnail exists.
+     *
+     * Return value: TRUE, if page has a thumbnail associated with it.
+     * Default return value: FALSE
+     **/
+    boolean getThumbnailSize( in long pagenum, in short suggested_width, inout short width, inout short height );
+
+
+    /**
+     * getThumbnail
+     * pagenum: page number
+     * suggested_width: if thumbnail doesn't have predefined width,
+     *                  it will be created with suggested_width.
+     *
+     * Returns pointer to LuPixbuf
+     *
+     * Return value: pointer to LuPixbuf, if page has a thumbnail associated with it
+     *               or NULL.
+     * Default return value: NULL
+     **/
+    LuPixbuf getThumbnail( in long pagenum, in short suggested_width );
+
+
+    /**
+     * searchText
+     * pagenum: page number
+     * text: the text to search for (in system encoding)
+     *
+     * Returns a sequence of rectangles for each occurance of the text
+     * found on the page.
+     * The returned sequence must be freed with freeRectangles()
+     *
+     * Return value: a newly allocated LuRectSequence, or NULL if
+     *               nothing found
+     * Default return value: NULL
+     *
+     * Note: SOMMalloc() must be used for all memory allocations.
+     **/
+    LuRectSequence *searchText( in long pagenum, in string text, in boolean caseSensitive );
+
+
+    /**
+     * isCreateFileThumbnail
+     *
+     * If this method returns TRUE, then GUI may create thumbnail for
+     * this file and write it into EAs.
+     *
+     * Default return value: FALSE
+     **/
+    boolean isCreateFileThumbnail();
+
+
+#ifdef __SOMIDL__
+
+    implementation
+    {
+        releaseorder: loadFile, getBpp, isScalable, isRotable,
+                      getPageCount, getPageSize, renderPageToPixbuf,
+                      isAsynchRenderingSupported, renderPageToPixbufAsynch,
+                      isRenderIntoPS, renderPageToPS,
+                      isHaveText, getSelectionRectangles, freeRectangles,
+                      getText, isHaveLinks, getLinkMapping, freeLinkMapping,
+                      isSaveable, saveAs,
+                      isPostScriptExportable, exportToPostScript,
+                      isHaveFontInfo, getFontInfo, freeFontInfo,
+                      isHaveIndex, getIndex, getDocumentInfo,
+                      freeDocumentInfo, getThumbnailSize, getThumbnail,
+                      searchText, isFixedImage, isCreateFileThumbnail;
+
+
+        somDefaultInit: override, init;
+
+        freeRectangles: procedure, noself;
+        freeLinkMapping: procedure, noself;
+        freeFontInfo: procedure, noself;
+        freeDocumentInfo: procedure, noself;
+
+
+        passthru C_h_before =  ""
+            ""
+            "#include <lutypes.h>"
+            "#include <lupixbuf.h>"
+            "#include <luinode.h>"
+            "";
+
+        passthru C_xh_before =  ""
+            ""
+            "#include <lutypes.h>"
+            "#include <lupixbuf.xh>"
+            "#include <luinode.xh>"
+            "";
+
+    };
+
+#endif // __SOMIDL__
+
+};
+
+#endif // ludoc_idl
+

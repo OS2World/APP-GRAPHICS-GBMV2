@@ -1,0 +1,2 @@
+
+This is a stripped down version of the Gecko Win32 SDK from Mozilla 1.4b.

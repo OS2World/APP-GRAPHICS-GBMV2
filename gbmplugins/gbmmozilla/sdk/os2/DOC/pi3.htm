@@ -1,0 +1,274 @@
+<HTML><HEAD>
+<TITLE>Netscape Methods</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#FF0000" ALINK="#FF0000">
+<H1>Netscape Methods</H1>
+
+<UL>
+<LI><a href="#npngeturl">NPN_GetURL</a>
+<LI><a href="#npnmemalloc">NPN_MemAlloc</a>
+<LI><a href="#npnmemflush">NPN_MemFlush</a>
+<LI><a href="#npnmemfree">NPN_MemFree</a>
+<LI><a href="#npnposturl">NPN_PostURL</a>
+<LI><a href="#npnrequestread">NPN_RequestRead</a>
+<LI><a href="#npnstatus">NPN_Status</a>
+<LI><a href="#npnuseragent">NPN_UserAgent</a>
+<LI><a href="#npnversion">NPN_Version</a>
+</UL>
+
+<HR>
+<a name="npngeturl"><H3>NPN_GetURL</H3></a>
+
+Requests that a new stream be created with the contents of the specified URL.
+<P>
+NPN_GetURL requests the creation of a new stream for the URL identified by <tt>url</tt> for the plug-in
+instance specified by <tt>instance</tt>.  The parameter <tt>target</tt> determines the recipient of the
+stream.  Note that this operation is asynchronous: control will always immediately return to your plug-in,
+but the stream will not be created until some point in the future, or never created in the event of network
+problems or user cancellation.
+<P>
+If <tt>target</tt> is non-NULL, the stream is sent to Netscape and Netscape displays the contents
+of the stream in the named target window or frame.  (For more information on named targets, see Netscape's
+documentation on <a href="http://home.netscape.com/eng/mozilla/2.0/relnotes/demo/target.html">targeting windows</a>.)
+Note that if the target refers to the window or frame containing the instance, the instance will be destroyed
+and the plug-in may be unloaded.  For example, a plug-in instance could draw a button that acts like a link to
+another web page. When the user clicks the button, the plug-in would call NPN_GetURL to go to the page:
+<XMP>
+err = NPN_GetURL(instance, "http://home.netscape.com/", "_self");
+</XMP>
+If <tt>target</tt> is NULL, the stream containing the contents of the URL will be delivered to the plug-in
+via a call to NPP_NewStream, one or more calls to NPP_WriteReady and NPP_Write, and a call to NPP_DestroyStream
+when the stream is complete.  Using NPN_GetURL in this mode allows the plug-in to retrieve arbitrary data from
+the network or file system and process the data itself.
+<P>
+Note that NPN_GetURL is typically asynchronous: it returns immediately and only later handles the request.
+<P>
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+NPError NPN_GetURL(NPP instance, const char *url, const char *window);
+</XMP>
+<H4>See also</H4>
+<a href="#npnposturl">NPN_PostURL</a><BR>
+<P>
+
+<HR>
+<a name="npnmemalloc"><H3>NPN_MemAlloc</H3></a>
+
+Allocates memory from the Navigator's memory space.
+<P>
+Call NPN_MemAlloc to allocate <tt>size</tt> bytes of memory in the Navigator's memory space.  Netscape
+returns NULL if insufficient memory is available.  NPN_MemAlloc is particularly important on the
+Macintosh, since the Macintosh version of Netscape Navigator frequently fills its memory partition with
+cached data which is only purged as necessary.  Since NPN_MemAlloc automatically frees cached information
+if necessary to fulfill the request, calls to NPN_MemAlloc may succeed where direct calls to <tt>NewPtr()</tt>
+would fail.
+<P>
+If you allocate saved instance data in NPP_Destroy, be sure to allocate the memory with this function,
+since Netscape may delete the saved data with the equivalent of NPN_MemFree at any time.  See the <a href="
+"pi2.htm#nppdestroy"">code example</a> in the documentation for NPP_Destroy for an example of allocating saved
+data using this function.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+void *NPN_MemAlloc (uint32 size);
+</XMP>
+<H4>See also</H4>
+<a href="#npnmemflush">NPN_MemFlush</a><BR>
+<a href="#npnmemfree">NPN_MemFree</a>
+<P>
+
+<HR>
+<a name="npnmemflush"><H3>NPN_MemFlush</H3></a>
+
+<I>Currently this function is implemented only on the Macintosh.</I>
+<P>
+Requests that Navigator free <tt>size</tt> bytes of memory, and returns the amount freed.
+<P>
+Generally, plug-ins should use NPN_MemAlloc to allocate memory in Navigator's memory space, since this
+function automatically frees cached data if necessary to fulfill the request. Use NPN_MemFlush in cases
+when calling NPN_MemAlloc is not possible, for example when calling system APIs that indirectly allocate
+memory. To request that Netscape free as much memory as possible, call NPN_MemFlush repeatedly until it
+returns 0.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+uint32 NPN_MemFlush(uint32 size);
+</XMP>
+<H4>See also</H4>
+<a href="#npnmemalloc">NPN_MemAlloc</a><BR>
+<a href="#npnmemfree">NPN_MemFree</a>
+<P>
+
+<HR>
+<a name="npnmemfree"><H3>NPN_MemFree</H3></a>
+
+Deallocate the block of memory, specified by <tt>ptr</tt>, that was previously allocated using NPN_MemAlloc.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+void NPN_MemFree (void *ptr);
+</XMP>
+<H4>See also</H4>
+<a href="#npnmemalloc">NPN_MemAlloc</a><BR>
+<a href="#npnmemflush">NPN_MemFlush</a>
+<P>
+
+<HR>
+<a name="npnposturl"><H3>NPN_PostURL</H3></a>
+
+<I>NPN_PostURL is only partially implemented in Netscape Navigator 2.0.</I>
+<P>
+Posts data from a file or buffer to a URL.
+<P>
+NPN_PostURL works similarly to NPN_GetURL, but in reverse.  Like NPN_GetURL, an <tt>instance</tt>,
+<tt>url</tt>, and <tt>target</tt> are specified by the plug-in.  But while NPN_GetURL reads data from the
+URL and either displays it in the target window or delivers it to the plug-in, NPN_PostURL writes data to the
+URL and displays the server's response in the target window or delivers it to the plug-in.
+<P>
+The data to post can be either contained in a file or a memory buffer.  To post a file, set the flag
+<tt>file</tt> to TRUE, the buffer <tt>buf</tt> to the path name string for a file, and <tt>len</tt> to
+the length of the path string.  The the file-type URL prefix "file://" is optional.  Note that on Windows and
+the Macintosh, if a file is posted with any protocol other than FTP the file must be text with UNIX-style line
+breaks ('\n' separators only).
+<P>
+<a name="postbuffer">To post data in a memory buffer</a>, set the flag <tt>file</tt> to FALSE, the buffer <tt>buf</tt>
+to the data to post, and <tt>len</tt> to the length of buffer.  NPN_PostURL works identically with buffers and files.
+<P>
+Possible URL types include FTP, HTTP, mail, and news.  For protocols where the headers must be distinguished
+from the body, such as HTTP, the buffer or file should contain the headers, followed by a blank line, then the
+body.  If no custom headers are required, simply add a blank line ('\n') to the beginning of the file or buffer.
+<I>NOTE: Passing headers (even a blank line) in a memory buffer is not supported by NPN_PostURL.
+</I>
+<P>
+For example, the following code posts two name-value pairs to a CGI script via HTTP.  The response from the server
+will be sent to the plug-in in a new stream created with NPP_NewStream.
+<XMP>
+char* myData = "Content Type:\tapplication/x-www-form-urlencoded\nContent Length:\t25\n\nname1=value1&name2=value2\n";
+uint32 myLength = strlen(myData) + 1;
+err = NPN_PostURL(instance, "http://hoohoo.ncsa.uiuc.edu/cgi-bin/post-query", NULL, myLength, myData, FALSE);
+</XMP>
+The following code will send a mail message with the default headers from the client machine:
+<XMP>
+char* myData = "\nHi Fred, this is a message from my plug-in!";
+uint32 myLength = strlen(myData) + 1;
+err = NPN_PostURL(instance, "mailto:fred@somewhere.com", NULL, myLength, myData, FALSE);
+</XMP>
+This code will upload a file from the root of the local file system to a FTP server and display the
+response in a frame named "response":
+<XMP>
+char* myData = "file:///myFileName";
+uint32 myLength = strlen(myData) + 1;
+err = NPN_PostURL(instance, "ftp://fred@ftp.somewhere.com/pub/", "response", myLength, myData, TRUE);
+</XMP>
+Note that NPN_PostURL is typically asynchronous: it returns immediately and only later handles the request.
+<P>
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+NPError NPN_PostURL(NPP instance, const char *url, const char *window, uint32 len, const char *buf, NPBool file);
+</XMP>
+<H4>See also</H4>
+<a href="#npngeturl">NPN_GetURL</a><br>
+<P>
+
+<HR>
+<a name="npnrequestread"><H3>NPN_RequestRead</H3></a>
+
+Requests a range of bytes for a seekable stream.
+<P>
+NPN_RequestRead requests a range of bytes identified by <tt>rangeList</tt> to be read from the
+stream denoted by <tt>stream</tt>.  The <tt>rangeList</tt> is a linked list of NPByteRange objects,
+each of which specifies an offset and length into the stream.  The data will be written to the plug-in
+via subsequent calls to NPP_WriteReady and NPP_Write.
+<P>
+The plug-in can call NPN_RequestRead on streams that were not initially placed <tt>NP_SEEK</tt> mode as long
+as the stream is inherently seekable (see <a href="pi2.htm#nppnewstream">NPP_NewStream</a>);
+NPN_RequestRead simply automatically changes the mode to <tt>NP_SEEK</tt>.  If the stream is not inherently
+seekable, the stream <B>must</B> have been put in <tt>NP_SEEK</tt> mode initially (since Netscape must cache
+all the stream data on disk in order to access it randomly).  If NPN_RequestRead is called on a stream that is not
+inherently seekable and not initially in mode <tt>NP_SEEK</tt>, it returns the error code NPERR_STREAM_NOT_SEEKABLE.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+NPError NPN_RequestRead((NPStream *stream, NPByteRange *rangeList);
+</XMP>
+<H4>See also</H4>
+<a href="pi2.htm#nppnewstream">NPP_NewStream</a><BR>
+<a href="pi4.htm#npstream">NPStream</a>
+<P>
+
+<HR>
+<a name="npnstatus"><H3>NPN_Status</H3></a>
+Displays a status message.
+<P>
+NPN_Status displays the status message indicated by <tt>message</tt> for the instance denoted by
+<tt>instance</tt>. The message appears in the Navigator client user interface; in Navigator 2.0 the
+message is drawn at the bottom of the browser window on all platforms.
+<P>
+This function is useful for simulating the Navigator's behavior for links.  When the user moves the
+mouse over a link in a browser window, the Navigator displays the URL of the link in the status message
+area. If your plug-in has a button or other object that will act as a link when clicked, you should make
+your user interface consistent with the rest of the Navigator by calling NPN_Status to display the URL of
+the link when user moves the mouse over the button.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+void NPN_Status((NPP instance, const char *message);
+</XMP>
+<P>
+
+<HR>
+<a name="npnuseragent"><H3>NPN_UserAgent</H3></a>
+
+Returns a string containing the Navigator's "user agent" field. The user agent is the part of the HTTP
+header that identifies the browser during transfers.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+const char* NPN_Status((NPP instance);
+</XMP>
+<H4>See also</H4>
+<a href="#npnversion">NPN_Version</a>
+<P>
+
+<HR>
+<a name="npnversion"><H3>NPN_Version</H3></a>
+
+Returns the plug-in API version information.
+<P>
+NPN_Version returns the plug-in version number in <tt>plugin_major</tt> and <tt>plugin_minor</tt>, and
+Netscape Navigator version in <tt>netscape_major</tt> and <tt>netscape_minor</tt>.  The plug-in version
+is determined by the constants defined in npapi.h when the plug-in is compiled; the Netscape verion is
+determine by the same constants when Netscape is compiled.
+<P>
+The plug-in glue code (in npmac.cpp for the Macintosh and npwin.cpp for Windows) checks the major version
+numbers and refuses to load the plug-in if the major version of Netscape is greater than the major version
+of the plug-in.  Thus the major version number in npapi.h will only change if old plug-ins will be strictly
+and explicitly incompatible with a new version of Netscape Navigator.  The minor version number will change
+whenever the plug-in API functionality changes with a new version of Navigator.  For example, if new
+capabilities or API entry points are added in a new Navigator version, plug-ins should check the minor version
+of Netscape to ensure that the capabilities exist before using them.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+void NPN_Version(int *plugin_major, int *plugin_minor, int *netscape_major, int *netscape_minor);
+</XMP>
+<H4>See also</H4>
+<a href="#npnuseragent">NPN_UserAgent</a>
+<P>
+
+</BODY>
+</HTML>
+ 
+ 

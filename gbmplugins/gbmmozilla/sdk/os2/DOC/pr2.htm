@@ -1,0 +1,84 @@
+<HTML><HEAD>
+<TITLE>Plug-ins and HTML</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#FF0000" ALINK="#FF0000">
+<H1>Plug-ins and HTML</H1>
+
+<P>
+Embedded plug-ins are loaded by Navigator when the user encounters an HTML page with an
+embedded object with a MIME type registered by a plug-in. When loaded, an embedded plug-in
+is displayed as part of the HTML document in a rectangular subpart of the page. This is
+similar to how a GIF or JPEG image is embedded, except that the plug-in can be live and
+respond to user events (such as mouse clicks).
+<P>
+Plug-in objects are embedded in an HTML page by using the EMBED tag.
+The syntax of the EMBED tag is:
+
+<PRE>
+<B>&lt;EMBED <I>attributes</I>&gt; ... &lt;/EMBED&gt; </B>
+</PRE>
+
+Use the following attributes with the EMBED tag:
+
+<UL>
+<LI>HEIGHT=<I>"value"</I> defines the horizontal location of the plug-in in the HTML page.
+The unit of measurement is optionally defined by the UNITS attribute.
+<P>
+<LI>HIDDEN=<I>"value"</I> indicates whether the plug-in is visible on the page.
+The <I>value</I> can be either <B>true</B> (the default) or <B>false</B>.
+A value of <B>true</B> overrides the values of HEIGHT and WIDTH, making the plug-in zero-sized.
+Always explicitly set HIDDEN=true to make an invisible plug-in (rather than simply setting
+the HEIGHT and WIDTH to zero).  
+<P>
+<LI>PALETTE=<I>"value"</I> indicates the mode of the plug-in's color palette.
+The <I>value</I> can be either <B>foreground</B> or <B>background</B> (the default).
+The palette mode is only relevant on the Windows platform.
+<P>
+<LI>PLUGINSPAGE=<I>"URL"</I> indicates the location of instructions on installing the
+plug-in. The value <I>URL</I> is a standard uniform resource locator.  The URL is used 
+by the <A HREF="us1.htm">assisted installation</A> process if the plug-in registered for
+the MIME type of this EMBED tag is not found.
+<P>
+<LI>SRC=<I>"URL"</I> optionally indicates the location of the plug-in data file.  The value 
+<I>URL</I> is a standard uniform resource locator.  The MIME type of the file (typically based
+on the file-name suffix) determines which plug-in is loaded to handle this EMBED tag.
+Either the SRC attribute or the TYPE attribute is required in an EMBED tag.
+<P>
+<LI>TYPE=<I>"type"</I> optionally indicates the MIME type of the EMBED tag, which in turn
+determines which plug-in is loaded to handle this EMBED tag.
+Either the SRC attribute or the TYPE attribute is required in an EMBED tag.
+Use TYPE instead of SRC for plug-ins that require no data (for example, a plug-in that
+draws an analog clock) or plug-ins that fetch all their data dynamically.
+<P>
+<LI>WIDTH=<I>"value "</I> optionally defines the vertical location of the plug-in in the HTML
+page. The unit of measurement is optionally defined by the UNITS  attribute.
+<P>
+<LI>UNITS=<I>"value"</I> defines the measurement unit used by the HEIGHT 
+and WIDTH attributes.  The <I>value</I> can be either <B>pixels</B> (the 
+default) or <B>en</B> (half the point size).
+</UL>
+
+<P>
+In addition to these standard attributes, plug-ins may optionally have private attributes
+to communicate specialized information between the HTML page and the plug-in code.
+Navigator ignores all non-standard attributes when parsing the HTML, but passes all attributes
+to the plug-in, allowing the plug-in to examine the attribute list for any private attributes
+that may modify its behavior.
+<P>
+For example, a plug-in that displays video could have private attributes to determine whether
+the plug-in should automatically start playing the video, and whether the video should
+automatically loop on playback.  Thus an example EMBED tag could be:
+<XMP>
+<EMBED SRC="myavi.avi" WIDTH=320 HEIGHT=200 AUTOSTART=true LOOP=true>
+</XMP>
+<P>
+Navigator would interpret the SRC tag to load the data file and determine the MIME type of the
+data, and the WIDTH and HEIGHT tags to size the area of the page handled by the plug-in
+to be 320 by 200 pixels.  Navigator would simply ignore private attributes AUTOSTART and LOOP
+and pass them to the plug-in with the rest of the attributes.  The plug-in could then scan its
+list of attributes to see if it should automatically start the video and loop it on playback.
+
+</body>
+</HTML>
+

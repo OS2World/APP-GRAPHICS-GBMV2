@@ -1,0 +1,119 @@
+#
+# Simple bitmap viewer II (German/German)
+#
+# This makefile is for GCC 3.x on OS/2 32bit.
+#
+# For English build call nmake with lang=en (default is lang=de)
+#
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\..\make.opt
+
+GBM    = ..\..\gbm
+GBMDLG = ..\gbmdlg
+IDIR   = ..\bin
+
+
+.SUFFIXES:    .c .o
+
+CWARNS     = -Wall -Werror
+CFLAGS     = -c $(CWARNS) -I. -I$(GBM) -I$(GBMDLG) -mcpu=i686 -m32 -O2 -Zomf -DNDEBUG
+CFLAGS_DBG = -c $(CWARNS) -I. -I$(GBM) -I$(GBMDLG) -mcpu=i686 -m32 -Zomf -g  -DDEBUG
+
+LFLAGS     = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /EXEPACK:2 -Zlinker /OPTFUNC -Zlinker /PACKCODE -Zlinker /PACKDATA
+LFLAGS_DBG = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /DEBUG -Zlinker /DBGPACK
+LFLAGS_EXE     = $(LFLAGS)     -Zlinker /BASE:0x10000 -Zlinker /STACK:0x10000 -Zlinker /PMTYPE:PM
+LFLAGS_EXE_DBG = $(LFLAGS_DBG) -Zlinker /BASE:0x10000 -Zlinker /STACK:0x10000 -Zlinker /PMTYPE:PM
+
+# For debugging call nmake with debug=on
+!ifdef debug
+CFLAGS     = $(CFLAGS_DBG)
+LFLAGS_EXE = $(LFLAGS_EXE_DBG)
+!endif
+
+# For English build call nmake with lang=en
+LANG_DIR=de
+IPFCOPT=/country=049 /codepage=850 /language=DEU /X /W1
+
+!ifdef lang
+!if ( "$(lang)" == "en" )
+LANG_DIR=en
+IPFCOPT=/country=001 /codepage=437 /language=ENG /X /W1
+!endif
+!endif
+
+LANG_DIR_RES=$(LANG_DIR)\WarpSans
+
+#
+
+.c.o:
+        gcc $(CFLAGS) $*.c
+
+#
+
+all:   gbmv2.exe gbmv2.hlp
+
+OBJS = scroll.o model.o bmputils.o help.o gbmv2.o
+
+LIBS =  $(GBM)\gbm.lib $(GBM)\gbmmem.lib \
+        $(GBM)\gbmtrunc.lib $(GBM)\gbmerr.lib $(GBM)\gbmht.lib \
+        $(GBM)\gbmhist.lib $(GBM)\gbmmcut.lib \
+        $(GBM)\gbmmir.lib $(GBM)\gbmrect.lib $(GBM)\gbmscale.lib \
+        $(GBM)\gbmtool.lib $(GBMDLG)\gbmdlg.lib
+
+gbmv2.exe:    $(OBJS) $(LIBS) gbmv2$(LANG_DIR)_gcc.def gbmv2.res
+        gcc $(LFLAGS_EXE) -o $@ $(OBJS) gbmv2$(LANG_DIR)_gcc.def -L$(GBM) -L$(GBMDLG) -lgbm.lib -lgbmmem.lib -lgbmtrunc.lib \
+                      -lgbmerr.lib -lgbmht.lib -lgbmhist.lib -lgbmmcut.lib -lgbmmir.lib -lgbmrect.lib \
+                      -lgbmscale.lib -lgbmtool.lib -lgbmmthrd.lib -lgbmdlg
+        rc -n -x2 gbmv2.res $@
+
+scroll.o:    scroll.c scroll.h
+
+model.o:    model.c model.h \
+        $(GBM)\gbm.h $(GBM)\gbmmem.h \
+        $(GBM)\gbmtrunc.h $(GBM)\gbmerr.h $(GBM)\gbmht.h \
+        $(GBM)\gbmhist.h $(GBM)\gbmmcut.h \
+        $(GBM)\gbmmir.h $(GBM)\gbmrect.h $(GBM)\gbmscale.h
+
+bmputils.o:    bmputils.c bmputils.h
+
+help.o:    $(LANG_DIR)\help.c gbmv2hlp.h
+           gcc $(CFLAGS) -o$@ $(LANG_DIR)\help.c
+
+gbmv2.o:   $(LANG_DIR)\gbmv2.c gbmv2.h scroll.h model.h bmputils.h help.h \
+           $(GBM)\gbm.h $(GBM)\gbmtool.h \
+           $(GBMDLG)\gbmdlg.h $(GBMDLG)\gbmdlgrc.h
+           gcc $(CFLAGS) -o$@ $(LANG_DIR)\gbmv2.c
+
+gbmv2.res:  $(LANG_DIR_RES)\gbmv2.rc gbmv2.ico $(GBMDLG)\gbmdlgrc.h gbmv2.h gbmv2hlp.h
+            (set INCLUDE=$(GBMDLG);$(INCLUDE) && rc -n -r -x2 $(LANG_DIR_RES)\gbmv2.rc $@)
+
+gbmv2.hlp: $(LANG_DIR)\gbmv2.scr gbmv2hlp.h $(GBMDLG)\gbmdlgrc.h
+           (set INCLUDE=$(GBMDLG);$(INCLUDE) && ipfcprep $(LANG_DIR)\gbmv2.scr gbmv2.ipf)
+           ipfc $(IPFCOPT) gbmv2.ipf
+
+#
+
+clean:
+        -del /F /N *.o *.res *.ipf 2>nul
+
+clobber:
+        -del /F /N *.o *.res *.ipf *.exe *.hlp 2>nul
+        -del /F /N $(IDIR)\gbmv2.exe $(IDIR)\gbmv2.hlp 2>nul
+
+
+install:
+        copy *.exe $(IDIR)
+        copy *.hlp $(IDIR)
+
+#
+
+exepack:
+         $(EXE_PACKER) *.exe
+
+#
+
+package:
+        -del /F /N $(IDIR)\gbmv2_exe.zip 2>nul
+        zip -9 $(IDIR)\gbmv2_exe.zip *.exe *.hlp
+

@@ -1,0 +1,52 @@
+#ifndef luinode_idl
+#define luinode_idl
+
+/*
+ *
+ *  LuIndexNode
+ *
+ */
+
+#include <somobj.idl>
+#include <lutypes.h>
+
+
+interface LuIndexNode : SOMObject
+{
+
+    void LuIndexNodeInit( inout somInitCtrl ctrl, in LuLink link );
+	void addChild( in LuIndexNode node );
+	LuIndexNode getFirstChild();
+	LuIndexNode getNextChild();
+	LuLink *getLink();
+
+#ifdef __SOMIDL__
+
+    implementation 
+    {
+    	releaseorder: LuIndexNodeInit, addChild, getFirstChild,
+                      getNextChild, getLink;
+
+        void *data;
+
+        LuIndexNodeInit: init;
+        somDestruct: override;
+
+
+        passthru C_h_before =  ""
+            ""
+            "#include <lutypes.h>"
+            "";
+
+        passthru C_xh_before =  ""
+            ""
+            "#include <lutypes.h>"
+            "";
+
+    };
+
+#endif // __SOMIDL__
+
+};
+
+#endif // luinode_idl

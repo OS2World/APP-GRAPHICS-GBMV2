@@ -1,0 +1,38 @@
+
+# Main Makefile for build GBM on Windows (64Bit) with MS Visual C++.
+# (maintains correct sub-makefile for the platform)
+#
+# The core makefile is the same for 32bit and 64bit.
+# A simple switch in the Windows SDK environment is sufficient.
+
+SUBMAKEOPT = 
+
+# For debugging call nmake with debug=yes
+!ifdef debug
+SUBMAKEOPT = $(SUBMAKEOPT) debug=yes
+!endif
+
+# For support of the new Vista/Win7 file dialog (not Windows 2000/XP compatible) call nmake with vista=yes
+!ifdef vista
+SUBMAKEOPT  = $(SUBMAKEOPT) vista=yes
+!endif
+
+
+all:     
+         @nmake /C /f makefile.ms_w32 $(SUBMAKEOPT)
+
+clean:   
+		 @nmake /C /f makefile.ms_w32 clean
+
+clobber: 
+		 @nmake /C /f makefile.ms_w32 clobber
+
+exepack: 
+		 @echo "Packing of executables is not supported"
+
+install: 
+		 @nmake /C /f makefile.ms_w32 install
+
+package: 
+		 @nmake /C /f makefile.ms_w32 package
+

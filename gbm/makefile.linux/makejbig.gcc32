@@ -1,0 +1,62 @@
+# Makefile for JBIG Kit library
+
+# This makefile is for GCC on Linux 32/64 bit.
+# It builds the library as a statically linkable library (.a).
+#
+
+# set directory where binaries will be placed by target install
+IDIR = bin
+
+# For 64bit compile call make with m64=on
+ifdef m64
+  CFLAGS_MACHINE = -m64 -mtune=generic -fPIC
+else
+  CFLAGS_MACHINE = -m32 -mtune=generic
+endif
+
+CWARNS     = -Wall -Werror -Wno-unused-variable
+CFLAGS     = -c $(CWARNS) $(CFLAGS_MACHINE) -std=c99 -mfpmath=sse -msse -O3 -I..
+CFLAGS_DBG = -c $(CWARNS) $(CFLAGS_MACHINE) -std=c99 -mfpmath=sse -msse -g -fbounds-check -I.. -DDEBUG
+
+# For debugging call make with debug=on
+ifdef debug
+CFLAGS   = $(CFLAGS_DBG)
+endif
+
+OBJS = jbig.o jbig_ar.o
+
+# Template command for compiling .c to .o
+.SUFFIXES:	.c .o
+
+.c.o:; gcc $(CFLAGS) $*.c
+
+#
+
+all:   jbig.c jbig_ar.c jbig.a
+
+jbig.a: $(OBJS)
+	@rm -f $@ 2>/dev/null
+	@ar ru $@ $(OBJS)
+
+jbig.o:    jbig.c jbig.h jbig_ar.h
+jbig_ar.o: jbig_ar.c jbig_ar.h
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:;		@rm -f $(OBJS)   2>/dev/null
+
+clobber:;  	@rm -f $(OBJS)   2>/dev/null
+		@rm -f jbig.a    2>/dev/null
+		@rm -f $(IDIR)/* 2>/dev/null
+
+install:;	@cp jbig.a       $(IDIR)
+		@cp jbig.h       $(IDIR)
+		@cp jbig_ar.h    $(IDIR)
+
+package:;	@rm -f $(IDIR)/libjbig.tar.gz 2>/dev/null
+		@tar zcvf $(IDIR)/libjbig.tar.gz jbig.a jbig.h jbig_ar.h
+
+

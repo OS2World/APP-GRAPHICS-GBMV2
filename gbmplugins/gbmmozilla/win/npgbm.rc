@@ -1,0 +1,318 @@
+/***************************************************
+* Mozilla GBM plug-in: npgbm.rc
+*
+* Copyright (C) 2006-2012 Heiko Nitzsche
+*
+*   This software is provided 'as-is', without any express or implied
+*   warranty.  In no event will the author be held liable for any damages
+*   arising from the use of this software.
+*
+*   Permission is granted to anyone to use this software for any purpose,
+*   including commercial applications, and to alter it and redistribute it
+*   freely, subject to the following restrictions:
+*
+*   1. The origin of this software must not be misrepresented; you must not
+*      claim that you wrote the original software. If you use this software
+*      in a product, an acknowledgment in the product documentation would be
+*      appreciated but is not required.
+*   2. Altered source versions must be plainly marked as such, and must not be
+*      misrepresented as being the original software.
+*   3. This notice may not be removed or altered from any source distribution.
+***************************************************/
+
+#include "winresrc.h"
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,4,7,0
+ PRODUCTVERSION 1,4,7,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "Comments", "\0"
+            VALUE "CompanyName", "Heiko Nitzsche\0"
+            VALUE "FileDescription", "The GBM Plugin allows you to view a variety of image formats.\0"
+            VALUE "FileExtents", "bmp,vga,bga,rle,dib,rl4,rl8|bmp,vga,bga,rle,dib,rl4,rl8|bmp,vga,bga,rle,dib,rl4,rl8|gif|pcx,pcc|pcx,pcc|tif,tiff|tif,tiff|tif,tiff|tga,vst,afi|tga,vst,afi|iff,lbm|iff,lbm|vid|pbm|pgm|pgm|ppm|pnm|png|png|kps|xbm|xbm|xbm|xpm|xpm|xpm|spr,sprite|pse,pseg,pseg38pp,pseg3820|img,ximg|cvp|jpg,jpeg,jpe|jpg,jpeg,jpe|jp2|jp2|jp2,j2k,j2c|j2k,j2c|j2k,j2c|jpt|jpt|jbg|jbg|dng|3fr|arw|bay|cap|crw|cr2|dcr|dcs|drf|erf|kdc|mdc|mef|mos|mrw|nef|nrw|orf|pef|raf|raw|raw|rw2|rwl|srf|sr2\0"
+            VALUE "FileOpenName", "OS/2, Windows Bitmap|OS/2, Windows Bitmap|Windows Bitmap|CompuServe Graphics Interchange Format|ZSoft PC Paintbrush|ZSoft PC Paintbrush|Tagged Image File Format|Tagged Image File Format|Tagged Image File Format|Truevision Targa/Vista|Truevision Targa/Vista|Amiga IFF|Amiga IFF|YUV12C M-Motion Frame Buffer|Portable Bit-Map|Portable Greyscale-Map|Portable Greyscale-Map|Portable Pixel-Map|Portable Any-Map|Portable Network Graphics|Portable Network Graphics|IBM KIPS|X Windows Bitmap B/W|X Windows Bitmap B/W|X Windows Bitmap B/W|X Windows PixMap - XPM2/XPM3|X Windows PixMap - XPM2/XPM3|X Windows PixMap - XPM2/XPM3|Archimedes Sprite (RiscOS)|IBM Printer Page Segment|GEM Raster|Portrait|JPEG Interchange File Format|JPEG Interchange File Format|JPEG2000 Graphics File Format|JPEG2000 Graphics File Format|JPEG2000 Graphics File Format/JPEG2000 Codestream|JPEG2000 Codestream|JPEG2000 Codestream|JPT Stream - JPIP/JPEG2000|JPT Stream - JPIP/JPEG2000|JBIG - Joint Bi-level Image experts Group|JBIG - Joint Bi-level Image experts Group|RAW - Adobe DNG|RAW - Hasselblad 3FR |RAW - Sony ARW|RAW - Casio BAY|RAW - Phase One CAP|RAW - Canon CRW|RAW - Canon CR2|RAW - Kodak DCR|RAW - Kodak DCS|RAW - Kodak DRF|RAW - EPSON ERF|RAW - Kodak KDC|RAW - Minolta MDC|RAW - Mamiya MEF|RAW - Leaf MOS|RAW - Minolta MRW|RAW - Nikon NEF|RAW - Nikon NRW|RAW - Olympus ORF|RAW - Pentax PEF|RAW - Fuji RAF|RAW - Panasonic RAW|RAW - Leica RAW|RAW - Panasonic RW2|RAW - Leica RWL|RAW - Sony SRF|RAW - Sony SR2\0"
+            VALUE "FileVersion", "1, 4, 7, 0\0"
+            VALUE "InternalName", "npgbm\0"
+            VALUE "LegalCopyright", "Copyright © 2006-2012 Heiko Nitzsche\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "MIMEType", "image/bmp|image/x-bmp|image/x-windows-bmp|image/gif|image/pcx|image/x-pcx|image/tif|image/tiff|image/x-tiff|image/tga|image/x-tga|image/iff|image/x-iff|image/vid|image/x-portable-bitmap|image/x-portable-graymap|image/x-portable-greymap|image/x-portable-pixmap|image/x-portable-anymap|image/png|image/x-png|image/kps|image/x-xbm|image/xbm|image/x-xbitmap|image/xpm|image/x-xpm|image/x-xpixmap|image/spr|image/pseg|image/img|image/cvp|image/jpeg|image/pjpeg|image/jp2|image/x-jp2|image/jpeg2000|image/j2k|image/x-j2k|image/jpt|image/x-jpt|image/jbig|image/x-jbig|image/x-adobe-dng|image/x-hasselblad-3fr|image/x-sony-arw|image/x-casio-bay|image/x-phaseone-cap|image/x-canon-crw|image/x-canon-cr2|image/x-kodak-dcr|image/x-kodak-dcs|image/x-kodak-drf|image/x-epson-erf|image/x-kodak-kdc|image/x-minolta-mdc|image/x-raw|image/x-leaf-mos|image/x-minolta-mrw|image/x-nikon-nef|image/x-nikon-nrw|image/x-olympus-orf|image/x-pentax-pef|image/x-fuji-raf|image/x-panasonic-raw|image/x-leica-raw|image/x-panasonic-rw2|image/x-leica-rwl|image/x-sony-srf|image/x-sony-sr2\0"
+            VALUE "OriginalFilename", "npgbm.dll\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "Generalised Bitmap Module Plugin\0"
+            VALUE "ProductVersion", "1, 4, 7, 0\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+/* --------------------------- */
+/* GBM Bitmap Viewer resources */
+/* --------------------------- */
+
+/* Keep in sync with GbmBitmapViewer.cpp resource ID language mapping table !!! */
+
+#include <dlgs.h>
+#include <windows.h>
+#include "npgbmrc.h"
+
+/* --------------------------- */
+/* Menus */
+/* --------------------------- */
+
+/* Define viewer window popup menu in embedded mode */
+
+/* English (also fallback if a language is missing) */
+RID_GBMVIEWER_SMALL_POPUP_EN MENU LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+BEGIN
+    POPUP ""
+    BEGIN
+        MENUITEM "&Export page...\tCtrl+A"  , MID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "Flip &horizontal\tCtrl+H" , MID_BITMAP_REF_HORZ
+        MENUITEM "Flip &vertical\tCtrl+V"   , MID_BITMAP_REF_VERT
+        MENUITEM SEPARATOR
+        MENUITEM "Fi&rst page\tCtrl+Home"   , MID_VIEW_PAGE_FIRST
+        MENUITEM "Pre&vious page\tCtrl+-"   , MID_VIEW_PAGE_PREV
+        MENUITEM "&Next page\tCtrl++"       , MID_VIEW_PAGE_NEXT
+        MENUITEM "&Last page\tCtrl+End"     , MID_VIEW_PAGE_LAST
+        MENUITEM SEPARATOR
+        MENUITEM "Preferences..."           , MID_VIEW_PREFERENCES
+        MENUITEM SEPARATOR
+        MENUITEM "&Image info..."           , MID_HELP_IMAGEINFO
+        MENUITEM "&About..."                , MID_HELP_ABOUT
+    END
+END
+
+/* German */
+RID_GBMVIEWER_SMALL_POPUP_DE MENU LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+BEGIN
+    POPUP ""
+    BEGIN
+        MENUITEM "Seite &exportieren...\tStrg+A" , MID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "&Horizontal spiegeln\tStrg+H"  , MID_BITMAP_REF_HORZ
+        MENUITEM "&Vertikal spiegeln\tStrg+V"    , MID_BITMAP_REF_VERT
+        MENUITEM SEPARATOR
+        MENUITEM "E&rste Seite\tStrg+Pos1"       , MID_VIEW_PAGE_FIRST
+        MENUITEM "&Vorhergehende Seite\tStrg+-"  , MID_VIEW_PAGE_PREV
+        MENUITEM "&N‰chste Seite\tStrg++"        , MID_VIEW_PAGE_NEXT
+        MENUITEM "&Letzte Seite\tStrg+Ende"      , MID_VIEW_PAGE_LAST
+        MENUITEM SEPARATOR
+        MENUITEM "Einstellungen..."              , MID_VIEW_PREFERENCES
+        MENUITEM SEPARATOR
+        MENUITEM "&Bildinformation..."           , MID_HELP_IMAGEINFO
+        MENUITEM "&Produktinformation..."        , MID_HELP_ABOUT
+    END
+END
+
+/* --------------------------- */
+
+/* Define viewer window popup menu in full mode */
+
+/* English (also fallback if a language is missing) */
+RID_GBMVIEWER_FULL_POPUP_EN MENU LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+BEGIN
+    POPUP ""
+    BEGIN
+        POPUP "&Page"
+        BEGIN
+            MENUITEM "Fi&rst\tCtrl+Home"     , MID_VIEW_PAGE_FIRST
+            MENUITEM "Pre&vious\tCtrl+-"     , MID_VIEW_PAGE_PREV
+            MENUITEM "&Next\tCtrl++"         , MID_VIEW_PAGE_NEXT
+            MENUITEM "&Last\tCtrl+End"       , MID_VIEW_PAGE_LAST
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&Export page...\tCtrl+A"   , MID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "Flip &horizontal\tCtrl+H"  , MID_BITMAP_REF_HORZ
+        MENUITEM "Flip &vertical\tCtrl+V"    , MID_BITMAP_REF_VERT
+        MENUITEM "Transpose x for y\tCtrl+D" , MID_BITMAP_TRANSPOSE
+        MENUITEM SEPARATOR
+        MENUITEM "Rotate 90∞ &CW\tCtrl+R"    , MID_BITMAP_ROT_P90
+        MENUITEM "Rotate 90∞ CC&W\tCtrl+L"   , MID_BITMAP_ROT_M90
+        MENUITEM SEPARATOR
+        MENUITEM "Smaller (&-10%)\t-"        , MID_VIEW_ZOOM_DOWN
+        MENUITEM "Larger  (&+10%)\t+"        , MID_VIEW_ZOOM_UP
+        MENUITEM SEPARATOR
+        MENUITEM "&Actual size\tCtrl+1"      , MID_VIEW_ZOOM_NONE
+        MENUITEM "&Fit in Window\tCtrl+2"    , MID_VIEW_ZOOM_FITWIN
+        MENUITEM "Fit width\tCtrl+3"         , MID_VIEW_ZOOM_FITWIDTH
+        MENUITEM SEPARATOR
+        MENUITEM "Preferences..."            , MID_VIEW_PREFERENCES
+        MENUITEM SEPARATOR
+        MENUITEM "&Image info..."            , MID_HELP_IMAGEINFO
+        MENUITEM "&About..."                 , MID_HELP_ABOUT
+    END
+END
+
+/* German */
+RID_GBMVIEWER_FULL_POPUP_DE MENU LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+BEGIN
+    POPUP ""
+    BEGIN
+        POPUP "&Seite"
+        BEGIN
+            MENUITEM "E&rste\tStrg+Pos1"         , MID_VIEW_PAGE_FIRST
+            MENUITEM "&Vorhergehende\tStrg+-"    , MID_VIEW_PAGE_PREV
+            MENUITEM "&N‰chste\tStrg++"          , MID_VIEW_PAGE_NEXT
+            MENUITEM "&Letzte\tStrg+Ende"        , MID_VIEW_PAGE_LAST
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Seite &exportieren...\tStrg+A" , MID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "&Horizontal spiegeln\tStrg+H"  , MID_BITMAP_REF_HORZ
+        MENUITEM "&Vertikal spiegeln\tStrg+V"    , MID_BITMAP_REF_VERT
+        MENUITEM "&Diagonal spiegeln\tStrg+D"    , MID_BITMAP_TRANSPOSE
+        MENUITEM SEPARATOR
+        MENUITEM "90∞ &im UZS drehen\tStrg+R"    , MID_BITMAP_ROT_P90
+        MENUITEM "90∞ &gegen UZS drehen\tStrg+L" , MID_BITMAP_ROT_M90
+        MENUITEM SEPARATOR
+        MENUITEM "Verkleinern (&-10%)\t-"        , MID_VIEW_ZOOM_DOWN
+        MENUITEM "Vergrˆﬂern  (&+10%)\t+"        , MID_VIEW_ZOOM_UP
+        MENUITEM SEPARATOR
+        MENUITEM "Origin&algrˆﬂe\tStrg+1"        , MID_VIEW_ZOOM_NONE
+        MENUITEM "Ganze &Seite\tStrg+2"          , MID_VIEW_ZOOM_FITWIN
+        MENUITEM "Seiten&breite\tStrg+3"         , MID_VIEW_ZOOM_FITWIDTH
+        MENUITEM SEPARATOR
+        MENUITEM "Einstellungen..."              , MID_VIEW_PREFERENCES
+        MENUITEM SEPARATOR
+        MENUITEM "&Bildinformation..."           , MID_HELP_IMAGEINFO
+        MENUITEM "&Produktinformation..."        , MID_HELP_ABOUT
+    END
+END
+
+
+/* --------------------------- */
+/* Dialogs */
+/* --------------------------- */
+
+/* GBM Bitmap Viewer Format Info dialog box */
+
+/* English (also fallback if a language is missing) */
+RID_GBMVIEWER_FORMATINFO_EN DIALOG 31, 30, 190, 93 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+FONT 8, "MS Sans Serif"
+STYLE WS_VISIBLE | WS_POPUPWINDOW | WS_DLGFRAME
+CAPTION "GBM Bitmap Viewer"
+BEGIN
+        GROUPBOX        "Image Information", 212, 2, 6, 185, 64, NOT WS_GROUP
+        RTEXT           "Format:", 201, 8, 20, 24, 8
+        RTEXT           "Width:" , 202, 8, 29, 24, 8
+        RTEXT           "Height:", 203, 8, 38, 24, 8
+        RTEXT           "Bits:"  , 204, 8, 47, 24, 8
+        RTEXT           "Pages:" , 209, 8, 56, 24, 8
+        LTEXT           "Microsoft/Aldus Tagged Image File Format support",
+                        TID_FORMATINFO_FORMAT, 37, 20, 148, 8
+        LTEXT           "Text", TID_FORMATINFO_WIDTH , 37, 29, 148, 8
+        LTEXT           "Text", TID_FORMATINFO_HEIGHT, 37, 38, 148, 8
+        LTEXT           "Text", TID_FORMATINFO_BPP   , 37, 47, 148, 8
+        LTEXT           "Text", TID_FORMATINFO_PAGES , 37, 56, 148, 8
+        DEFPUSHBUTTON   "&OK", IDOK, 69, 75, 52, 14
+END
+
+/* German */
+RID_GBMVIEWER_FORMATINFO_DE DIALOG 31, 30, 190, 93 LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+FONT 8, "MS Sans Serif"
+STYLE WS_VISIBLE | WS_POPUPWINDOW | WS_DLGFRAME
+CAPTION "GBM Bitmap Viewer"
+BEGIN
+        GROUPBOX        "Bildinformation", 212, 2, 6, 185, 64, NOT WS_GROUP
+        RTEXT           "Format:" , 201, 8, 20, 24, 8
+        RTEXT           "Breite:" , 202, 8, 29, 24, 8
+        RTEXT           "Hˆhe:"   , 203, 8, 38, 24, 8
+        RTEXT           "Bits:"   , 204, 8, 47, 24, 8
+        RTEXT           "Seiten:" , 209, 8, 56, 24, 8
+        LTEXT           "Microsoft/Aldus Tagged Image File Format support",
+                        TID_FORMATINFO_FORMAT, 37, 20, 148, 8
+        LTEXT           "Text", TID_FORMATINFO_WIDTH , 37, 29, 148, 8
+        LTEXT           "Text", TID_FORMATINFO_HEIGHT, 37, 38, 148, 8
+        LTEXT           "Text", TID_FORMATINFO_BPP   , 37, 47, 148, 8
+        LTEXT           "Text", TID_FORMATINFO_PAGES , 37, 56, 148, 8
+        DEFPUSHBUTTON   "&OK", IDOK, 69, 75, 52, 14
+END
+
+/* GBM Bitmap Viewer preferences dialog box */
+
+/* English (also fallback if a language is missing) */
+RID_GBMVIEWER_PREFS_EN DIALOG 17, 25, 159, 82 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+FONT 8, "Helv"
+STYLE WS_VISIBLE | WS_POPUPWINDOW | WS_DLGFRAME
+CAPTION "GBM Bitmap Viewer"
+BEGIN
+	CONTROL "Options",          308, "BUTTON", BS_GROUPBOX | WS_CHILD | WS_VISIBLE, 3, 6, 153, 54
+	CONTROL "Zoom Algorithm:",  302, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE, 11, 20, 55, 8
+	CONTROL "Nearest Neighbor", TID_PREFERENCES_ALGO, "COMBOBOX", CBS_DROPDOWNLIST | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 72, 18, 75, 73
+	CONTROL "Prefetch Pages:",  304, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE, 11, 39, 54, 8
+	CONTROL "0",                TID_PREFERENCES_PAGESUD, "msctls_updown32", UDS_ALIGNRIGHT | UDS_ARROWKEYS | UDS_NOTHOUSANDS | UDS_SETBUDDYINT | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 95, 37, 11, 14
+	CONTROL "0",                TID_PREFERENCES_PAGES, "EDIT", ES_LEFT | ES_AUTOHSCROLL | ES_NUMBER | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, 72, 38, 30, 12
+	CONTROL "pages",            307, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE, 114, 40, 28, 8
+	CONTROL "&OK",              IDOK, "BUTTON", BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 29, 65, 51, 14
+	CONTROL "Cancel",           IDCANCEL, "BUTTON", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 85, 65, 45, 14
+END
+
+/* German */
+RID_GBMVIEWER_PREFS_DE DIALOG 11, 26, 181, 84 LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+FONT 8, "Helv"
+STYLE WS_VISIBLE | WS_POPUPWINDOW | WS_DLGFRAME
+CAPTION "GBM Bitmap Viewer"
+BEGIN
+	CONTROL "Optionen",                308, "BUTTON", BS_GROUPBOX | WS_CHILD | WS_VISIBLE, 3, 7, 174, 54
+	CONTROL "Zoom-Algorithmus:",       303, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE, 11, 23, 76, 8
+	CONTROL "Benachbarte Pixel",       TID_PREFERENCES_ALGO, "COMBOBOX", CBS_DROPDOWNLIST | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 94, 20, 75, 73
+	CONTROL "Seiten Vorausladen:",     304, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE, 9, 41, 78, 8
+	CONTROL "0",                       TID_PREFERENCES_PAGESUD, "msctls_updown32", UDS_ALIGNRIGHT | UDS_ARROWKEYS | UDS_NOTHOUSANDS | UDS_SETBUDDYINT | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 117, 39, 11, 14
+	CONTROL "0",                       TID_PREFERENCES_PAGES, "EDIT", ES_LEFT | ES_AUTOHSCROLL | ES_NUMBER | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, 94, 40, 30, 12
+	CONTROL "Seiten",                  307, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE, 136, 42, 28, 8
+	CONTROL "&OK",                     IDOK, "BUTTON", BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 41, 66, 51, 14
+	CONTROL "Abbrechen",               IDCANCEL, "BUTTON", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 97, 66, 45, 14
+END
+
+/* --------------------------- */
+
+STRINGTABLE
+BEGIN
+  /* English (also fallback if a language is missing) */
+  SID_GBMVIEWER_STRING_UNSUPPORTED_FMT_EN    "Unsupported file format"
+  SID_GBMVIEWER_STRING_SAVEAS_EN             "Export page as..."
+  SID_GBMVIEWER_STRING_ALL_FILES_EN          "All Files"
+  SID_GBMVIEWER_STRING_FMT_EXT_ERROR_EN      "Couldn't determine the file format based on the specified file extension. Please use one of the supported file extensions."
+  SID_GBMVIEWER_STRING_SCALE_SIMPLE_EN       "Simple"
+  SID_GBMVIEWER_STRING_SCALE_NEARNEIGHBOR_EN "Nearest Neighbor"
+
+  /* German */
+  SID_GBMVIEWER_STRING_UNSUPPORTED_FMT_DE    "Nicht unterst¸Åtztes Dateiformat"
+  SID_GBMVIEWER_STRING_SAVEAS_DE             "Seite exportieren unter..."
+  SID_GBMVIEWER_STRING_ALL_FILES_DE          "Alle Dateien"
+  SID_GBMVIEWER_STRING_FMT_EXT_ERROR_DE      "Basierend auf der angebenenen Dateiendung konnte das Dateiformat nicht bestimmt werden. Bitte verwenden Sie eine der unterst¸tzten Dateiendungen."
+  SID_GBMVIEWER_STRING_SCALE_SIMPLE_DE       "Einfach"
+  SID_GBMVIEWER_STRING_SCALE_NEARNEIGHBOR_DE "Benachbarte Pixel"
+END
+
+

@@ -1,0 +1,107 @@
+# Makefile for Libtiff (static)
+
+# This makefile is for IBM VisualAge C++ FP8 (CTx308) on OS/2.
+# It builds the Libtiff library as a statically linkable library (.LIB).
+
+# Builds libtiff objects which are compiled multithreaded
+# Therefore all users should also be multithreaded
+#
+# Modify this line to point to the zlib library 1.2.3 or higher
+ZLIB = ..\zlib
+IJG  = ..\libjpeg
+IDIR = bin
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\makefile.os2\maketif.options
+
+CWARNS     = /W2 /Wcnd+cns+dcl+ord+par+pro+rea+ret+use+
+CFLAGS     = /C+ $(CWARNS) /G5 /Gd-m+ /Q+ /O+ /Os- /Gf+ /I$(ZLIB) /I$(IJG) /I$(JBIGDIR) /I.. $(EXTRAFLAGS) /DNDEBUG /DGBMMEM
+CFLAGS_DBG = /C+ $(CWARNS) /G5 /Gd-m+ /Q+ /O+ /Os- /Gf+ /I$(ZLIB) /I$(IJG) /I$(JBIGDIR) /I.. $(EXTRAFLAGS) /Ti+ /Tm+ /DDEBUG /DGBMMEM
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS     = $(CFLAGS_DBG)
+!endif
+
+#
+
+OBJS_SYSDEP_MODULE = tif_os2.obj
+
+OBJS =  tif_aux.obj \
+	tif_close.obj \
+	tif_codec.obj \
+	tif_color.obj \
+	tif_compress.obj \
+	tif_dir.obj \
+	tif_dirinfo.obj \
+	tif_dirread.obj \
+	tif_dirwrite.obj \
+	tif_dumpmode.obj \
+	tif_error.obj \
+	tif_extension.obj \
+	tif_fax3.obj \
+	tif_fax3sm.obj \
+	tif_getimage.obj \
+	tif_jbig.obj \
+	tif_jpeg.obj \
+	tif_flush.obj \
+	tif_luv.obj \
+	tif_lzw.obj \
+	tif_next.obj \
+	tif_ojpeg.obj \
+	tif_open.obj \
+	tif_packbits.obj \
+	tif_pixarlog.obj \
+	tif_predict.obj \
+	tif_print.obj \
+	tif_read.obj \
+	tif_swab.obj \
+	tif_strip.obj \
+	tif_thunder.obj \
+	tif_tile.obj \
+	tif_version.obj \
+	tif_warning.obj \
+	tif_write.obj \
+	tif_zip.obj \
+	$(OBJS_SYSDEP_MODULE)
+
+#
+
+.SUFFIXES:	.c .obj
+
+.c.obj:
+		icc $(CFLAGS) $*.c
+
+#
+
+all:   tiff.lib
+
+
+tiff.lib: $(OBJS)
+          -del /N $@ 2> nul
+           ilib /NOLOGO $@ $**;
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+         -del /F /N $(OBJS) tif_win32.obj 2>nul
+
+clobber:
+         -del /F /N $(OBJS) tif_win32.obj 2>nul
+         -del /F /N tiff.lib 2>nul
+         -del /F /N $(IDIR)\* 2>nul
+
+install:
+         copy tiff.lib     $(IDIR)
+         copy tiff.h       $(IDIR)
+         copy tiffio.h     $(IDIR)
+         copy tiffconf.h   $(IDIR)
+		 copy tif_config.h $(IDIR)
+
+package:
+         -del /F /N $(IDIR)\libtiff.zip 2>nul
+         zip -9 $(IDIR)\libtiff.zip tiff.lib tiff.h tiffio.h tiffconf.h tif_config.h
+

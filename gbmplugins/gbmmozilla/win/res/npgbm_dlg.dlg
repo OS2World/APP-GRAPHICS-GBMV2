@@ -1,0 +1,70 @@
+701 DIALOG FIXED IMPURE  31, 30, 190, 93
+STYLE WS_POPUPWINDOW | WS_VISIBLE | WS_DLGFRAME
+CAPTION "GBM Bitmap Viewer"
+FONT 8, "MS Sans Serif"
+BEGIN
+	CONTROL "Image Information",                                212, "BUTTON", BS_GROUPBOX | WS_CHILD | WS_VISIBLE, 2, 6, 185, 64
+	CONTROL "Format:",                                          201, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 8, 20, 24, 8
+	CONTROL "Width:",                                           202, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 8, 29, 24, 8
+	CONTROL "Height:",                                          203, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 8, 38, 24, 8
+	CONTROL "Bits:",                                            204, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 8, 47, 24, 8
+	CONTROL "Pages:",                                           209, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 8, 56, 24, 8
+	CONTROL "Microsoft/Aldus Tagged Image File Format support", 1360, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 37, 20, 148, 8
+	CONTROL "Text",                                             1361, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 37, 29, 148, 8
+	CONTROL "Text",                                             1362, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 37, 38, 148, 8
+	CONTROL "Text",                                             1363, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 37, 47, 148, 8
+	CONTROL "Text",                                             1364, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 37, 56, 148, 8
+	CONTROL "&OK",                                              IDOK, "BUTTON", BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 69, 75, 52, 14
+END
+
+1001 DIALOG FIXED IMPURE  31, 30, 190, 93
+STYLE WS_POPUPWINDOW | WS_VISIBLE | WS_DLGFRAME
+CAPTION "GBM Bitmap Viewer"
+FONT 8, "MS Sans Serif"
+BEGIN
+	CONTROL "Bildinformation",                                  212, "BUTTON", BS_GROUPBOX | WS_CHILD | WS_VISIBLE, 2, 6, 185, 64
+	CONTROL "Format:",                                          201, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 8, 20, 24, 8
+	CONTROL "Breite:",                                          202, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 8, 29, 24, 8
+	CONTROL "H¸he:",                                            203, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 8, 38, 24, 8
+	CONTROL "Bits:",                                            204, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 8, 47, 24, 8
+	CONTROL "Seiten:",                                          209, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE | WS_GROUP, 8, 56, 24, 8
+	CONTROL "Microsoft/Aldus Tagged Image File Format support", 1360, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 37, 20, 148, 8
+	CONTROL "Text",                                             1361, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 37, 29, 148, 8
+	CONTROL "Text",                                             1362, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 37, 38, 148, 8
+	CONTROL "Text",                                             1363, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 37, 47, 148, 8
+	CONTROL "Text",                                             1364, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 37, 56, 148, 8
+	CONTROL "&OK",                                              IDOK, "BUTTON", BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 69, 75, 52, 14
+END
+
+1002 DIALOG DISCARDABLE  11, 26, 181, 84
+STYLE DS_MODALFRAME | WS_OVERLAPPED | WS_CAPTION | WS_VISIBLE | WS_SYSMENU
+CAPTION "GBM Bitmap Viewer"
+FONT 8, "Helv"
+BEGIN
+	CONTROL "Optionen",                100, "BUTTON", BS_GROUPBOX | WS_CHILD | WS_VISIBLE, 3, 7, 174, 54
+	CONTROL "OK",                      IDOK, "BUTTON", BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 41, 66, 51, 14
+	CONTROL "Benachbarte Pixel",       103, "COMBOBOX", CBS_DROPDOWN | CBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 94, 20, 75, 73
+	CONTROL "Zoom-Algorithmus:",       104, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE, 11, 23, 76, 8
+	CONTROL "Vorausladen von Seiten:", 105, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE, 9, 41, 78, 8
+	CONTROL "0",                       106, "msctls_updown32", UDS_ALIGNLEFT | UDS_NOTHOUSANDS | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 117, 39, 11, 14
+	CONTROL "0",                       107, "EDIT", ES_LEFT | ES_AUTOHSCROLL | ES_NUMBER | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, 94, 40, 23, 12
+	CONTROL "Threads",                 108, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE, 136, 42, 28, 8
+	CONTROL "Abbrechen",               IDCANCEL, "BUTTON", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 97, 66, 45, 14
+END
+
+702 DIALOG DISCARDABLE  17, 25, 159, 82
+STYLE DS_MODALFRAME | WS_OVERLAPPED | WS_CAPTION | WS_VISIBLE | WS_SYSMENU
+CAPTION "GBM Bitmap Viewer"
+FONT 8, "Helv"
+BEGIN
+	CONTROL "Options",          128, "BUTTON", BS_GROUPBOX | WS_CHILD | WS_VISIBLE, 3, 6, 153, 54
+	CONTROL "Zoom Algorithm:",  127, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE, 11, 20, 55, 8
+	CONTROL "Nearest Neighbor", 126, "COMBOBOX", CBS_DROPDOWN | CBS_HASSTRINGS | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 72, 18, 75, 73
+	CONTROL "Prefetch Pages:",  125, "STATIC", SS_RIGHT | WS_CHILD | WS_VISIBLE, 11, 39, 54, 8
+	CONTROL "0",                124, "EDIT", ES_LEFT | ES_AUTOHSCROLL | ES_NUMBER | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, 72, 38, 23, 12
+	CONTROL "0",                123, "msctls_updown32", UDS_ALIGNLEFT | UDS_NOTHOUSANDS | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 95, 37, 11, 14
+	CONTROL "Threads",          122, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE, 114, 40, 28, 8
+	CONTROL "OK",               IDOK, "BUTTON", BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 29, 65, 51, 14
+	CONTROL "Cancel",           IDCANCEL, "BUTTON", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 85, 65, 45, 14
+END
+

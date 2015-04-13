@@ -1,0 +1,132 @@
+#
+# Generalised Bitmap Module Lucide adapter
+#
+# Copyright (C) 2006-2012 Heiko Nitzsche
+#
+#   This software is provided 'as-is', without any express or implied
+#   warranty.  In no event will the author be held liable for any damages
+#   arising from the use of this software.
+#
+#   Permission is granted to anyone to use this software for any purpose,
+#   including commercial applications, and to alter it and redistribute it
+#   freely, subject to the following restrictions:
+#
+#   1. The origin of this software must not be misrepresented; you must not
+#      claim that you wrote the original software. If you use this software
+#      in a product, an acknowledgment in the product documentation would be
+#      appreciated but is not required.
+#   2. Altered source versions must be plainly marked as such, and must not be
+#      misrepresented as being the original software.
+#   3. This notice may not be removed or altered from any source distribution.
+
+#
+# This makefile is for IBM Visual Age C++ 3.08.
+#
+# Builds Lucide adapter library for GBM.DLL.
+# As GBM.DLL is built multithreaded, all users should also be multithreaded.
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\..\make.opt
+
+# Location of gbm libs and public header files
+COMMON       = ..\common
+GBM          = ..\..\gbm
+LUDOC        = ludoc
+OS2TKSOM     = $(OS2TK)\som
+#OS2TKSOM_INC = $(OS2TKSOM)\include
+# Use modified SOM includes (patched for GCC, provided by Lucide plugindev pack)
+OS2TKSOM_INC = sominc
+OS2TKSOM_LIB = $(OS2TKSOM)\lib
+
+# ------------------
+# Configure compiler
+# ------------------
+
+#
+# IBM Visual Age C++:
+#
+CWARNS         = /W3
+CFLAGS         = /C+ $(CWARNS) /G5 /Gd-m+ /Q+ /O+  /Os- /Gf+ /DOS2 /DNDEBUG /I. /I$(GBM) /I$(COMMON) /I$(LUDOC) /I$(OS2TKSOM_INC)
+CFLAGS_DBG     = /C+ $(CWARNS) /G5 /Gd-m+ /Q+ /Gf+ /Ti+ /DOS2 /I. /I$(GBM) /I$(COMMON) /I$(LUDOC) /I$(OS2TKSOM_INC) /DDEBUG
+CFLAGS_DLL     = $(CFLAGS) /Ge-
+CFLAGS_DLL_TM  = $(CFLAGS_DLL)
+CFLAGS_DLL_DBG = $(CFLAGS_DBG) /Ge-
+
+LFLAGS         = /NOI /NOLOGO /EXEPACK:2 /OPTFUNC /PACKCODE /PACKDATA
+LFLAGS_DBG     = /NOI /NOLOGO /DEBUG /DBGPACK
+LFLAGS_DLL     = $(LFLAGS) /NOE /DLL
+LFLAGS_DLL_DBG = $(LFLAGS_DBG) /NOE /DLL
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS_DLL     = $(CFLAGS_DLL_DBG)
+CFLAGS_DLL_TM  = $(CFLAGS_DLL_TM) /Tm+
+LFLAGS_DLL     = $(LFLAGS_DLL_DBG)
+!endif
+
+# Common source file for update checking
+HDR_FILES = $(COMMON)\GbmException.hpp $(COMMON)\GbmDocument.hpp $(COMMON)\GbmDocumentPage.hpp \
+            $(COMMON)\GbmRenderer.hpp $(COMMON)\GbmAccessor.hpp $(COMMON)\ConfigHandler.hpp $(GBM)\gbm.h $(GBM)\gbmmem.h $(GBM)\gbmscale.h $(GBM)\gbmmir.h $(GBM)\gbmrect.h \
+            $(COMMON)\os2defs.h $(COMMON)\Semaphore.hpp
+
+#
+
+.SUFFIXES: .cpp .obj .idl .xh
+
+.cpp.obj:
+               icc $(CFLAGS_DLL) $*.cpp
+
+.idl.xh:
+    sc -c -s"xc;xih;xh" -I$(LUDOC) $*.idl
+    $(OS2TKSOM_INC)\cnvsomex.cmd $@
+
+#
+
+all:           common.lib lugbm.dll
+
+#
+
+lugbm.dll:     lugbm.obj WGbmDocument.obj lugbm_vac.def
+               ilink $(LFLAGS_DLL) /OUT:$@ @<<
+                     $** CPPOPA3.OBJ $(GBM)\gbmmem.lib $(GBM)\gbmmthrd.lib $(GBM)\gbmscale.lib $(GBM)\gbmmir.lib $(GBM)\gbmrect.lib $(COMMON)\common.lib $(LUDOC)\ludoc.lib $(OS2TKSOM_LIB)\somtk.lib
+<<
+
+lugbm.obj:     lugbm.cpp lugbm.hpp lugbm.xh $(HDR_FILES)
+
+WGbmDocument.obj:  WGbmDocument.cpp WGbmDocument.hpp  $(HDR_FILES)
+
+lugbm.cpp:     lugbm.idl
+
+common.lib:
+!ifdef debug
+               (cd $(COMMON) && nmake -c -f makefile.vac_os2 debug=yes)
+!else
+               (cd $(COMMON) && nmake -c -f makefile.vac_os2)
+!endif
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+    (cd $(COMMON) && nmake -c -f makefile.vac_os2 clean)
+    -del /F /N *.obj *.xh *.xih *.xc 2>nul
+
+clobber:
+    (cd $(COMMON) && nmake -c -f makefile.vac_os2 clobber)
+    -del /F /N *.obj *.xh *.xih *.xc *.dll 2>nul
+
+#
+
+install:
+
+#
+
+exepack:
+         $(DLL_PACKER) *.dll
+
+#
+
+package:
+

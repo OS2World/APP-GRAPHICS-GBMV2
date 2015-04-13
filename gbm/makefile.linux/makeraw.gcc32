@@ -1,0 +1,74 @@
+# Makefile for libraw library (static)
+
+# This makefile is for GCC on Linux 32/64 bit.
+# It builds the library as a statically linkable library (.a).
+#
+
+# set directory where binaries will be placed by target install
+IDIR = bin
+
+# For 64bit compile call make with m64=on
+ifdef m64
+  CFLAGS_MACHINE = -m64 -mtune=generic -fPIC
+else
+  CFLAGS_MACHINE = -m32 -mtune=generic
+endif
+
+CWARNS     = -w -Werror
+CFLAGS     = -c $(CWARNS) $(CFLAGS_MACHINE) -mfpmath=sse -msse -O3 -I. -I.. -DLIBRAW_NODLL -DNDEBUG
+CFLAGS_DBG = -c $(CWARNS) $(CFLAGS_MACHINE) -mfpmath=sse -msse -g -fbounds-check -I. -I.. -DLIBRAW_NODLL -DDEBUG
+
+# For debugging call make with debug=on
+ifdef debug
+CFLAGS   = $(CFLAGS_DBG)
+endif
+
+# Template command for compiling .cpp to .o
+.SUFFIXES:	.cpp .o
+
+.cpp.o:; g++ $(CFLAGS) $*.c
+
+#
+
+all:   raw.a
+
+raw.a:	internal/dcraw_common.o internal/dcraw_fileio.o internal/demosaic_packs.o src/libraw_cxx.o src/libraw_c_api.o src/libraw_datastream.o
+		@rm -f $@ 2>/dev/null
+		@ar ru $@ internal/dcraw_common.o internal/dcraw_fileio.o internal/demosaic_packs.o src/libraw_cxx.o src/libraw_c_api.o src/libraw_datastream.o
+
+internal/dcraw_common.o:	internal/dcraw_common.cpp
+							g++ $(CFLAGS) -o internal/dcraw_common.o internal/dcraw_common.cpp
+
+internal/demosaic_packs.o:	internal/demosaic_packs.cpp
+							g++ $(CFLAGS) -o internal/demosaic_packs.o internal/demosaic_packs.cpp
+                            
+internal/dcraw_fileio.o:	internal/dcraw_fileio.cpp
+							g++ $(CFLAGS) -o internal/dcraw_fileio.o internal/dcraw_fileio.cpp
+
+src/libraw_cxx.o:	src/libraw_cxx.cpp
+					g++ $(CFLAGS) -o src/libraw_cxx.o src/libraw_cxx.cpp
+
+src/libraw_c_api.o:	src/libraw_c_api.cpp
+					g++ $(CFLAGS) -o src/libraw_c_api.o src/libraw_c_api.cpp
+
+src/libraw_datastream.o:	src/libraw_datastream.cpp
+					g++ $(CFLAGS) -o src/libraw_datastream.o src/libraw_datastream.cpp
+                    
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:;		@rm -f src/*.o internal/*.o   2>/dev/null
+
+clobber:;  	@rm -f src/*.o internal/*.o   2>/dev/null
+		@rm -f raw.a     2>/dev/null
+		@rm -f $(IDIR)/* 2>/dev/null
+
+install:;	@cp raw.a       $(IDIR)
+		@cp libraw/*.h      $(IDIR)
+
+package:;	@rm -f $(IDIR)/libraw.tar.gz 2>/dev/null
+		@tar zcvf $(IDIR)/libraw.tar.gz raw.a *.h
+
+

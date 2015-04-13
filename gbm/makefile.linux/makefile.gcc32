@@ -1,0 +1,575 @@
+#
+# Generalised Bitmap Module
+#
+# This makefile is for GCC on Linux 32/64 bit.
+#
+# Builds  which is compiled multithreaded
+# Therefore all users should also be multithreaded
+#
+
+# set the versioned lib to build
+LIB_GBM       = gbm
+LIB_GBM_NAME  = lib$(LIB_GBM).so
+LIB_GBMS_NAME = $(LIB_GBM).a
+
+# directory of the platform makefiles
+MAKEFILE_SRC2 = makefile.linux
+MAKEFILE_SRC  = ../$(MAKEFILE_SRC2)
+
+# Modify this line to point to the Independant JPEG groups library
+# If you haven't got it, comment out the line instead.
+# (Keep the current makefile !)
+IJG    = libjpeg
+
+# Modify this line to point to the Open JPEG library
+# If you haven't got it, comment out the line instead.
+OPENJPEG = libojpeg
+
+# Modify these 2 lines to point to the libpng library and the zlib
+# If you haven't got them, comment out the lines instead.
+ZLIB   = zlib
+LIBPNG = libpng
+
+# Modify this line to point to the libtiff library
+# If you haven't got it, comment out the line instead.
+LIBTIFF = libtiff
+
+# Modify this line to point to the JBIG Kit library.
+# If you haven't got it or want to skip support for JBIG because of
+# of patenting issues, comment out the line instead.
+JBIG = libjbig
+
+# Modify this line to point to the LibRaw library
+LIBRAW      = libraw
+LIBRAW_INCL = $(LIBRAW)/libraw
+
+# Documentation directory
+DOCDIR = doc
+
+# Installation directory: libgbm.so, and gbm.h files are copied to this directory
+IDIR =  bin
+
+# -------------------
+# Configure lib usage
+# -------------------
+
+CJPEG    = -DENABLE_IJG
+LIB_IJG  = $(IJG)/jpeg.a
+
+CJ2K     = -DENABLE_J2K
+LIB_J2K  = $(OPENJPEG)/ojpeg.a
+
+# ZLIB is required for LIBPNG
+CPNG     = -DENABLE_PNG
+LIB_ZLIB = $(ZLIB)/z.a
+LIB_PNG  = $(LIBPNG)/png.a
+
+# ZLIB and IJG are required for LIBTIFF
+CTIFF    = -DENABLE_TIF
+LIB_TIFF = $(LIBTIFF)/tiff.a
+
+ifdef JBIG
+  CJBIG    = -DENABLE_JBIG
+  LIB_JBIG = $(JBIG)/jbig.a
+endif
+
+CRAW    = -DENABLE_RAW
+LIB_RAW = $(LIBRAW)/raw.a
+
+# ------------------
+# Configure compiler
+# ------------------
+
+#
+# GCC
+#
+CC = gcc
+
+# For 64bit compile call make with m64=on
+ifdef m64
+  CFLAGS_MACHINE   = -m64 -mtune=generic -fPIC
+  MAKEOPTS_MACHINE = "m64=yes"
+else
+  CFLAGS_MACHINE = -m32 -mtune=generic
+  MAKEOPTS_MACHINE =
+endif
+
+CWARNS         = -Wall -Werror
+CFLAGS         = -c $(CWARNS) $(CFLAGS_MACHINE) -I. -mfpmath=sse -msse -O3 -fno-strict-aliasing -DLINUX -DNDEBUG $(CJPEG) $(CJ2K) $(CJBIG) $(CPNG) $(CTIFF) $(CRAW)
+CFLAGS_DBG     = -c $(CWARNS) $(CFLAGS_MACHINE) -I. -mfpmath=sse -msse -fno-strict-aliasing -fbounds-check -g -DLINUX -DDEBUG $(CJPEG) $(CJ2K) $(CJBIG) $(CPNG) $(CTIFF) $(CRAW)
+CFLAGS_DLL     = $(CFLAGS)
+CFLAGS_DLL_DBG = $(CFLAGS_DBG)
+
+LFLAGS         = $(CFLAGS_MACHINE) -s
+LFLAGS_DBG     = $(CFLAGS_MACHINE) -g
+LFLAGS_EXE     = $(LFLAGS) -lm -Wl,-rpath .
+LFLAGS_EXE_DBG = $(LFLAGS_DBG) -lm -Wl,-rpath .
+LFLAGS_DLL     = $(LFLAGS) -shared -lm
+LFLAGS_DLL_DBG = $(LFLAGS_DBG) -shared -lm
+
+# For debugging call nmake or wmake with debug=on
+ifdef debug
+  CFLAGS_DLL     = $(CFLAGS_DLL_DBG)
+  LFLAGS_EXE     = $(LFLAGS_EXE_DBG)
+  LFLAGS_DLL     = $(LFLAGS_DLL_DBG)
+  MAKEOPTS_DBG   = debug=yes
+endif
+
+MAKEOPTS = $(MAKEOPTS_MACHINE) $(MAKEOPTS_DBG)
+
+
+OBJS_ = gbmpbm.o gbmpgm.o gbmppm.o gbmpnm.o  \
+        gbmbmp.o gbmtga.o gbmkps.o gbmiax.o gbmpcx.o  \
+        gbmtif.o gbmlbm.o gbmvid.o gbmgif.o gbmxbm.o  \
+        gbmspr.o gbmpsg.o gbmgem.o gbmcvp.o gbmjpg.o gbmjbg.o \
+        gbmj2k.o gbmpng.o gbmxpm.o gbmxpmcn.o gbmraw.o gbmhelp.o gbmmap.o gbmmem.o
+
+OBJS = gbm.o $(OBJS_)
+
+OBJS_S = gbms.o $(OBJS_)
+
+
+.SUFFIXES:	.c .o
+
+.c.o:
+		$(CC) $(CFLAGS_DLL) $*.c
+
+#
+
+all:    prep ijg j2k jbig png tiff raw \
+        gbmmthrd.a \
+        gbmdllout \
+        $(LIB_GBM_NAME) $(LIB_GBMS_NAME) \
+        gbmmem.a \
+        gbmtoolsout \
+        gbmhdr \
+        gbmmir.a gbmref \
+        gbmrect.a gbmsub \
+        gbmscale.a gbmsize \
+        gbmerr.a gbmtrunc.a gbmht.a gbmhist.a gbmmcut.a gbmbpp \
+        gbmcpal  \
+        gbmgamma \
+        gbmconv \
+        gbmver
+
+#
+
+prep:
+	@echo -----------------------------
+	@echo JPEG support, via IJG library
+	@echo -----------------------------
+	@cp -p $(IJG)/jconfig.txt $(IJG)/jconfig.h
+	@cp -p jmorecfg.h $(IJG)
+	@echo ---------------------------------------
+	@echo JPEG 2000 support, via OpenJPEG library
+	@echo ---------------------------------------
+ifdef JBIG
+	@echo ---------------------------------------
+	@echo JBIG support, via JBIG Kit library
+	@echo ---------------------------------------
+endif
+	@echo --------------------------------
+	@echo PNG support, via LIBPNG and ZLIB
+	@echo --------------------------------
+	@cp pngusr.h     $(LIBPNG)
+	@echo ---------------------------------------
+	@echo TIFF support, via LIBTIFF, IJG and ZLIB
+	@echo ---------------------------------------
+
+ijg:
+	@echo ---------------------
+	@echo Compiling IJG library
+	@echo ---------------------
+	@make -C $(IJG) -f $(MAKEFILE_SRC)/makeijg.gcc32 $(MAKEOPTS)
+
+#
+
+j2k:
+ifdef CJ2K
+	@echo --------------------------
+	@echo Compiling OpenJPEG library
+	@echo --------------------------
+	@make -C $(OPENJPEG) -f $(MAKEFILE_SRC)/makej2k.gcc32 $(MAKEOPTS)
+endif
+
+#
+
+jbig:
+ifdef JBIG
+	@echo --------------------------
+	@echo Compiling JBIG Kit library
+	@echo --------------------------
+	@make -C $(JBIG) -f $(MAKEFILE_SRC)/makejbig.gcc32 $(MAKEOPTS)
+endif
+
+#
+
+png:
+	@echo ----------------------
+	@echo Compiling ZLIB library
+	@echo ----------------------
+	@make -C $(ZLIB) -f $(MAKEFILE_SRC)/makezlib.gcc32 $(MAKEOPTS)
+	@echo ------------------------
+	@echo Compiling LIBPNG library
+	@echo ------------------------
+	@make -C $(LIBPNG) -f $(MAKEFILE_SRC)/makepng.gcc32 $(MAKEOPTS)
+
+#
+
+tiff:
+	@echo -------------------------
+	@echo Compiling LIBTIFF library
+	@echo -------------------------
+ifdef JBIG
+	@make -C $(LIBTIFF) -f $(MAKEFILE_SRC)/maketif.gcc32 $(MAKEOPTS) ENABLE_JBIG=1
+else
+	@make -C $(LIBTIFF) -f $(MAKEFILE_SRC)/maketif.gcc32 $(MAKEOPTS)
+endif
+
+#
+
+raw:
+	@echo ------------------------
+	@echo Compiling LIBRAW library
+	@echo ------------------------
+	@make -C $(LIBRAW) -f $(MAKEFILE_SRC)/makeraw.gcc32 $(MAKEOPTS)
+
+#
+
+gbmdllout:
+	@echo ---------------------
+	@echo Compiling GBM library
+	@echo ---------------------
+
+gbmtoolsout:
+	@echo -------------------
+	@echo Compiling GBM tools
+	@echo -------------------
+
+#
+
+$(LIB_GBM_NAME):	$(OBJS) $(LIB_IJG) $(LIB_J2K) $(LIB_PNG) $(LIB_TIFF) $(LIB_ZLIB) $(LIB_JBIG) $(LIB_RAW)
+	g++ $(LFLAGS_DLL) -o $@ $(OBJS) -L. gbmmthrd.a -lpthread $(LIB_IJG) $(LIB_J2K) $(LIB_PNG) $(LIB_TIFF) $(LIB_ZLIB) $(LIB_JBIG) $(LIB_RAW)
+
+$(LIB_GBMS_NAME):	$(OBJS_S)
+		@rm -f $@ 2>/dev/null
+		ar r $@ $(OBJS_S)
+
+gbm.o:  gbm.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h gbmpbm.h gbmpgm.h gbmpnm.h gbmppm.h gbmbmp.h gbmtga.h gbmkps.h gbmiax.h gbmpcx.h gbmtif.h gbmlbm.h gbmvid.h gbmgif.h gbmxbm.h gbmspr.h gbmpsg.h gbmgem.h gbmcvp.h gbmjpg.h gbmpng.h gbmxpm.h gbmxpmcn.h gbmj2k.h gbmjbg.h gbmraw.h
+
+gbms.o:  gbm.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h gbmpbm.h gbmpgm.h gbmpnm.h gbmppm.h gbmbmp.h gbmtga.h gbmkps.h gbmiax.h gbmpcx.h gbmtif.h gbmlbm.h gbmvid.h gbmgif.h gbmxbm.h gbmspr.h gbmpsg.h gbmgem.h gbmcvp.h gbmjpg.h gbmpng.h gbmxpm.h gbmxpmcn.h gbmj2k.h gbmjbg.h gbmraw.h
+	$(CC) $(CFLAGS_DLL) -o $@ gbm.c
+
+# ------------
+# File formats
+# ------------
+
+gbmpbm.o:	gbmpbm.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+
+gbmpgm.o:	gbmpgm.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+
+gbmpnm.o:	gbmpnm.c gbm.h gbmhelp.h gbmdesc.h
+
+gbmppm.o:	gbmppm.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+
+gbmbmp.o:	gbmbmp.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+
+gbmtga.o:	gbmtga.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+
+gbmkps.o:	gbmkps.c gbm.h gbmhelp.h gbmdesc.h
+
+gbmiax.o:	gbmiax.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+
+gbmpcx.o:	gbmpcx.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+
+gbmlbm.o:	gbmlbm.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+
+gbmvid.o:	gbmvid.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+
+gbmgif.o:	gbmgif.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+
+gbmxbm.o:	gbmxbm.c gbm.h gbmhelp.h gbmdesc.h
+
+gbmxpm.o:	gbmxpm.c gbm.h gbmhelp.h gbmdesc.h gbmmap.h gbmmem.h
+
+gbmxpmcn.o:	gbmxpmcn.c gbmxpmcn.h gbm.h gbmmap.h
+
+gbmspr.o:	gbmspr.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+
+gbmpsg.o:	gbmpsg.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+
+gbmgem.o:	gbmgem.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+
+gbmcvp.o:	gbmcvp.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+
+# ------------------
+
+gbmhelp.o:	gbmhelp.c gbm.h gbmmem.h
+
+gbmmap.o:	gbmmap.c gbm.h gbmmap.h
+
+# ------------------
+
+gbmjpg.o:	gbmjpg.c gbmjpg.h gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+		$(CC) $(CFLAGS_DLL) -I$(IJG) $*.c
+
+gbmj2k.o:	gbmj2k.c gbmj2k.h gbm.h gbmhelp.h gbmdesc.h
+		$(CC) $(CFLAGS_DLL) -DOPJ_STATIC -DUSE_JPWL -I$(OPENJPEG) $*.c
+
+gbmpng.o:	gbmpng.c gbm.h gbmhelp.h gbmmap.h gbmdesc.h gbmmem.h
+		$(CC) $(CFLAGS_DLL) -DPNG_USER_CONFIG -I$(LIBPNG) -I$(ZLIB) $*.c
+
+gbmtif.o:	gbmtif.c gbm.h gbmhelp.h gbmmap.h gbmdesc.h gbmmem.h
+		$(CC) $(CFLAGS_DLL) -I$(IJG) -I$(ZLIB) -I$(LIBTIFF) $*.c
+
+ifdef JBIG
+gbmjbg.o:	gbmjbg.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+		$(CC) $(CFLAGS_DLL) -I$(JBIG) $*.c
+else
+gbmjbg.o:	gbmjbg.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+		$(CC) $(CFLAGS_DLL) $*.c
+endif
+        
+gbmraw.o:	gbmraw.c gbm.h gbmhelp.h gbmdesc.h gbmmem.h
+		$(CC) $(CFLAGS_DLL) -I$(LIBRAW_INCL) -DLIBRAW_NODLL $*.c
+
+
+# ------------
+# Bitmap tools
+# ------------
+
+gbmtool.o:    gbmtool.c gbmtool.h gbm.h
+
+gbmtool.a:	gbmtool.o
+		@rm -f $@ 2>/dev/null
+		@ar ru $@ gbmtool.o
+
+#
+
+gbmmem.o:	gbmmem.c gbmmem.h
+
+gbmmem.a:	gbmmem.o
+		@rm -f $@ 2>/dev/null
+		@ar ru $@ gbmmem.o
+
+#
+
+gbmmthrd.o:	gbmmthrd.c gbmmthrd.h
+
+gbmmthrd.a:	gbmmthrd.o
+		@rm -f $@ 2>/dev/null
+		@ar ru $@ gbmmthrd.o
+
+#
+
+gbmhdr:	gbmhdr.o gbmtool.a $(LIB_GBM_NAME)
+		gcc $(LFLAGS_EXE) -o $@ gbmhdr.o gbmtool.a -L. -l$(LIB_GBM)
+
+gbmhdr.o:	gbmhdr.c gbm.h
+
+#
+
+gbmmir.a:	gbmmir.o
+		@rm -f $@ 2>/dev/null
+		@ar ru $@ gbmmir.o
+
+gbmmir.o:	gbmmir.c gbmmir.h gbmmem.h
+
+gbmref:	gbmref.o $(LIB_GBM_NAME) gbmmem.a gbmmir.a gbmtool.a
+		gcc $(LFLAGS_EXE) -o $@ gbmref.o gbmmem.a gbmmir.a gbmtool.a -L. -l$(LIB_GBM)
+
+gbmref.o:	gbmref.c gbm.h gbmmem.h gbmmir.h
+
+#
+
+gbmrect.a:	gbmrect.o
+		@rm -f $@ 2>/dev/null
+		@ar ru $@ gbmrect.o
+
+gbmrect.o:	gbmrect.c
+
+gbmsub:	gbmsub.o $(LIB_GBM_NAME) gbmmem.a gbmrect.a gbmtool.a
+		gcc $(LFLAGS_EXE) -o $@ gbmsub.o gbmmem.a gbmrect.a gbmtool.a -L. -l$(LIB_GBM)
+
+gbmsub.o:	gbmsub.c gbm.h gbmmem.h gbmrect.h
+
+#
+
+gbmerr.a:	gbmerr.o
+		@rm -f $@ 2>/dev/null
+		@ar ru $@ gbmerr.o
+
+gbmerr.o:	gbmerr.c gbmmem.h
+
+#
+
+gbmscale.a:	gbmscale.o
+		@rm -f $@ 2>/dev/null
+		@ar ru $@ gbmscale.o
+
+gbmscale.o:	gbmscale.c gbmscale.h gbmmem.h gbmmthrd.h
+
+gbmsize:	gbmsize.o $(LIB_GBM_NAME) gbmmem.a gbmscale.a gbmtool.a gbmmthrd.a
+		gcc $(LFLAGS_EXE) -o $@ gbmsize.o gbmmem.a gbmscale.a gbmtool.a gbmmthrd.a -lpthread -L. -l$(LIB_GBM)
+
+gbmsize.o:	gbmsize.c gbm.h gbmmem.h gbmscale.h
+
+#
+
+gbmtrunc.a:	gbmtrunc.o
+		@rm -f $@ 2>/dev/null
+		@ar ru $@ gbmtrunc.o
+
+gbmtrunc.o:	gbmtrunc.c gbmtrunc.h
+
+#
+
+gbmht.a:	gbmht.o
+		@rm -f $@ 2>/dev/null
+		@ar ru $@ gbmht.o
+
+gbmht.o:	gbmht.c gbmht.h
+
+#
+
+gbmhist.a:	gbmhist.o
+		@rm -f $@ 2>/dev/null
+		@ar ru $@ gbmhist.o
+
+gbmhist.o:	gbmhist.c gbmmem.h
+
+#
+
+gbmmcut.a:	gbmmcut.o
+		@rm -f $@ 2>/dev/null
+		@ar ru $@ gbmmcut.o
+
+gbmmcut.o:	gbmmcut.c gbmmem.h
+
+#
+
+gbmbpp:	gbmbpp.o $(LIB_GBM_NAME) gbmmem.a gbmerr.a gbmtrunc.a gbmht.a gbmhist.a gbmmcut.a gbmtool.a
+		gcc $(LFLAGS_EXE) -o $@ gbmbpp.o gbmmem.a gbmerr.a gbmtrunc.a gbmht.a gbmhist.a gbmmcut.a gbmtool.a -L. -l$(LIB_GBM)
+
+gbmbpp.o:	gbmbpp.c gbm.h gbmmem.h gbmerr.h gbmtrunc.h gbmht.h gbmhist.h gbmmcut.h
+
+#
+
+gbmcpal:	gbmcpal.o $(LIB_GBM_NAME) gbmmem.a gbmhist.a gbmmcut.a gbmtool.a
+		gcc $(LFLAGS_EXE) -o $@ gbmcpal.o gbmmem.a gbmhist.a gbmmcut.a gbmtool.a -L. -l$(LIB_GBM)
+
+gbmcpal.o:	gbmcpal.c gbm.h gbmmem.h gbmhist.h gbmmcut.h
+
+#
+
+gbmgamma:	gbmgamma.o $(LIB_GBM_NAME) gbmmem.a gbmtool.a
+		gcc $(LFLAGS_EXE) -o $@ gbmgamma.o gbmmem.a gbmtool.a -L. -l$(LIB_GBM)
+
+gbmgamma.o:	gbmgamma.c gbm.h gbmmem.h
+
+#
+
+gbmconv:	gbmconv.o $(LIB_GBM_NAME) gbmmem.a gbmtool.a
+		gcc $(LFLAGS_EXE) -o $@ gbmconv.o gbmmem.a gbmtool.a -L. -l$(LIB_GBM)
+
+gbmconv.o:	gbmconv.c gbm.h gbmmem.h
+
+#
+# On Linux we need libgbm.so
+
+gbmver:	gbmver.o $(LIB_GBM_NAME)
+		gcc $(LFLAGS_EXE) -o $@ gbmver.o -L. -l$(LIB_GBM)
+
+gbmver.o:	gbmver.c gbm.h
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:  prep
+	@rm -f $(IJG)/jmorecfg.h $(LIBPNG)/pngusr.h 2>/dev/null
+	@rm -f *.o 2>/dev/null
+	@make -C $(IJG)      -f $(MAKEFILE_SRC)/makeijg.gcc32  clean
+	@make -C $(OPENJPEG) -f $(MAKEFILE_SRC)/makej2k.gcc32  clean
+ifdef JBIG
+	@make -C $(JBIG)     -f $(MAKEFILE_SRC)/makejbig.gcc32 clean
+endif
+	@make -C $(ZLIB)     -f $(MAKEFILE_SRC)/makezlib.gcc32 clean
+	@make -C $(LIBPNG)   -f $(MAKEFILE_SRC)/makepng.gcc32  clean
+	@make -C $(LIBTIFF)  -f $(MAKEFILE_SRC)/maketif.gcc32  clean
+	@make -C $(LIBRAW)   -f $(MAKEFILE_SRC)/makeraw.gcc32  clean
+
+clobber: prep
+	@rm -f $(IJG)/jmorecfg.h $(LIBPNG)/pngusr.h 2>/dev/null
+	@rm -f *.o 2>/dev/null
+	@rm -f gbmhdr gbmref gbmsub gbmsize gbmbpp gbmcpal gbmgamma gbmconv gbmver 2>/dev/null
+	@rm -f *.a 2>/dev/null
+	@rm -f $(LIB_GBM_NAME) 2>/dev/null
+	@rm -f $(IDIR)/* 2>/dev/null
+	@make -C $(IJG)      -f $(MAKEFILE_SRC)/makeijg.gcc32  clobber
+	@make -C $(OPENJPEG) -f $(MAKEFILE_SRC)/makej2k.gcc32  clobber
+ifdef JBIG
+	@make -C $(JBIG)     -f $(MAKEFILE_SRC)/makejbig.gcc32 clobber
+endif
+	@make -C $(ZLIB)     -f $(MAKEFILE_SRC)/makezlib.gcc32 clobber
+	@make -C $(LIBPNG)   -f $(MAKEFILE_SRC)/makepng.gcc32  clobber
+	@make -C $(LIBTIFF)  -f $(MAKEFILE_SRC)/maketif.gcc32  clobber
+	@make -C $(LIBRAW)   -f $(MAKEFILE_SRC)/makeraw.gcc32  clobber
+
+#
+
+install:
+	@make -C $(IJG)      -f $(MAKEFILE_SRC)/makeijg.gcc32  install
+	@make -C $(OPENJPEG) -f $(MAKEFILE_SRC)/makej2k.gcc32  install
+	@make -C $(ZLIB)     -f $(MAKEFILE_SRC)/makezlib.gcc32 install
+ifdef JBIG
+	@make -C $(JBIG)     -f $(MAKEFILE_SRC)/makejbig.gcc32 install
+endif
+	@make -C $(LIBPNG)   -f $(MAKEFILE_SRC)/makepng.gcc32  install
+	@make -C $(LIBTIFF)  -f $(MAKEFILE_SRC)/maketif.gcc32  install
+	@make -C $(LIBRAW)   -f $(MAKEFILE_SRC)/makeraw.gcc32  install
+	@cp gbm.h      $(IDIR)
+	@cp gbmerr.h   $(IDIR)
+	@cp gbmhist.h  $(IDIR)
+	@cp gbmht.h    $(IDIR)
+	@cp gbmmcut.h  $(IDIR)
+	@cp gbmmir.h   $(IDIR)
+	@cp gbmrect.h  $(IDIR)
+	@cp gbmscale.h $(IDIR)
+	@cp gbmtrunc.h $(IDIR)
+	@cp gbmtool.h  $(IDIR)
+	@cp gbmmem.h   $(IDIR)
+	@cp gbmmthrd.h $(IDIR)
+	@cp *.a        $(IDIR)
+	@cp gbmhdr     $(IDIR)
+	@cp gbmref     $(IDIR)
+	@cp gbmsub     $(IDIR)
+	@cp gbmsize    $(IDIR)
+	@cp gbmbpp     $(IDIR)
+	@cp gbmcpal    $(IDIR)
+	@cp gbmgamma   $(IDIR)
+	@cp gbmconv    $(IDIR)
+	@cp gbmver     $(IDIR)
+	@cp $(LIB_GBM_NAME)     $(IDIR)
+	@cp $(DOCDIR)/readme_gbm.txt $(IDIR)
+
+#
+
+package:
+	@make -C $(IJG)      -f $(MAKEFILE_SRC)/makeijg.gcc32  package
+	@make -C $(OPENJPEG) -f $(MAKEFILE_SRC)/makej2k.gcc32  package
+ifdef JBIG
+	@make -C $(JBIG)     -f $(MAKEFILE_SRC)/makejbig.gcc32 package
+endif
+	@make -C $(ZLIB)     -f $(MAKEFILE_SRC)/makezlib.gcc32 package
+	@make -C $(LIBPNG)   -f $(MAKEFILE_SRC)/makepng.gcc32  package
+	@make -C $(LIBTIFF)  -f $(MAKEFILE_SRC)/maketif.gcc32  package
+	@make -C $(LIBRAW)   -f $(MAKEFILE_SRC)/makeraw.gcc32  package
+	@rm -f $(IDIR)/gbm.tar.gz 2>/dev/null
+	@tar zcvf $(IDIR)/gbm.tar.gz gbmhdr gbmref gbmsub gbmsize gbmbpp gbmcpal gbmgamma gbmconv gbmver \
+                          $(LIB_GBM_NAME) *.a gbm.h gbmerr.h gbmhist.h  \
+                          gbmht.h gbmmcut.h gbmmir.h gbmrect.h  \
+                          gbmscale.h gbmtrunc.h gbmtool.h gbmmem.h \
+                          gbmmthrd.h $(DOCDIR)/readme_gbm.txt
+

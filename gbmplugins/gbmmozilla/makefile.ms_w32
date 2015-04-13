@@ -1,0 +1,18 @@
+all:
+!ifdef debug
+      (cd win && nmake -c -f makefile.ms debug=yes)
+!else
+      (cd win && nmake -c -f makefile.ms)
+!endif
+
+clean:
+      (cd win && nmake -c -f makefile.ms clean)
+
+clobber:
+      (cd win && nmake -c -f makefile.ms clobber)
+
+exepack:
+
+install:
+
+package:

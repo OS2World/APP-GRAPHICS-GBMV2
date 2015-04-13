@@ -1,0 +1,100 @@
+#ifndef lupixbuf_idl
+#define lupixbuf_idl
+
+/*
+ *
+ *  LuPixbuf - pixel buffer class, contains pixel data
+ *             in format suitable for use with GpiDrawBits()
+ *
+ */
+
+#include <somobj.idl>
+
+
+interface LuPixbuf : SOMObject
+{
+
+    /**
+     * LuPixbufInit: init routine (constructor)
+     * w: width of newly created pixbuf
+     * h: height of newly created pixbuf
+     * bpp: bytes per pixel, 3 or 4
+     **/
+    void LuPixbufInit( inout somInitCtrl ctrl, in long w, in long h, in short bpp );
+    
+    /**
+     * getWidth
+     *
+     * Returns pixbuf width
+     **/
+    long getWidth();
+    
+    /**
+     * getHeight
+     *
+     * Returns pixbuf height
+     **/
+    long getHeight();
+    
+    /**
+     * getBpp
+     *
+     * Returns number of bytes per pixel (3 or 4)
+     **/
+    short getBpp();
+    
+    /**
+     * getRowSize
+     *
+     * Returns size of one row, in bytes
+     *
+     * Note: (getWidth()*getBpp()) MAY NOT EQUAL getRowSize() as
+     *       row size may be padded to be four-bytes aligned
+     **/
+    long getRowSize();
+    
+    /**
+     * getDataLen
+     *
+     * Returns length of pixbuf data in bytes (getRowSize()*getHeight())
+     **/
+    long getDataLen();
+    
+    /**
+     * getDataPtr
+     *
+     * Returns pointer to pixbuf data
+     **/
+    void *getDataPtr();
+    
+    /**
+     * putAt
+     *
+     * Puts a data of another pixbuf (p) to specified position (x, y)
+     **/
+    void putAt( in LuPixbuf p, in long x, in long y );
+
+
+#ifdef __SOMIDL__
+
+    implementation 
+    {
+    	releaseorder: LuPixbufInit, getWidth, getHeight, getBpp, getRowSize,
+				      getDataLen, getDataPtr, putAt;
+    
+        long width;
+        long height;
+        short bpp;
+        long dlen;
+        long rowsize;
+        void *data;
+        
+        LuPixbufInit: init;
+        somDestruct: override;
+    };
+    
+#endif // __SOMIDL__
+
+};
+
+#endif // lupixbuf_idl

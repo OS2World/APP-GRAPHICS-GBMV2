@@ -1,0 +1,183 @@
+<HTML><HEAD>
+<TITLE>Windows Steps, Files</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#FF0000" ALINK="#FF0000">
+<H1>Windows Steps, Files</H1>
+
+<UL>
+<LI><a href="#C1">Creating a Windows Plug-In</a>
+<LI><a href="#C2">Windows Files</a>
+</UL>
+
+<a name="C1"><h2>Creating A Windows Plug-In</h2></a>
+<P>
+In order to create a Windows plug-in you need a C++ complier, such as
+Microsoft's Visual C++ 2.1 compiler. 
+<P>
+<OL>
+<LI>Create a directory on your hard drive for the plug-in project. For
+example, you might call this directory plug-in.
+<LI>Download the Windows Sample Source Code. Note that the file is
+compressed.
+<LI>Use the resulting dialog boxes to save the file in the directory
+you created for the plug-in project (for example, in c:\plug-in). The
+compressed file is saved in the directory you specified.
+<LI>Decompress the file. If you are using pkunzip to decompress the
+file, use the -d flag to maintain the directory structure stored in
+the zip file. Two subdirectories, AVI and shell, are automatically
+created. A readme file is also placed in the directory. The shell
+directory contains the files you use to create a new plug-in. The AVI
+directory contains example files for creating an AVI movie plug-in.
+<LI>Create a new subdirectory to work in. For example,
+c:\plug-in\myplug.
+<LI>Copy all the directories and files in the shell directory into
+your new working directory. In addition, copy into this directory any
+auxiliary plug-in specific files you have created. For example, you
+may have written code to implement window handling functionality. 
+<LI>Using your compiler, open the existing makefile in your working
+directory. Notice that there are two makefiles, one for 16 bit
+applications and one for 32 bit applications. Make sure to open the
+appropriate makefile for your configuration.
+<LI>Edit the appropriate resource file, NPDLL16.RC2 or NPDLL32.RC2,
+to include the correct information. You must change the MIME type and
+the file extension values. For example, if you were creating an AVI
+plug-in, your resource file would look like this:
+<PRE>VALUE "MIMEType",        "video/x-msvideo\0"
+VALUE "FileExtents",     "AVI\0"
+VALUE "FileOpenName",    "Video for Windows (*.AVI)\0"
+</PRE>
+To include multiple MIME types in the plug-in, use a vertical bar to
+delimit each value in the MIME type. For example, VALUE "MIMEType",
+"video/x-msvideo | video/quicktime\0"
+<LI>Save the resource file. The resource file allows Netscape to query
+the plug-in without having to load it in memory. 
+<LI>Open the file npshell.cpp. This is a compilable shell file that
+provides the framework for creating a plug-in. By working in
+npshell.cpp, you simply fill in the necessary code for basic plug-in
+functionality. 
+<LI>In npshell.cpp, write the code for the functions needed for your
+plug-in. The Plug-In Application Programming Interface provides a
+detailed description of each function. You may want to take a look at
+the npshell.cpp file in the AVI directory. This is an example of how
+the npshell.cpp file is used to create an AVI plug-in.
+<LI>Save the npshell.cpp file.
+<LI>Using your compiler, build the project. The file npwin16.dll or
+npwin32.dll is created, depending on your environment.
+<LI>Copy the dll file (npwin16.dll or npwin32.dll) into the plugins
+subdirectory of Navigator. If this directory doesn't exist, create it
+in the same location as netscape.exe. If the plug-in has associated
+files, create a separate subdirectory and places the files there.
+<LI>Restart Navigator. When Netscape Navigator starts up, it checks
+for plug-in modules in the netscape\plugins directory.
+<LI>From the Help menu of Navigator, choose About Plug-ins. A list of
+all plug-ins in the directory is displayed. You should see your Mime
+type listed.
+<LI>Test your plug-in by creating an HTML document. 
+</OL>
+
+<HR>
+<a name="C2"><h2>Windows Files</h2></a>
+<P>
+When you unzip the Windows sample source code, two subdirectories,
+shell and AVI, are automatically created in your working directory.
+The shell directory contains the files that provide a compilable
+framework for creating a plug-in. By working in these files you
+simply fill in the necessary code for basic plug-in functionality.
+<P>
+The AVI directory includes example files that demonstrate a basic
+plug-in for Netscape Navigator 2.0. The example implements a
+Microsoft Video for Windows AVI player as a 16-bit and 32-bit
+plug-in. The plug-in utilizes MCI calls for the video display. You
+must have Video for Windows installed in order to run the plug-in.The
+AVI example demonstrates a file-based plug-in. This means that the
+AVI plug-in handles the data stream once it is complete, rather than
+as it is being transferred. 
+<P>
+The contents of each directory include:
+<H4>Shell Directory</H4>
+<UL>
+<LI>npapi.h - The main plug-in header file. It contains prototypes for
+all plug-in and Netscape Method functions. It also contains typedefs
+for all types and structures passed to and from these functions, as
+well as error codes and other definitions. You should not need to
+change this file.
+<LI>npupp.h - Procedure typedefs and function creation and calling
+macros. Since this file is included by npshell.cpp, your plug-in
+sources don't need to reference it directly. You should not need to
+change this file.
+<LI>npshell.cpp - Shell implementation of all plug-in methods. This
+file also includes suggestions (as comments) on plug-in development
+as applicable to a specific method. You use this file to create your
+own plug-in.
+<LI>npwin.cpp - Passes plug-in function pointers to Netscape for
+communication and contains shell functions for Navigator entry
+points. This file also implements version checking. You should not
+need to change this file.
+<LI>npdll16.def - Used by the linker to resolve export symbols for
+16-bit plug-in entry points. You should not need to change this file.
+<LI>npdll16.rc - Contains boiler-plate Visual C++ symbols for 16-bit
+plug-ins. 
+<LI>npdll32.def - Used by the linker to resolve export symbols for
+32-bit plug-in entry points. You should not need to change this file.
+<LI>npdll32.rc - Contains boiler-plate Visual C++ symbols for 32-bit
+plug-ins.
+<LI>npwin16.mak - A Visual C++ 1.5 make file for 16-bit plug-ins.
+<LI>npwin32.mak - A Visual C++ 2.1 make file for 32-bit plug-ins.
+<LI>npdll16.rc2 - Located in the res subdirectory, contains the
+resources for the MIME type supported by 16-bit plug-ins. 
+<LI>npdll32.rc2 - Located in the res subdirectory, contains the
+resources for the MIME type supported by 32-bit plug-ins. 
+</UL>
+<H4>AVI Directory</H4>
+<UL>
+<LI>npapi.h - The main plug-in header file. It contains prototypes for
+all plug-in and Netscape Method functions. It also contains typedefs
+for all types and structures passed to and from these functions, as
+well as error codes and other definitions. 
+<LI>npupp.h - Procedure typedefs and function creation and calling
+macros. Since this file is included by npshell.cpp, your plug-in
+sources don't need to reference it directly.
+<LI>npshell.cpp - The AVI implementation, including comments, of
+applicable plug-in methods.
+<LI>npwin.cpp - Passes plug-in function pointers to Netscape for
+communication and contains shell functions for Navigator entry
+points. This file also implements version checking.
+<LI>npavi16.def - Used by the linker to resolve export symbols for
+16-bit plug-in entry points.
+<LI>npavi16.rc - Contains boiler-plate Visual C++ symbols for 16-bit
+plug-ins.
+<LI>npavi32.def - Used by the linker to resolve export symbols for
+32-bit plug-in entry points.
+<LI>npavi32.rc - Contains boiler-plate Visual C++ symbols for 32-bit
+plug-ins.
+<LI>npavi16.mak - A Visual C++ 1.5 make file for 16-bit plug-ins.
+<LI>npavi32.mak - A Visual C++ 2.1 make file for 32-bit plug-ins.
+<LI>npavi16.rc2 - Located in the res subdirectory, contains the
+resources for the AVI MIME type for the implementation of 16-bit
+plug-ins.
+<LI>npavi32.rc2 - Located in the res subdirectory, contains the
+resources for the AVI MIME type for the implementation of 32-bit
+plug-ins.
+<LI>npavi.h - Specific to the AVI example, contains the class
+definitions for the AVI application class.
+<LI>npavi.cpp - Specific to the AVI example, includes the AVI
+application class implementation.
+<LI>cavi.h - Specific to the AVI example, contains the class
+definitions for the AVI class.
+<LI>cavi.cpp - Specific to the AVI example, includes the
+implementation of the AVI class.
+<LI>plugwind.h - Specific to the AVI example, made up of the class
+declaration for the plug-in Window class.
+<LI>plugwind.cpp - Specific to the AVI example, includes the
+implementation of the plug-in Window class.
+<LI>resource.h - Specific to the AVI example, contains the
+boiler-plate Visual C++ symbols for MFC-based plug-ins.
+<LI>stdafx.h - Specific to the AVI example, contains the boiler-plate
+Visual C++ symbols for MFC-based plug-ins.
+<LI>stdafx.cpp - Specific to the AVI example, is a standard MFC-based
+file that contains information used by precompiled headers.
+</UL>
+
+</BODY>
+</HTML>

@@ -1,0 +1,106 @@
+#
+# GBM enhanced file dialog (German/English)
+#
+# This makefile is for GCC 3.x on OS/2 32bit.
+#
+# Builds GBMDLG.DLL which is compiled multithreaded
+# Therefore all users should also be multithreaded
+#
+# For English build call nmake with lang=en (default is lang=de)
+#
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\..\make.opt
+
+GBM  = ..\..\gbm
+IDIR = ..\bin
+
+CWARNS         = -Wall -Werror
+CFLAGS         = -c $(CWARNS) -I. -I$(GBM) -mcpu=i686 -m32 -O2 -Zomf -DNDEBUG
+CFLAGS_DBG     = -c $(CWARNS) -I. -I$(GBM) -mcpu=i686 -m32 -Zomf -g  -DDEBUG
+CFLAGS_DLL     = $(CFLAGS)
+CFLAGS_DLL_DBG = $(CFLAGS_DBG)
+
+LFLAGS         = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /EXEPACK:2 -Zlinker /OPTFUNC -Zlinker /PACKCODE -Zlinker /PACKDATA
+LFLAGS_DBG     = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /DEBUG -Zlinker /DBGPACK
+LFLAGS_DLL     = $(LFLAGS) -Zlinker /PMTYPE:PM -Zdll
+LFLAGS_DLL_DBG = $(LFLAGS_DBG) -Zlinker /PMTYPE:PM -Zdll
+
+# For debugging call nmake with debug=on
+!ifdef debug
+CFLAGS     = $(CFLAGS_DBG)
+CFLAGS_DLL = $(CFLAGS_DLL_DBG)
+LFLAGS_DLL = $(LFLAGS_DLL_DBG)
+!endif
+
+# For English build call nmake with lang=en
+LANG_DIR=de
+IPFCOPT=/country=049 /codepage=850 /language=DEU /X /W3
+
+!ifdef lang
+!if ( "$(lang)" == "en" )
+LANG_DIR=en
+IPFCOPT=/country=001 /codepage=437 /language=ENG /X /W3
+!endif
+!endif
+
+LANG_DIR_RES=$(LANG_DIR)\WarpSans
+
+#
+
+.SUFFIXES:	.c .o
+
+.c.o:
+		gcc $(CFLAGS_DLL) $*.c
+
+#
+
+all:		gbmdlg.dll gbmdlg.lib gbmdlg.hlp
+
+#
+
+gbmdlg.dll:	gbmdlg.o $(GBM)\gbm.lib $(GBM)\gbmmem.lib gbmdlg$(LANG_DIR)_gcc.def gbmdlg.res
+		gcc $(LFLAGS_DLL) -o $@ gbmdlg.o -L$(GBM) -lgbm.lib -lgbmmem.lib -lgbmmthrd.lib -lgbmscale.lib gbmdlg$(LANG_DIR)_gcc.def
+		rc -n -x2 gbmdlg.res gbmdlg.dll
+
+gbmdlg.lib:	gbmdlg$(LANG_DIR)_gcc.def
+          emximp -o $@ gbmdlg.dll
+
+gbmdlg.o:	$(LANG_DIR)\gbmdlg.c gbmdlg.h gbmdlgrc.h $(GBM)\gbm.h $(GBM)\gbmmem.h $(GBM)\gbmscale.h
+		gcc $(CFLAGS_DLL) -o$@ $(LANG_DIR)\gbmdlg.c
+
+gbmdlg.res:	$(LANG_DIR_RES)\gbmdlg.rc gbmdlgrc.h
+		rc -n -r -x2 $(LANG_DIR_RES)\gbmdlg.rc $@
+
+gbmdlg.hlp: $(LANG_DIR)\gbmdlg.scr gbmdlgrc.h
+            ipfcprep $(LANG_DIR)\gbmdlg.scr gbmdlg.ipf
+            ipfc $(IPFCOPT) gbmdlg.ipf
+
+#
+
+clean:
+		-del /F /N *.o *.res *.ipf 2>nul
+
+clobber:
+		-del /F /N *.dll *.lib *.o *.res *.ipf *.hlp 2>nul
+		-del /F /N $(IDIR)\gbmdlg.dll $(IDIR)\gbmdlg.hlp $(IDIR)\gbmdlg.h $(IDIR)\gbmdlg.lib 2>nul
+
+#
+
+install:
+		copy gbmdlg.dll $(IDIR)
+		copy gbmdlg.hlp $(IDIR)
+        copy gbmdlg.h   $(IDIR)
+        copy gbmdlg.lib $(IDIR)
+
+#
+
+exepack:
+         $(DLL_PACKER) *.dll
+
+#
+
+package:
+        -del /F /N $(IDIR)\gbmdlg_dll.zip 2>nul
+        zip -9 $(IDIR)\gbmdlg_dll.zip  gbmdlg.dll gbmdlg.hlp gbmdlg.h gbmdlg.lib
+

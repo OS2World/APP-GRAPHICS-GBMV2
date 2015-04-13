@@ -1,0 +1,362 @@
+<HTML><HEAD>
+<TITLE>Structures and Definitions</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#FF0000" ALINK="#FF0000">
+<H1>Structures and Definitions</H1>
+
+All structures and definitions are found in <tt>npapi.h</tt>.
+
+<UL>
+<LI><a href="#npp">NPP</a>
+<LI><a href="#npstream">NPStream</a>
+<LI><a href="#npbyterange">NPByteRange</a>
+<LI><a href="#npsaveddata">NPSavedData</a>
+<LI><a href="#npswcs">NPSetWindowCallbackStruct</a>
+<LI><a href="#npwindow">NPWindow</a>
+<LI><a href="#npfullprint">NPFullPrint</a>
+<LI><a href="#npembedprint">NPEmbedPrint</a>
+<LI><a href="#npprint">NPPrint</a>
+<LI><a href="#npport">NP_Port</a>
+</UL>
+
+<HR>
+<a name="npp"><H3>NPP</H3></a>
+
+The type <tt>NPP</tt> points to a structure representing a single instance of
+your plug-in.  The structure is created by Netscape and the <tt>NPP</tt> pointer
+to the structure is passed to your plug-in initially as a parameter to NPP_New.
+Thereafter, the <tt>NPP</tt> pointer is used in almost all API calls to identify
+the instance on which the API should operate.  Netscape informs the plug-in of the
+deletion of the instance via NPP_Destroy; after this call returns the <tt>NPP</tt>
+pointer is no longer valid.
+<P>
+The structure pointed to by a <tt>NPP</tt> contains two fields: <tt>pdata</tt> and
+<tt>ndata</tt>.  <tt>pdata</tt> is a plug-in private value that your plug-in can 
+use to store a pointer to an internal data structure associated with the instance;
+Netscape does not modify this value.  <tt>ndata</tt> is a Netscape private value
+that should not be modified by your plug-in.
+
+<H4>Syntax</H4>
+<XMP>
+typedef struct _NPP
+{
+    void*	pdata;		/* plug-in private data */
+    void*	ndata;		/* netscape private data */
+} NPP_t;
+typedef NPP_t*  NPP;
+</XMP>
+
+<H4>See also</H4>
+<a href="pi2.htm#nppnew">NPP_New</a><BR>
+<a href="pi2.htm#nppdestroy">NPP_Destroy</a>
+<P>
+
+<HR>
+<a name="npstream"><H3>NPStream</H3></a>
+
+A <tt>NPStream</tt> object represents a stream of data either produced by Netscape
+and consumed by the plug-in, or produced by the plug-in and consumed by Netscape.
+For streams produced by Netscape, the <tt>NPStream</tt> is created by Netscape
+and passed to the plug-in initially as a parameter to NPP_NewStream.  Thereafter,
+a pointer to the <tt>NPStream</tt> is used in all API calls that operate on the
+stream (such as NPP_WriteReady and NPP_Write).  Netscape informs the plug-in of
+the deletion of the stream via NPP_DestroyStream; after this call returns the
+<tt>NPStream</tt> object is no longer valid.
+<P>
+For streams produced by the plug-in, the <tt>NPStream</tt> is created by Netscape
+and returned as an output parameter when the plug-in calls NPN_NewStream.
+Thereafter, the plug-in must pass a pointer to the <tt>NPStream</tt> to all API
+calls that operate on the stream, such as NPN_Write and NPN_DestroyStream.
+<P>
+The <tt>pdata</tt> field of the <tt>NPStream</tt> is a plug-in private value that
+your plug-in can use to store a pointer to an internal data structure associated
+with the stream; Netscape does not modify this value.  <tt>ndata</tt> is a Netscape
+private value that should not be modified by your plug-in.  <tt>url</tt> is a 
+string containing the URL that the data in the stream is read from or written to.
+<tt>end</tt> is the offset in bytes of the end of the stream (equivalent to the
+length of the stream in bytes).  (Note that <tt>end</tt> may be zero for streams
+of unknown length, such as streams returned from older FTP servers or generated
+"on the fly" by CGI scripts.)  <tt>lastmodified</tt> is the time the data in the
+URL was last modified (if applicable), measured in seconds since 12:00 midnight GMT,
+January 1, 1970.
+
+<H4>Syntax</H4>
+<XMP>
+typedef struct _NPStream
+{
+    void*	pdata;		/* plug-in private data */
+    void*	ndata;		/* netscape private data */
+    const char*	url;
+    uint32	end;
+    uint32	lastmodified;
+} NPStream;
+</XMP>
+
+<H4>See also</H4>
+<a href="pi2.htm#nppnewstream">NPP_NewStream</a><BR>
+<a href="pi2.htm#nppdestroystream">NPP_DestroyStream</a><BR>
+<a href="pi3.htm#npnnewstream">NPN_NewStream</a><BR>
+<a href="pi3.htm#npndestroystream">NPN_DestroyStream</a>
+<P>
+
+<HR>
+<a name="npbyterange"><H3>NPByteRange</H3></a>
+
+A <tt>NPByteRange</tt> object represents a request of a particular range of bytes
+from a stream.  Multiple <tt>NPByteRange</tt> objects can be linked together into
+a list to represent a set of discontiguous byte ranges.  The only API call that
+uses the <tt>NPByteRange</tt> type is NPN_RequestRead.
+<P>
+The <tt>offset</tt> field of the <tt>NPByteRange</tt> indicates the offset 
+in bytes of the requested range, from the beginning of the stream if the offset 
+is positive, or from the end of the stream if the offset is negative.
+<tt>length</tt> indicates the number of bytes to fetch from the specified offset.
+<tt>next</tt> points to the next <tt>NPByteRange</tt> request in the list of
+requests, or NULL if this is the last request.
+
+<H4>Syntax</H4>
+<XMP>
+typedef struct _NPByteRange
+{
+    int32	offset;		/* negative offset means from the end */
+    uint32	length;
+    struct _NPByteRange* next;
+} NPByteRange;
+</XMP>
+
+<H4>See also</H4>
+<a href="pi3.htm#npnrequestread">NPN_RequestRead</a>
+<P>
+
+<HR>
+<a name="npsaveddata"><H3>NPSavedData</H3></a>
+
+The <tt>NPSavedData</tt> object contains a block of per-instance information
+saved by Netscape after the deletion of the instance, and possibly returned to the
+plug-in if the instance is revisited by the user.  When the plug-in's NPP_Destroy
+function is called, it optionally may allocate a <tt>NPSavedData</tt> object using
+the NPN_MemAlloc function, fill in the fields, and return it to Netscape as an
+output parameter.  See NPP_Destroy for a <a href="pi2.htm#nppdestroy">code example</a> of the use of <tt>NPSavedData</tt>.
+<P>
+The <tt>buf</tt> field holds a pointer to a memory buffer allocated by the plug-in
+with NPN_MemAlloc.  The memory buffer can be any reasonable size; its contents are
+private to the plug-in and will not be modified by Netscape.  <tt>len</tt> should
+be set by the plug-in to the length in bytes of the buffer pointed to by <tt>buf</tt>.
+
+<H4>Syntax</H4>
+<XMP>
+typedef struct _NPSavedData
+{
+    int32	len;
+    void*	buf;
+} NPSavedData;
+</XMP>
+
+<H4>See also</H4>
+<a href="pi2.htm#nppnew">NPP_New</a><BR>
+<a href="pi2.htm#nppdestroy">NPP_Destroy</a>
+<P>
+
+<HR>
+<a name="npswcs"><H3>NPSetWindowCallbackStruct</H3></a>
+
+<I>NPSetWindowCallbackStruct is used on UNIX only.</I>
+<P>
+On UNIX, the <tt>ws_info</tt> field of an <tt>NPWindow</tt> points to
+an object of type <tt>NPSetWindowCallbackStruct</tt>, allocated by Netscape.
+The structure is valid for the lifetime of the <tt>NPWindow</tt>
+(until NPP_SetWindow is called again or the instance is destroyed). 
+The fields <tt>display</tt>, <tt>visual</tt>, <tt>colormap</tt>, and <tt>depth</tt>
+contain the standard X Toolkit attributes of the top-level shell window in the
+Netscape window hierarchy.
+
+<H4>Syntax</H4>
+<XMP>
+typedef struct
+{
+    int32		type;
+    Display*		display;
+    Visual*		visual;
+    Colormap		colormap;
+    unsigned int	depth;
+} NPSetWindowCallbackStruct;
+</XMP>
+
+<H4>See also</H4>
+<a href="pi2.htm#nppsetwindow">NPP_SetWindow</a><BR>
+<a href="#npwindow">NPWindow</a>
+<P>
+
+<HR>
+<a name="npwindow"><H3>NPWindow</H3></a>
+
+The <tt>NPWindow</tt> structure contains information about the native window,
+or portion of the native window, into which the plug-in instance can draw.  A
+pointer to an <tt>NPWindow</tt> (allocated by Netscape) is passed to the plug-in
+via NPP_SetWindow and is valid until NPP_SetWindow is called again or the instance
+is destroyed.
+<P>
+The <tt>window</tt> field is a handle to a native window element in the Netscape
+window hierarchy on Windows and UNIX.  On the Macintosh, <tt>window</tt> is a 
+pointer to a <a href="#npport"><tt>NP_Port</tt></a>.  The position and size of this
+plug-in area (native window element on Window and UNIX, rectangle within a 
+native window on the Mac) are specified by <tt>x</tt>, <tt>y</tt>, <tt>height</tt>,
+and <tt>width</tt>.  Note that these values should not be modified by the plug-in.
+<P>
+On the Macintosh, <tt>clipRect</tt> is the rectangle in port coordinates to which
+the plug-in should clip its drawing.  Clipping to the <tt>clipRect</tt> prevents
+the plug-in from overwriting the status bar, scroll bars, etc. when partially
+scrolled off the screen.
+<P>
+On UNIX, <tt>ws_info</tt> points to a
+<a href="#npswcs"><tt>NPSetWindowCallbackStruct</tt></a>.
+
+<H4>Syntax</H4>
+<XMP>
+typedef struct _NPWindow 
+{
+    void*	window;		/* Platform specific window handle */
+    uint32	x;		/* Position of top left corner relative */
+    uint32	y;		/*   to a netscape page. */
+    uint32	width;		/* Maximum window size */
+    uint32	height;
+    NPRect	clipRect;	/* Clipping rectangle in port coordinates */
+				/* Used by Mac only. */
+#ifdef XP_UNIX
+    void *	ws_info;	/* Platform-dependent additional data */
+#endif /* XP_UNIX */
+} NPWindow;
+</XMP>
+
+<H4>See also</H4>
+<a href="pi2.htm#nppsetwindow">NPP_SetWindow</a><BR>
+<a href="#npport">NP_Port</a><BR>
+<a href="#npswcs">NPSetWindowCallbackStruct</a>
+<P>
+
+<HR>
+<a name="npfullprint"><H3>NPFullPrint</H3></a>
+
+When printing in full-page mode, <tt>NPFullPrint</tt> is a substructure of
+<tt>NPPrint</tt>.  If your plug-in wants to take complete control of the 
+printing process, print the page and set the field <tt>pluginPrinted</tt> to
+TRUE before returning.  If your plug-in wants to simply render its area of the
+page, set <tt>pluginPrinted</tt> to FALSE and return immediately.
+<P>
+<tt>printOne</tt> is TRUE if the plug-in should avoid displaying print dialogs
+and instead print a single copy of the page to the default printer.  
+<tt>platformPrint</tt> points to platform-specific printing information; on the
+Macintosh, <tt>platformPrint</tt> is a THPrint.
+
+<H4>Syntax</H4>
+<XMP>
+typedef struct _NPFullPrint
+{
+    NPBool	pluginPrinted;	/* Set TRUE if plugin handled fullscreen */
+				/*	printing */
+    NPBool  	printOne;	/* TRUE if plugin should print one copy  */
+				/*	to default printer */
+    void*	platformPrint;	/* Platform-specific printing info */
+} NPFullPrint;
+</XMP>
+
+<H4>See also</H4>
+<a href="pi2.htm#nppprint">NPP_Print</a><br>
+<a href="#npprint">NPPrint</a>
+<P>
+
+<HR>
+<a name="npembedprint"><H3>NPEmbedPrint</H3></a>
+
+When printing in embedded mode, <tt>NPEmbedPrint</tt> is a substructure of
+<tt>NPPrint</tt>.  The field <tt>window</tt> is the <tt>NPWindow</tt> the
+plug-in should use for printing.  <tt>platformPrint</tt> points to additional
+platform-specific printing info; on the Macintosh, <tt>platformPrint</tt> is a
+THPrint.
+
+<H4>Syntax</H4>
+<XMP>
+typedef struct _NPEmbedPrint
+{
+    NPWindow    window;
+    void*       platformPrint;	/* Platform-specific printing info */
+} NPEmbedPrint;
+</XMP>
+
+<H4>See also</H4>
+<a href="pi2.htm#nppprint">NPP_Print</a><BR>
+<a href="#npprint">NPPrint</a>
+<P>
+
+<HR>
+<a name="npprint"><H3>NPPrint</H3></a>
+
+The <tt>NPPrint</tt> structure contains information the plug-in may need to 
+print itself in full-page or embedded modes.  A pointer to a <tt>NPPrint</tt>
+object (previously allocated by Netscape) is passed to the plug-in as a parameter 
+to NPP_Print.  The pointer and fields within the structure are valid only for
+the duration of the NPP_Print call.
+<P>
+If the <tt>mode</tt> field is <tt>NP_FULL</tt>, the plug-in may
+optionally print in full-page mode, and the <tt>fullPrint</tt> field is valid
+(see <a href="#npfullprint">NPFullPrint</a> and
+<a href="pi2.htm#nppprint">NPP_Print</a>).  If the <tt>mode</tt> field is
+<tt>NP_EMBED</tt>, the plug-in should print in embedded mode, and the
+<tt>embedPrint</tt> field is valid (see <a href="#npembedprint">NPEmbedPrint</a>). 
+
+<H4>Syntax</H4>
+<XMP>
+typedef struct _NPPrint
+{
+    uint16	mode;		/* NP_FULL or NP_EMBED */
+    union
+    {
+	NPFullPrint fullPrint;	/* if mode is NP_FULL */
+	NPEmbedPrint embedPrint;/* if mode is NP_EMBED */
+    } print;
+} NPPrint;
+</XMP>
+
+<H4>See also</H4>
+<a href="pi2.htm#nppprint">NPP_Print</a><BR>
+<a href="#npfullprint">NPFullPrint</a><BR>
+<a href="#npembedprint">NPEmbedPrint</a>
+<P>
+
+<HR>
+<a name="npport"><H3>NP_Port</H3></a>
+
+<I>NP_Port is used on the Macintosh only.</I>
+<P>
+On the Macintosh, the <tt>window</tt> field of an <tt>NPWindow</tt> points to
+an object of type <tt>NP_Port</tt>, allocated by Netscape.  The structure is
+valid for the lifetime of the <tt>NPWindow</tt> (until NPP_SetWindow is called
+again or the instance is destroyed). 
+<P>
+The fields <tt>portx</tt> and <tt>porty</tt> determine the top-left corner of
+the plug-in rectangle in port coordinates (taking into account the scroll position).
+The field <tt>port</tt> is the standard Macintosh port into which the plug-in
+should draw.  Note that since the port is shared between the plug-in and other
+plug-ins and Netscape, the plug-in should take care to draw only within the area
+designated by the <tt>NPWindow</tt>, and to <B>always</B> save the current port
+settings and set the desired port settings before drawing and restore the previous
+port settings after drawing.
+
+<H4>Syntax</H4>
+<XMP>
+typedef struct NP_Port
+{
+    CGrafPtr	port;		/* Grafport */
+    int32	portx;		/* position inside the topmost window */
+    int32	porty;
+} NP_Port;
+</XMP>
+
+<H4>See also</H4>
+<a href="pi2.htm#nppsetwindow">NPP_SetWindow</a><BR>
+<a href="#npwindow">NPWindow</a>
+<P>
+
+</BODY>
+</HTML>

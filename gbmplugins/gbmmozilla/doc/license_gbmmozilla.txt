@@ -1,0 +1,57 @@
+
+GBM plugin for Mozilla/Firefox/SeaMonkey (NPGBM.DLL)
+----------------------------------------------------
+Copyright (C) 2006-2012 Heiko Nitzsche
+
+  This software is provided 'as-is', without any express or implied
+  warranty.  In no event will the author be held liable for any damages
+  arising from the use of this software.
+
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
+
+  1. The origin of this software must not be misrepresented; you must not
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+     misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
+
+
+GBM.DLL shipped with the plugin
+-------------------------------
+The package includes source code provided as Public Domain from Andy Key,
+the original author of GBM (http://www.nyangau.org). All enhancements
+added to the original GBM version are provided as Public Domain as well.
+
+This software is based in part on the work of the Independent JPEG Group.
+The source package ships with full source code of the Independent JPEG Group
+JPEGLIB version 8d and may be used if they are credited, (which I do so here).
+
+This software is based in part on the Libpng and Zlib libraries.
+Both are Open Source and can be found on www.libpng.org and www.zlib.org.
+The source package ships with full source code of Libpng 1.5.13 and Zlib 1.2.7.
+Some minor adaptions for GBM have been done.
+
+This software is based in part on the Libtiff library.
+It is Open Source and can be found on www.libtiff.org.
+The source package ships with full source code of Libtiff 3.9.5.
+Some minor adaptions for GBM have been done.
+
+This software is based in part on the OpenJPEG library.
+It is Open Source and can be found on www.openjpeg.org.
+The source package ships with full source code of OpenJPEG 1.5.1.
+Some minor adaptions for GBM have been done.
+
+This software is based in part on the LibRaw library.
+It is Open Source and can be found on http://www.libraw.org.
+The source package ships with full source code of Libraw 0.14.7.
+Some minor adaptions for GBM have been done.
+
+This software is based in part on the JBIG-Kit library.
+It is Open Source and can be found on http://www.cl.cam.ac.uk/~mgk25.
+The source package ships with full source code of the library.
+Some minor adaptions for GBM have been done.
+

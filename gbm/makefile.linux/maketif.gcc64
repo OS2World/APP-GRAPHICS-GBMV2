@@ -1,0 +1,33 @@
+# Makefile for Libtiff (static)
+
+# This makefile is for GCC on Linux 64 bit.
+
+
+ifdef debug
+
+all:;   $(MAKE) -f maketif.gcc32 all m64=yes debug=yes
+
+clean:;  	$(MAKE) -f maketif.gcc32 clean
+
+clobber:; 	$(MAKE) -f maketif.gcc32 clobber
+
+install:;	$(MAKE) -f maketif.gcc32 install
+
+package:; 	$(MAKE) -f maketif.gcc32 package
+
+else
+
+all:;   $(MAKE) -f maketif.gcc32 all m64=yes
+
+clean:;  	$(MAKE) -f maketif.gcc32 clean
+
+clobber:; 	$(MAKE) -f maketif.gcc32 clobber
+
+install:;	$(MAKE) -f maketif.gcc32 install
+
+package:; 	$(MAKE) -f maketif.gcc32 package
+
+endif
+
+
+

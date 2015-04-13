@@ -1,0 +1,22 @@
+
+all:
+!ifdef debug
+      (cd os2 && wmake -c -ms -h -f makefile.wat debug=yes)
+!else
+      (cd os2 && wmake -c -ms -h -f makefile.wat)
+!endif
+
+clean:
+      (cd os2 && wmake -c -ms -h -f makefile.wat clean)
+
+clobber:
+      (cd os2 && wmake -c -ms -h -f makefile.wat clobber)
+
+exepack:
+      (cd os2 && wmake -c -ms -h -f makefile.wat exepack)
+
+install:
+
+package:
+
+

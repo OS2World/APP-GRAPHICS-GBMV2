@@ -1,0 +1,9 @@
+#include "os2.h"
+#include "gbmv.h"
+
+POINTER RID_STANDARD gbmv.ico
+
+ACCELTABLE RID_STANDARD
+	{
+	VK_F3,		MID_EXIT,		VIRTUALKEY
+	}

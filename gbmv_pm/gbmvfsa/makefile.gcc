@@ -1,0 +1,65 @@
+#
+# Simple full screen bitmap animation viewer
+#
+# This makefile is for GCC 3.x on OS/2 32bit.
+#
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\..\make.opt
+
+GBM    = ..\..\gbm
+IDIR   = ..\bin
+
+
+.SUFFIXES:	.c .o
+
+CWARNS     = -Wall -Wno-missing-braces -Werror
+CFLAGS     = -c $(CWARNS) -I$(GBM) -mcpu=i686 -m32 -O2 -Zomf -DNDEBUG
+CFLAGS_DBG = -c $(CWARNS) -I$(GBM) -mcpu=i686 -m32 -Zomf -g  -DDEBUG
+
+LFLAGS         = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /EXEPACK:2 -Zlinker /OPTFUNC -Zlinker /PACKCODE -Zlinker /PACKDATA
+LFLAGS_DBG     = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /DEBUG -Zlinker /DBGPACK
+LFLAGS_EXE     = $(LFLAGS) -Zlinker /BASE:0x10000 -Zlinker /STACK:0x16384
+LFLAGS_EXE_DBG = $(LFLAGS_DBG) -Zlinker /BASE:0x10000 -Zlinker /STACK:0x16384
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS     = $(CFLAGS_DBG)
+LFLAGS_EXE = $(LFLAGS_EXE_DBG)
+!endif
+
+.c.o:
+		gcc $(CFLAGS) $*.c
+
+#
+
+gbmvfsa.exe:	gbmvfsa.o gbmvfsa_gcc.def $(GBM)\gbm.lib $(GBM)\gbmtool.lib
+		gcc $(LFLAGS_EXE) -o $@ gbmvfsa.o gbmvfsa_gcc.def -L$(GBM) -lgbm.lib -lgbmtool.lib
+
+gbmvfsa.o:	gbmvfsa.c $(GBM)\gbm.h $(GBM)\gbmtool.h
+
+#
+
+clean:
+		-del /F /N *.o 2>nul
+
+clobber:
+		-del /F /N *.o *.exe $(IDIR)\gbmvfsa.exe 2>nul
+
+#
+
+
+install:
+		copy gbmvfsa.exe $(IDIR)
+
+#
+
+exepack:
+         $(EXE_PACKER) *.exe
+
+#
+
+package:
+        -del /F /N $(IDIR)\gbmvfsa_exe.zip 2>nul
+        zip -9 $(IDIR)\gbmvfsa_exe.zip gbmvfsa.exe
+

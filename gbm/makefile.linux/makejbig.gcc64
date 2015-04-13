@@ -1,0 +1,33 @@
+# It builds the JBIG-Kit library as a statically linkable library (.a).
+
+# This makefile is for GCC on Linux 64 bit.
+
+
+ifdef debug
+
+all:;   $(MAKE) -f makejbig.gcc32 all m64=yes debug=yes
+
+clean:;  	$(MAKE) -f makejbig.gcc32 clean
+
+clobber:; 	$(MAKE) -f makejbig.gcc32 clobber
+
+install:;	$(MAKE) -f makejbig.gcc32 install
+
+package:; 	$(MAKE) -f makejbig.gcc32 package
+
+else
+
+all:;   $(MAKE) -f makejbig.gcc32 all m64=yes
+
+clean:;  	$(MAKE) -f makejbig.gcc32 clean
+
+clobber:; 	$(MAKE) -f makejbig.gcc32 clobber
+
+install:;	$(MAKE) -f makejbig.gcc32 install
+
+package:; 	$(MAKE) -f makejbig.gcc32 package
+
+endif
+
+
+

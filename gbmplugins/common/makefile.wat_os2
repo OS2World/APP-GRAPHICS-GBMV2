@@ -1,0 +1,127 @@
+#
+# Generalised Bitmap Module C++ adapter for GBM plugins,
+#
+# Copyright (C) 2006-2010 Heiko Nitzsche
+#
+#   This software is provided 'as-is', without any express or implied
+#   warranty.  In no event will the author be held liable for any damages
+#   arising from the use of this software.
+#
+#   Permission is granted to anyone to use this software for any purpose,
+#   including commercial applications, and to alter it and redistribute it
+#   freely, subject to the following restrictions:
+#
+#   1. The origin of this software must not be misrepresented; you must not
+#      claim that you wrote the original software. If you use this software
+#      in a product, an acknowledgment in the product documentation would be
+#      appreciated but is not required.
+#   2. Altered source versions must be plainly marked as such, and must not be
+#      misrepresented as being the original software.
+#   3. This notice may not be removed or altered from any source distribution.
+#
+# This makefile is for Open Watcom C++ on OS/2.
+#
+
+# Builds the adapter library to GBM.DLL.
+
+# As GBM.DLL is built multithreaded, all users should also be multithreaded.
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\..\make.opt
+
+# Location of gbm libs and public header files
+GBM     = ..\..\gbm
+GBMDLG  = ..\..\gbmv_pm\gbmdlg
+
+# ------------------
+# Configure compiler
+# ------------------
+
+#
+# Using Open Watcom C++:
+#
+
+# Builds gbm objects which are compiled multithreaded
+# Therefore all users should also be multithreaded
+#CWARNS         = -wx -we
+CWARNS         = -w3 -we
+CFLAGS         = $(CWARNS) -bt=os2 -zq -zv -onatxh -sg -ei -6r -fp6 -fpi87 -bm -mf -xs -xr /DOS2 /DNDEBUG -i. -i$(GBM) -i$(GBMDLG)
+CFLAGS_DBG     = $(CWARNS) -bt=os2 -zq -sg -ei -6r -fp6 -fpi87 -bm -mf -xs -xr -i. -i$(GBM) -i$(GBMDLG) -d2 /DOS2 /DDEBUG
+
+LIBFLAGS       = -q -n -b -c
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS = $(CFLAGS_DBG)
+!endif
+
+# Enable for Pentium profiling (also combined with debug above)
+#CFLAGS = $(CFLAGS) -et
+
+#
+
+.SUFFIXES: .cpp .obj
+
+.cpp.obj:
+               wpp386 $(CFLAGS) $*.cpp
+
+#
+
+all:           common.lib
+
+#
+
+common.lib:    ConfigHandler.obj Semaphore.obj Thread.obj \
+               GbmAccessor.obj GbmDialogAccessor.obj GbmException.obj \
+               GbmDocument.obj GbmDocumentPage.obj GbmRenderer.obj
+               -del /N $@ 2> nul
+               wlib $(LIBFLAGS) $@ +ConfigHandler.obj +Semaphore.obj +Thread.obj \
+                                   +GbmAccessor.obj  +GbmDialogAccessor.obj \
+                                   +GbmException.obj +GbmDocument.obj \
+                                   +GbmDocumentPage.obj +GbmRenderer.obj
+
+
+ConfigHandler.obj: ConfigHandler.cpp ConfigHandler.hpp os2defs.h
+
+Semaphore.obj:     Semaphore.cpp Semaphore.hpp os2defs.h
+
+Thread.obj:        Thread.cpp Thread.hpp os2defs.h
+
+# GBM files
+GbmAccessor.obj:        GbmAccessor.cpp GbmAccessor.hpp os2defs.h $(GBM)\gbm.h
+
+GbmDialogAccessor.obj:  GbmDialogAccessor.cpp GbmDialogAccessor.hpp os2defs.h $(GBMDLG)\gbmdlg.h
+
+GbmException.obj:       GbmException.cpp GbmException.hpp os2defs.h $(GBM)\gbm.h
+
+GbmDocument.obj:        GbmDocument.cpp GbmDocument.hpp os2defs.h $(GBM)\gbm.h
+
+GbmDocumentPage.obj:    GbmDocumentPage.cpp GbmDocumentPage.hpp os2defs.h $(GBM)\gbm.h $(GBM)\gbmmem.h
+
+GbmRenderer.obj:        GbmRenderer.cpp GbmRenderer.hpp os2defs.h \
+                          $(GBM)\gbm.h $(GBM)\gbmmem.h $(GBM)\gbmscale.h $(GBM)\gbmmir.h $(GBM)\gbmrect.h
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+    -del /F /N *.obj *.err 2>nul
+
+clobber:
+    -del /F /N *.obj *.lib *.err 2>nul
+
+#
+
+install:
+
+#
+
+exepack:
+
+#
+
+package:
+
+

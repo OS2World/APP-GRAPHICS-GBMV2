@@ -1,0 +1,123 @@
+#
+# Generalised Bitmap Module Lucide adapter
+#
+# Copyright (C) 2006-2012 Heiko Nitzsche
+#
+#   This software is provided 'as-is', without any express or implied
+#   warranty.  In no event will the author be held liable for any damages
+#   arising from the use of this software.
+#
+#   Permission is granted to anyone to use this software for any purpose,
+#   including commercial applications, and to alter it and redistribute it
+#   freely, subject to the following restrictions:
+#
+#   1. The origin of this software must not be misrepresented; you must not
+#      claim that you wrote the original software. If you use this software
+#      in a product, an acknowledgment in the product documentation would be
+#      appreciated but is not required.
+#   2. Altered source versions must be plainly marked as such, and must not be
+#      misrepresented as being the original software.
+#   3. This notice may not be removed or altered from any source distribution.
+
+#
+# This makefile is for GCC 3.x on OS/2 32bit.
+#
+# Builds Lucide adapter library for GBM.DLL.
+# As GBM.DLL is built multithreaded, all users should also be multithreaded.
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\..\make.opt
+
+# Location of gbm libs and public header files
+COMMON       = ..\common
+GBM          = ..\..\gbm
+LUDOC        = ludoc
+OS2TKSOM     = $(OS2TK)\som
+#OS2TKSOM_INC = $(OS2TKSOM)\include
+# Use modified SOM includes (patched for GCC, provided by Lucide plugindev pack)
+OS2TKSOM_INC = sominc
+OS2TKSOM_LIB = $(OS2TKSOM)\lib
+
+# ------------------
+# Configure compiler
+# ------------------
+
+CWARNS         = -Wall
+CFLAGS_DLL     = -c $(CWARNS) -I. -I$(GBM) -I$(COMMON) -I$(LUDOC) -I$(OS2TKSOM_INC) -mcpu=i686 -m32 -O3 -Zomf -DOS2 -DNDEBUG
+CFLAGS_DLL_DBG = -c $(CWARNS) -I. -I$(GBM) -I$(COMMON) -I$(LUDOC) -I$(OS2TKSOM_INC) -mcpu=i686 -m32 -Zomf -g  -DOS2 -DDEBUG
+
+LFLAGS         = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /EXEPACK:2 -Zlinker /OPTFUNC -Zlinker /PACKCODE -Zlinker /PACKDATA
+LFLAGS_DBG     = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /DEBUG -Zlinker /DBGPACK
+LFLAGS_DLL     = $(LFLAGS) -Zdll
+LFLAGS_DLL_DBG = $(LFLAGS_DBG) -Zdll
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS_DLL     = $(CFLAGS_DLL_DBG)
+LFLAGS_DLL     = $(LFLAGS_DLL_DBG)
+!endif
+
+# Common source file for update checking
+HDR_FILES = $(COMMON)\GbmException.hpp $(COMMON)\GbmDocument.hpp $(COMMON)\GbmDocumentPage.hpp \
+            $(COMMON)\GbmRenderer.hpp $(COMMON)\GbmAccessor.hpp $(COMMON)\ConfigHandler.hpp $(GBM)\gbm.h $(GBM)\gbmmem.h $(GBM)\gbmscale.h $(GBM)\gbmmir.h $(GBM)\gbmrect.h \
+            $(COMMON)\os2defs.h $(COMMON)\Semaphore.hpp
+
+#
+
+.SUFFIXES: .cpp .o .idl .xh
+
+.cpp.o:
+       g++ $(CFLAGS_DLL) $*.cpp
+
+.idl.xh:
+       sc -c -s"xc;xih;xh" -I$(LUDOC) $*.idl
+       $(OS2TKSOM_INC)\cnvsomex.cmd $@
+
+#
+
+all:           common.lib lugbm.dll
+
+#
+
+lugbm.dll:     lugbm.o WGbmDocument.o lugbm_gcc.def
+               g++ $(LFLAGS_DLL) -o $@ lugbm.o WGbmDocument.o lugbm_gcc.def -L$(GBM) -lgbmmem.lib -lgbmmthrd.lib -lgbmscale.lib -lgbmmir.lib -lgbmrect.lib -l$(COMMON)\common.lib -l$(LUDOC)\ludoc.lib -lsomtk
+
+lugbm.o:     lugbm.cpp lugbm.hpp lugbm.xh lugbm.xih $(HDR_FILES)
+
+WGbmDocument.o:  WGbmDocument.cpp WGbmDocument.hpp  $(HDR_FILES)
+
+lugbm.cpp:     lugbm.idl
+
+common.lib:
+!ifdef debug
+               (cd $(COMMON) && nmake -c -f makefile.gcc_os2 debug=yes)
+!else
+               (cd $(COMMON) && nmake -c -f makefile.gcc_os2)
+!endif
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+    (cd $(COMMON) && nmake -c -f makefile.gcc_os2 clean)
+    -del /F /N *.o *.xh *.xih *.xc 2>nul
+
+clobber:
+    (cd $(COMMON) && nmake -c -f makefile.gcc_os2 clobber)
+    -del /F /N *.o *.xh *.xih *.xc *.dll 2>nul
+
+#
+
+install:
+
+#
+
+exepack:
+         $(DLL_PACKER) *.dll
+
+#
+
+package:
+

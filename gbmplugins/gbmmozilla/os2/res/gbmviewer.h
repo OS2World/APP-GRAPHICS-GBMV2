@@ -1,0 +1,9 @@
+#define RID_GBMVIEWER               100
+#define RID_GBMFORMATINFO           200
+#define TID_FORMAT                  205
+#define TID_WIDTH                   206
+#define TID_FORMATINFO_HEIGHT       207
+#define TID_FORMATINFO_BPP          208
+#define TID_FORMATINFO_PAGES        210
+#define TID_FORMATINFO_FORMAT       211
+#define TID_FORMATINFO_WIDTH        213

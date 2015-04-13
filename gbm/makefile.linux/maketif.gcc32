@@ -1,0 +1,106 @@
+# Makefile for Libtiff (static)
+
+# This makefile is for GCC on Linux 32/64 bit.
+# It builds the Libtiff library as a statically linkable library (.a).
+
+# Modify this line to point to the zlib library 1.2.3 or higher
+ZLIB = ../zlib
+IJG  = ../libjpeg
+IDIR = bin
+
+# include configuration setting for nmake (except compiler options)
+include ../makefile.linux/maketif.options
+
+# For 64bit compile call make with m64=on
+ifdef m64
+  CFLAGS_MACHINE = -m64 -mtune=generic -fPIC
+else
+  CFLAGS_MACHINE = -m32 -mtune=generic
+endif
+
+CWARNS     = -Wall -Werror
+CFLAGS     = -c $(CWARNS) $(CFLAGS_MACHINE) -mfpmath=sse -msse -O3 -fno-strict-aliasing -I$(ZLIB) -I$(IJG) -I$(JBIGDIR) -I.. $(EXTRAFLAGS) -DNDEBUG
+CFLAGS_DBG = -c $(CWARNS) $(CFLAGS_MACHINE) -mfpmath=sse -msse -g  -fno-strict-aliasing -fbounds-check -I$(ZLIB) -I$(IJG) -I$(JBIGDIR) -I.. $(EXTRAFLAGS) -DDEBUG
+
+# For debugging call make with debug=on
+ifdef debug
+  CFLAGS = $(CFLAGS_DBG)
+endif
+
+#
+
+OBJS_SYSDEP_MODULE = tif_unix.o
+
+OBJS =  tif_aux.o \
+	tif_close.o \
+	tif_codec.o \
+	tif_color.o \
+	tif_compress.o \
+	tif_dir.o \
+	tif_dirinfo.o \
+	tif_dirread.o \
+	tif_dirwrite.o \
+	tif_dumpmode.o \
+	tif_error.o \
+	tif_extension.o \
+	tif_fax3.o \
+	tif_fax3sm.o \
+	tif_getimage.o \
+	tif_jbig.o \
+	tif_jpeg.o \
+	tif_flush.o \
+	tif_luv.o \
+	tif_lzw.o \
+	tif_next.o \
+	tif_ojpeg.o \
+	tif_open.o \
+	tif_packbits.o \
+	tif_pixarlog.o \
+	tif_predict.o \
+	tif_print.o \
+	tif_read.o \
+	tif_swab.o \
+	tif_strip.o \
+	tif_thunder.o \
+	tif_tile.o \
+	tif_version.o \
+	tif_warning.o \
+	tif_write.o \
+	tif_zip.o \
+	$(OBJS_SYSDEP_MODULE)
+
+#
+
+.SUFFIXES:	.c .o
+
+.c.o:; gcc $(CFLAGS) $*.c
+
+#
+
+all:	tiff.a
+
+
+tiff.a:	$(OBJS)
+	@rm -f $@ 2>/dev/null
+	@ar ru $@ $(OBJS)
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:;		@rm -f $(OBJS) 2>/dev/null
+
+clobber:;  	@rm -f $(OBJS) 2>/dev/null
+		@rm -f tiff.a  2>/dev/null
+		@rm -f  $(IDIR)/* 2>/dev/null
+
+install:;	@cp tiff.a       $(IDIR)
+		@cp tiff.h       $(IDIR)
+		@cp tiffio.h     $(IDIR)
+		@cp tiffconf.h   $(IDIR)
+		@cp tif_config.h $(IDIR)
+
+package:;	@rm -f $(IDIR)/libtiff.tar.gz 2>/dev/null
+		@tar zcvf $(IDIR)/libtiff.tar.gz tiff.a tiff.h tiffio.h tiffconf.h tif_config.h
+

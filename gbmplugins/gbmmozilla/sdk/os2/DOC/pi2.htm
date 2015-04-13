@@ -1,0 +1,410 @@
+<HTML><HEAD>
+<TITLE>Plug-in Methods</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#FF0000" ALINK="#FF0000">
+<H1>Plug-in Methods</H1>
+
+<UL>
+<LI><a href="#nppdestroy">NPP_Destroy</a>
+<LI><a href="#nppdestroystream">NPP_DestroyStream</a>
+<LI><a href="#npphandleevent">NPP_HandleEvent</a>
+<LI><a href="#nppinitialize">NPP_Initialize</a>
+<LI><a href="#nppnew">NPP_New</a>
+<LI><a href="#nppnewstream">NPP_NewStream</a>
+<LI><a href="#nppprint">NPP_Print</a>
+<LI><a href="#nppsetwindow">NPP_SetWindow</a>
+<LI><a href="#nppshutdown">NPP_Shutdown</a>
+<LI><a href="#nppstreamasfile">NPP_StreamAsFile</a>
+<LI><a href="#nppwrite">NPP_Write</a>
+<LI><a href="#nppwriteready">NPP_WriteReady</a>
+</UL>
+
+<HR>
+<a name="nppdestroy"><h3>NPP_Destroy</h3></a>
+Deletes a specific instance of a plug-in and returns an error value.
+<P>
+NPP_Destroy is called when a plug-in instance is deleted, typically because the user has left the page
+containing the instance, closed the window, or quit the application.  You should delete any private
+instance-specific information stored in <tt>instance->pdata</tt>.  If the instance being deleted is the
+last instance created by your plug-in, NPP_Shutdown will subsequently be called, where you can delete any
+data allocated in NPP_Initialize to be shared by all your plug-in's instances.  Note that you should not
+perform any graphics operations in NPP_Destroy as the instance's window is no longer guaranteed to be
+valid.
+<P>
+You can use the <tt>save</tt> parameter if you want to save some state or other information to be reused
+by a new instance with the same URL.  This data will be passed to the new instance via a parameter to
+NPP_New, called when the instance is created.  For example, a video player might choose to save the frame
+number that was last displayed.  If the user returned to the page, when the new instance was created it
+would have the previous frame number passed to it, so it could initially display the same frame.
+<P>
+Note that ownership of the <tt>buf</tt> field of the <tt>NPSavedData</tt> structure passes from the
+plug-in to Netscape when NPP_Destroy returns.  Netscape can and will discard this data based on arbitrary
+criteria such as its size and the user's page history; thus you should not save critical data using this
+mechanism.  To ensure that Netscape does not crash or leak memory when the saved data is discarded, the
+<tt>buf</tt> should be a flat structure (i.e., a simple structure with no allocated substructures)
+allocated with NPN_MemAlloc.  For example:
+<XMP>
+char* myData = "Here is some saved data.\n";
+int32 myLength = strlen(myData) + 1;
+*save = (NPSavedData*) NPN_MemAlloc(sizeof(NPSavedData));
+(*save)->len = myLength;
+(*save)->buf = (void*) NPN_MemAlloc(myLength);
+strcpy((*save)->buf, myData);
+</XMP>
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+NPError NPP_Destroy(NPP instance, NPSavedData **save);
+</XMP>
+<H4>See also</H4>
+<a href="#nppnew">NPP_New</a><BR>
+<a href="#nppshutdown">NPP_Shutdown</a><BR>
+<a href="pi4.htm#npp">NPP</a><BR>
+<a href="pi4.htm#npsaveddata">NPSavedData</a>
+<P>
+
+<HR>
+<a name="nppdestroystream"><h3>NPP_DestroyStream</h3></a>
+Indicates the closure and deletion of a stream, and returns an error value.
+<P>
+The NPP_DestroyStream function is called when the stream identified by <tt>stream</tt> for the plug-in
+instance denoted by <tt>instance</tt> will be destroyed.  You should delete any private data allocated in
+<tt>stream->pdata</tt> at this time.
+<P>
+The reason the stream was destroyed is indicated by the by the parameter <tt>reason</tt>.  The most
+common reason code is <tt>NPRES_DONE</tt>, indicating simply that the stream completed normally because
+all data was sent to the instance.  Other possible reason codes are <tt>NPRES_USER_BREAK</tt>, indicating
+that the user canceled the stream by clicking the "Stop" button, and <tt>NPRES_NETWORK_ERR</tt>,
+indicating that the stream failed due to network problems.  The complete list of reason codes is found
+in <tt>npapi.h</tt>.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+NPError NPP_DestroyStream(NPP instance, NPStream *stream, NPError reason);
+</XMP>
+<H4>See also</H4>
+<a href="#nppnewstream">NPP_NewStream</a><BR>
+<a href="pi4.htm#npstream">NPStream</a>
+<P>
+
+<HR>
+<a name="npphandleevent"><h3>NPP_HandleEvent</h3></a>
+
+<I>Currently this function is used only on the Macintosh.</I>
+<P>
+Delivers a platform-specific event to the instance.
+<P>
+On the Macintosh, <tt>event</tt> is a pointer to a standard Macintosh <tt>EventRecord</tt>.  All standard
+event types are passed to the instance as appropriate.  In general, return TRUE if you handle the event
+and FALSE if you ignore the event.
+<P>
+<li>Mouse events: Sent if the mouse is within the bounds of the instance.
+<li>Key events: Sent if the instance has text focus (see below).
+<li>Update events: Sent if the update region intersects the instance's bounds.
+<li>Activate events: Sent to all instances in the window being activate or deactivated.
+<li>Suspend/Resume events: Sent to all instances in all windows.
+<li>Null events: Sent to all instances in all windows.
+<P>
+In addition to these standard types, three additional event types may be passed in the
+<tt>event->what</tt> field of the <tt>EventRecord</tt>:
+<P>
+<li><tt>getFocusEvent</tt>: Sent when the instance may become the focus of subsequent key events, as a
+result of the user clicking on the instance or pressing the tab key to focus the instance.  If your
+instance accepts key events, return TRUE, and key events will be sent to the instance until it receives a
+<tt>loseFocusEvent</tt>.  If your plug-in ignores key events, return FALSE, and the key events will be
+processed by Netscape itself.
+<li><tt>loseFocusEvent</tt>: Sent when the instance has lost the text focus, as a result of the user
+clicking elsewhere on the page or pressing the tab key to move the focus.  No key events will be sent to
+the instance until the next <tt>getFocusEvent</tt>.
+<li><tt>adjustCursorEvent</tt>: Send when the mouse enters or leaves the bounds of the instance.  If your
+plug-in wants to set the cursor when the mouse is within the instance, set the cursor and return TRUE.
+If you don't want a special cursor, return FALSE and Netscape will use the standard arrow cursor.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+int16 NPP_HandleEvent(NPP instance, void *event);
+</XMP>
+<P>
+
+<HR>
+<a name="nppinitialize"><h3>NPP_Initialize</h3></a>
+Provides global initialization for a plug-in, and returns an error value.
+<P>
+This function is called once when a plug-in is loaded, before the first instance is created.  You should
+allocate any memory or resources shared by all instances of your plug-in at this time.  After the last
+instance has been deleted, NPP_Shutdown will be called, where you can release any memory or resources
+allocated by NPP_Initialize.
+<P>
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+NPError NPP_Initialize(void)
+</XMP>
+<H4>See also</H4>
+<a href="#nppshutdown">NPP_Shutdown</a>
+<P>
+
+<HR>
+<a name="nppnew"><h3>NPP_New</h3></a>
+Creates a new instance of a plug-in and returns an error value.
+<P>
+NPP_New creates a new instance of your plug-in with MIME type specified by <tt>pluginType</tt>. The
+parameter <tt>mode</tt> is <tt>NP_EMBED</tt> if the instance was created by an EMBED tag, or
+<tt>NP_FULL</tt> if the instance was created by a separate file. You can allocate any instance-specific private
+data in <tt>instance->pdata</tt> at this time.  The <tt>NPP</tt> pointer is valid until the instance is
+destroyed.
+<P>
+The parameters <tt>argc</tt>, <tt>argn</tt> and <tt>argv</tt> pass a list of name-value pairs to
+the plug-in for the HTML attributes associated with this instance.  Since Netscape ignores any
+non-standard attributes within an EMBED tag, you can use private attributes to communicate
+instance-specific options or other information to the plug-in.  For example, the following EMBED tag has the
+standard attributes SRC, HEIGHT, and WIDTH, and the private attribute LOOP:
+
+<XMP>
+<EMBED SRC="movie.avi" HEIGHT=100 WIDTH=100 LOOP=TRUE>
+</XMP>
+
+With this EMBED tag, Netscape would pass the following values to the plug-in instance:
+
+<XMP>
+argc = 4
+argn = { "SRC", "HEIGHT", "WIDTH", "LOOP" }
+argv = { "movie.avi", "100", "100", "TRUE" }
+</XMP>
+
+If you have previously saved data for this instance of the plug-in using the function NPP_Destroy, you may
+receive this data via the <tt>saved</tt> parameter.  If <tt>saved</tt> is non-NULL, ownership of the
+<tt>NPSavedData</tt> object passes from Netscape back to the plug-in; therefore, the plug-in is responsible for
+freeing the memory for the <tt>NPSavedData</tt> and the buffer within it.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+NPError NPP_New(NPMIMEType *pluginType, NPP instance, uint16 mode, int16 argc, char *argn[], char
+*argv[], NPSavedData *saved);
+</XMP>
+<H4>See also</H4>
+<a href="#nppdestroy">NPP_Destroy</a><BR>
+<a href="pi4.htm#npp">NPP</a><BR>
+<a href="pi4.htm#npsaveddata">NPSavedData</a>
+<P>
+
+<HR>
+<a name="nppnewstream"><h3>NPP_NewStream</h3></a>
+Notifies an instance of a new data stream and returns an error value.
+<P>
+NPP_NewStream notifies the instance denoted by <tt>instance</tt> of the creation of a new stream specifed
+by <tt>stream</tt>.  The <tt>NPStream*</tt> pointer is valid until the stream is destroyed.  The MIME
+type of the stream is provided by the parameter <tt>type</tt>.
+<P>
+The stream may have been started by Netscape from the file specified in the SRC attribute of the EMBED
+tag (for an embedded instance) or the file itself (for a full-page instance).  A plug-in can also request
+a stream with function NPN_GetURL.  NPP_DestroyStream is called when the stream completes (either
+successfully or abnormally).  The plug-in can terminate the stream itself by calling NPN_DestroyStream.
+<P>
+The parameter <tt>stype</tt> defines the mode of the stream.  By default the mode is <tt>NP_NORMAL</tt>,
+but the plug-in can request a different mode if necessary:
+<P>
+<li><tt>NP_NORMAL</tt>: Data in the stream is delivered to the instance in a series of calls to
+NPP_WriteReady and NPP_Write.  This mode allows the plug-in to process the data progressively as it
+arrives from the network or file system.
+<P>
+<li><tt>NP_ASFILE</tt>: Most plug-ins that need the stream saved to a file should use the more efficient mode
+<tt>NP_ASFILEONLY</tt> (above); this mode is preserved for compatibility only. <tt>NP_ASFILE</tt> differs from
+<tt>NP_ASFILEONLY</tt> in that data is delivered to the plug-in, via a series of calls to NPP_Write, as it
+is saved to the file (as in mode <tt>NP_NORMAL</tt>).  If the data in the stream comes from a file that is already
+local, the data is still read, sent to the plug-in via NPP_Write, and written to a file in the local cache.
+<P>
+<li><tt>NP_SEEK</tt>: Data in the stream is not automatically delivered to the instance, but can be
+randomly accessed by the plug-in as needed, via calls to NPN_RequestRead.  The parameter <tt>seekable</tt> is
+TRUE if the stream inherently supports random access (for example, local files or HTTP servers that support byte-range
+requests).  If the plug-in requests mode <tt>NP_SEEK</tt> for a stream that is not inherently seekable (<tt>seekable =
+FALSE</tt>), the data in the stream will be copied to the local cache.  Any requests for data made by the plug-in
+via NPN_RequestRead will only be fulfilled when all data has been read and stored in the cache.  Note that as
+an optimization to extract the maximum benefit from existing network connections, Netscape will continue to read
+data sequentially out of the stream (as in mode <tt>NP_NORMAL</tt>) until the first NPN_RequestRead call is made.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+NPError NPP_NewStream(NPP instance, NPMIMEType type, NPStream *stream, NPBool seekable, uint16* stype);
+</XMP>
+<H4>See also</H4>
+<a href="#nppdestroystream">NPP_DestroyStream</a><br>
+<a href="#nppstreamasfile">NPP_StreamAsFile</a><br>
+<a href="#nppwrite">NPP_Write</a><br>
+<a href="#nppwriteready">NPP_WriteReady</a><br>
+<a href="pi3.htm#npndestroystream">NPN_DestroyStream</a><br>
+<a href="pi3.htm#npnrequestread">NPN_RequestRead</a><br>
+<a href="pi4.htm#npstream">NPStream</a>
+<P>
+
+<HR>
+<a name="nppprint"><h3>NPP_Print</h3></a>
+Requests a platform-specific print operation for the instance.
+<P>
+NPP_Print requests the plug-in instance identified by <tt>instance</tt> to print itself.  If the instance
+is full-page, NPP_Print will initially be called with <tt>platformPrint->mode</tt> equal to
+<tt>NP_FULL</tt> before Netscape displays any print dialogs.  If the plug-in wishes to completely control
+the print process for this instance, it can access the platform-specific printer information in
+<tt>platformPrint</tt> and handle the print dialogs and printing process as it sees fit.  If the plug-in
+does print the instance in full-page mode, it should set <tt>pluginPrinted</tt> to TRUE.  If the plug-in
+does not want to take control of the complete printing process it can set <tt>pluginPrinted</tt> to FALSE
+(the default value) and Netscape will display whatever print dialogs are necessary and call NPP_Print
+again (this time, with <tt>platformPrint->mode</tt> equal to <tt>NP_EMBED</tt>).
+<P>
+If the instance is embedded, or full-page but the plug-in declined control of the print process as
+described above, NPP_Print will be called with <tt>platformPrint->mode</tt> equal to <tt>NP_EMBED</tt>.
+<tt>platformPrint->embedPrint.window</tt> contains the window that the plug-in should render the instance
+into for printing.
+<P>
+On the Macintosh, when printing in mode <tt>NP_FULL</tt> the field <tt>platformPrint</tt> contains a
+standard Macintosh <tt>THPrint</tt> (see Printing.h).
+<P>
+On Windows, note that the coordinates for the window rectangle are in TWIPS. Therefore you need to
+convert the x-y point using the Windows API call <tt>DPtoLP()</tt> when you output text.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+void NPP_Print(NPP instance, NPPrint *platformPrint);
+</XMP>
+<H4>See also</H4>
+<a href="pi4.htm#npprint">NPPrint</a><BR>
+<a href="pi4.htm#npfullprint">NPFullPrint</a><BR>
+<a href="pi4.htm#npembedprint">NPEmbedPrint</a>
+<P>
+
+<HR>
+<a name="nppsetwindow"><h3>NPP_SetWindow</h3></a>
+Sets the window in which a plug-in draws, and returns an error value.
+<P>
+NPP_SetWindow informs the plug-in instance specified by <tt>instance</tt> of the the window denoted by
+<tt>window</tt> in which the instance draws.  This <a href="pi4.htm#npwindow"><tt>NPWindow</tt></a>
+pointer is valid for the life of
+the instance, or until NPP_SetWindow is called again with a different value.  Subsequent calls to
+NPP_SetWindow for a given instance typically indicate that the window has been resized.  If either
+<tt>window</tt> or <tt>window->window</tt> are NULL, the plug-in must not perform any additional graphics
+operations on the window and should free any resources associated with the window.
+<P>
+On Windows and UNIX, the platform-specific window information specified in <tt>window->window</tt> is a
+handle to a subwindow of the Netscape window hierarchy.  On the Macintosh, this field points to a
+<tt>NP_Port</tt> structure.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+NPError NPP_SetWindow(NPP instance, NPWindow *window);
+</XMP>
+<H4>See also</H4>
+<a href="pi4.htm#npwindow">NPWindow</a><BR>
+<a href="pi4.htm#npport">NPPort</a>
+<P>
+
+<HR>
+<a name="nppshutdown"><h3>NPP_Shutdown</h3></a>
+Provides global deinitialization for a plug-in.
+<P>
+This function is called once after the last instance of your plug-in is destroyed.  Use this function to
+release any memory or resources shared across all instances of your plug-in.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+void NPP_Shutdown(void);
+</XMP>
+<H4>See also</H4>
+<a href="nppinitialize">NPP_Initialize</a>
+<P>
+
+<HR>
+<a name="nppstreamasfile"><h3>NPP_StreamAsFile</h3></a>
+Provides a local file name for the data from a stream.
+<P>
+NPP_StreamAsFile provides the instance with a full path to a local file, identified by <tt>fname</tt>,
+for the stream specified by <tt>stream</tt>.  NPP_StreamAsFile is called as a result of the plug-in
+requesting mode <tt>NP_ASFILEONLY</tt> or <tt>NP_ASFILE</tt> in a previous call to NPP_NewStream.
+If an error occurs while retrieving the data or writing the file, <tt>fname</tt> may be NULL.
+<P>
+Note that if the file is created from a stream from the network, the file is locked in the Netscape disk
+cache until the stream or its instance is destroyed.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+void NPP_StreamAsFile(NPP instance, NPStream *stream, const char* fname);
+</XMP>
+<H4>See also</H4>
+<a href="#nppnewstream">NPP_NewStream</a><BR>
+<a href="pi4.htm#npstream">NPStream</a>
+<P>
+
+<HR>
+<a name="nppwrite"><h3>NPP_Write</h3></a>
+Delivers data from a stream and returns the number of bytes written.
+<P>
+NPP_Write is called after a call to NPP_NewStream in which the plug-in requested a normal-mode stream, in
+which the data in the stream is delivered progressively over a series of calls to NPP_WriteReady and
+NPP_Write.  The function delivers a buffer <tt>buf</tt> of <tt>len</tt> bytes of data from the stream
+identified by <tt>stream</tt> to the <tt>instance</tt>. The parameter <tt>offset</tt> is the logical
+position of <tt>buf</tt> from the beginning of the data in the stream.
+<P>
+The function returns the number of bytes written (consumed by the instance).  A negative return value
+causes an error on the stream, which will subsequently be destroyed via a call to NPP_DestroyStream.
+<P>
+Note that a plug-in must consume at least as many bytes as it indicated in the preceeding NPP_WriteReady
+call.  All data consumed must be either processed immediately or copied to memory allocated by the
+plug-in: the <tt>buf</tt> parameter is not persistent.
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+int32 NPP_Write(NPP instance, NPStream *stream, int32 offset, int32 len, void *buf);
+</XMP>
+<H4>See also</H4>
+<a href="#nppdestroystream">NPP_DestroyStream</a><br>
+<a href="#nppnewstream">NPP_NewStream</a><br>
+<a href="#nppwriteready">NPP_WriteReady</a><br>
+<a href="pi4.htm#npstream">NPStream</a>
+<P>
+
+<HR>
+<a name="nppwriteready"><h3>NPP_WriteReady</h3></a>
+Returns the maximum number of bytes that an instance is prepared to accept from the stream.
+<P>
+NPP_WriteReady determines the maximum number of bytes that the <tt>instance</tt> will consume from the
+stream in a subsequent call NPP_Write.  This function allows Netscape to only send as much data to the
+instance as the instance is capable of handling at a time, allowing more efficient use of resources
+within both Netscape and the plug-in.
+<P>
+For example, suppose the plug-in allocates in NPP_NewStream an 8K buffer to hold the data written from
+that stream.  In the first call to NPP_WriteReady it could return 8192, resulting in a call to NPP_Write
+with a buffer of up to 8K bytes.  After this data is copied from Netscape's buffer to the plug-in's
+buffer, the plug-in begins to asynchronously process the data.  When the next NPP_WriteReady call is
+made, only half of the data has been processed, so to avoid allocating additional buffers, the plug-in
+could return 4096, resulting in a call to NPP_Write of up to 4K bytes.
+<P>
+Note that the buffer passed to NPP_Write may be larger than the size returned from NPP_WriteReady.
+The value returned from NPP_WriteReady is only a promise to consume a certain amount of data from the
+buffer, not an upper limit on the buffer size.  In the example above, if the plug-in allocates an 8K buffer
+and returns 8192 from NPP_Write, but gets 10000 bytes from Netscape in a subsequent call to NPP_Write,
+the plug-in should copy the first 8192 bytes from Netscape's buffer into its own buffer, and return
+8192 (the number of bytes actually consumed) from NPP_Write.
+<P>
+
+<H4>Syntax</H4>
+<XMP>
+#include <npapi.h>
+int32 NPP_WriteReady(NPP instance, NPStream *stream);
+</XMP>
+<H4>See also</H4>
+<a href="#nppwrite">NPP_Write</a><br>
+<a href="pi4.htm#npstream">NPStream</a>
+<P>
+</BODY>
+</HTML>
+ 
+ 

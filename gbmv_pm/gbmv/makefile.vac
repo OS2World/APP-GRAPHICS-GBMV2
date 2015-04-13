@@ -1,0 +1,61 @@
+#
+# Simple bitmap viewer
+#
+# OS/2
+# IBM VisualAge C++, with CTC306, CTD302 and CTU304
+#
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\..\make.opt
+
+GBM    = ..\..\gbm
+IDIR   = ..\bin
+
+
+.SUFFIXES: .c .obj
+
+CWARNS = /W3 /Wcnd+cns+ord+par+pro+rea+ret+use+
+CFLAGS = /C+ $(CWARNS) /I$(GBM) /G5 /Gd-e+m+ /Q+ /O+ /Os- /Gf+ /DNDEBUG
+LFLAGS = /NOLOGO /BASE:0x10000 /STACK:0x10000 /NOI /EXEPACK:2 /OPTFUNC /PACKCODE /PACKDATA
+
+.c.obj:
+        icc $(CFLAGS) $*.c
+
+#
+
+gbmv.exe: gbmv.obj gbmv_vac.def $(GBM)\gbm.lib $(GBM)\gbmmem.lib $(GBM)\gbmerr.lib \
+          $(GBM)\gbmht.lib $(GBM)\gbmscale.lib $(GBM)\gbmtool.lib gbmv.res
+          ilink $(LFLAGS) /OUT:$@ gbmv.obj gbmv_vac.def $(GBM)\gbm.lib $(GBM)\gbmmem.lib \
+                $(GBM)\gbmerr.lib $(GBM)\gbmht.lib $(GBM)\gbmscale.lib $(GBM)\gbmtool.lib \
+                $(GBM)\gbmmthrd.lib
+          rc -n -x2 gbmv.res $@
+
+gbmv.obj: gbmv.c gbmv.h $(GBM)\gbm.h $(GBM)\gbmmem.h $(GBM)\gbmerr.h $(GBM)\gbmht.h $(GBM)\gbmscale.h $(GBM)\gbmtool.h
+
+gbmv.res: gbmv.rc gbmv.h gbmv.ico
+          rc -n -r -x2 gbmv.rc
+
+#
+
+clean:
+        -del /F /N *.obj *.res 2>nul
+
+clobber:
+        -del /F /N *.obj *.res *.exe $(IDIR)\gbmv.exe 2>nul
+
+#
+
+install:
+        copy *.exe $(IDIR)
+
+#
+
+exepack:
+        $(EXE_PACKER) *.exe
+
+#
+
+package:
+        -del /F /N $(IDIR)\gbmv_exe.zip 2>nul
+        zip -9 $(IDIR)\gbmv_exe.zip *.exe
+

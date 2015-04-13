@@ -1,0 +1,437 @@
+#include "os2.h"
+#include "gbmdlgrc.h"
+#include "gbmv2.h"
+#include "gbmv2hlp.h"
+
+POINTER RID_GBMV2 gbmv2.ico
+POINTER RID_SELECT1 select1.ptr
+POINTER RID_SELECT2 select2.ptr
+
+/* MENU RID_GBMV2 */
+MENU RID_GBMV2 PRELOAD
+    {
+    SUBMENU "~Datei",            MID_FILE
+        {
+        MENUITEM "~Neu\tStrg+N",             MID_NEW
+        MENUITEM "~ôffnen...\tStrg+O",       MID_OPEN
+        MENUITEM "~Sichern\tStrg+S",         MID_SAVE
+        MENUITEM "Sichern ~als...\tStrg+A",  MID_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "~Export MetaFile...",      MID_EXPORT_MET
+        MENUITEM SEPARATOR
+        MENUITEM "~Drucken\tStrg+P",         MID_PRINT
+        MENUITEM SEPARATOR
+        MENUITEM "Bildschirmkopie",          MID_SNAPSHOT
+        }
+    SUBMENU "~Edit",            MID_EDIT
+        {
+        MENUITEM "~RÅckgÑngig\tStrg+Z",     MID_UNDO
+        MENUITEM SEPARATOR
+        MENUITEM "~AuswÑhlen\tUmschalt+A",  MID_SELECT
+        MENUITEM "Auswahl auf~heben\tESC",  MID_DESELECT
+        MENUITEM SEPARATOR
+        MENUITEM "~Kopieren\tStrg+Einfg" ,    MID_COPY
+        MENUITEM "~EinfÅgen\tUmschalt+Einfg", MID_PASTE
+        }
+    SUBMENU "~Bild",            MID_BITMAP
+        {
+        MENUITEM "~Horizontal spiegeln\tStrg+H", MID_REF_HORZ
+        MENUITEM "~Vertikal spiegeln\tStrg+V"  , MID_REF_VERT
+        MENUITEM "~Diagonal spiegeln\tStrg+D",  MID_TRANSPOSE
+        MENUITEM SEPARATOR
+        MENUITEM "Um  ~90¯ drehen\tStrg+L",    MID_ROT_90
+        MENUITEM "Um ~180¯ drehen",            MID_ROT_180
+        MENUITEM "Um ~270¯ drehen\tStrg+R",    MID_ROT_270
+        MENUITEM SEPARATOR
+        MENUITEM "~Farbraumanpassung...\tStrg+G"    , MID_COLOUR
+        MENUITEM "~Farbraumkonvertierung...\tStrg+F", MID_MAP
+        MENUITEM "Rote Augen ~korrigieren\tStrg+K"  , MID_REDEYE
+        MENUITEM SEPARATOR
+        MENUITEM "~Zuschneiden\tAlt+X",               MID_CROP
+        MENUITEM "G~rî·e...\tStrg+E",                 MID_RESIZE
+        }
+    SUBMENU "~Ansicht",            MID_VIEW
+        {
+        MENUITEM "~Direkt\tUmschalt+R"          , MID_VIEW_NULL
+        MENUITEM "~Halbtonverfahren\tUmschalt+H", MID_VIEW_HALFTONE
+        MENUITEM "~Fehlerstreuung\tUmschalt+E"  , MID_VIEW_ERRDIFF
+        }
+        SUBMENU "~Hilfe",                        MID_HELP
+                {
+                MENUITEM "~Hilfe fÅr Hilfefunktion...",   MID_HELP_FOR_HELP
+                MENUITEM "~Erweiterte Hilfe...",          SC_HELPEXTENDED, MIS_SYSCOMMAND
+                MENUITEM "Hilfe fÅr ~Tasten...",          SC_HELPKEYS    , MIS_SYSCOMMAND
+                MENUITEM "Hilfe~index...",                SC_HELPINDEX   , MIS_SYSCOMMAND
+        MENUITEM SEPARATOR
+        MENUITEM "~Produktinformation...",MID_ABOUT
+                }
+    }
+
+/* ACCELTABLE RID_GBMV2 */
+ACCELTABLE RID_GBMV2
+    {
+    "n",        MID_NEW,          CONTROL
+    "N",        MID_NEW,          CONTROL
+    "o",        MID_OPEN,         CONTROL
+    "O",        MID_OPEN,         CONTROL
+    "s",        MID_SAVE,         CONTROL
+    "S",        MID_SAVE,         CONTROL
+    "a",        MID_SAVE_AS,      CONTROL
+    "A",        MID_SAVE_AS,      CONTROL
+    "p",        MID_PRINT,        CONTROL
+    "P",        MID_PRINT,        CONTROL
+    "a",        MID_SELECT,       SHIFT
+    "A",        MID_SELECT,       SHIFT
+    VK_ESC,     MID_DESELECT,     VIRTUALKEY
+    VK_INSERT,  MID_COPY,         VIRTUALKEY, CONTROL
+    VK_INSERT,  MID_PASTE,        VIRTUALKEY, SHIFT
+    "z",        MID_UNDO,         CONTROL
+    "Z",        MID_UNDO,         CONTROL
+    "h",        MID_REF_HORZ,     CONTROL
+    "H",        MID_REF_HORZ,     CONTROL
+    "v",        MID_REF_VERT,     CONTROL
+    "V",        MID_REF_VERT,     CONTROL
+    "l",        MID_ROT_90,       CONTROL
+    "L",        MID_ROT_90,       CONTROL
+    "r",        MID_ROT_270,      CONTROL
+    "R",        MID_ROT_270,      CONTROL
+    "d",        MID_TRANSPOSE,    CONTROL
+    "D",        MID_TRANSPOSE,    CONTROL
+    "g",        MID_COLOUR,       CONTROL
+    "G",        MID_COLOUR,       CONTROL
+    "f",        MID_MAP,          CONTROL
+    "F",        MID_MAP,          CONTROL
+    "k",        MID_REDEYE,       CONTROL
+    "K",        MID_REDEYE,       CONTROL
+    "x",        MID_CROP,         ALT
+    "X",        MID_CROP,         ALT
+    "e",        MID_RESIZE,       CONTROL
+    "E",        MID_RESIZE,       CONTROL
+    "r",        MID_VIEW_NULL,     SHIFT
+    "R",        MID_VIEW_NULL,     SHIFT
+    "h",        MID_VIEW_HALFTONE, SHIFT
+    "H",        MID_VIEW_HALFTONE, SHIFT
+    "e",        MID_VIEW_ERRDIFF,  SHIFT
+    "E",        MID_VIEW_ERRDIFF,  SHIFT
+    VK_F3,      MID_EXIT,         VIRTUALKEY
+    }
+
+/* DLGTEMPLATE RID_DLG_ABOUT */
+DLGTEMPLATE RID_DLG_ABOUT LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "GbmV2 - Produktinformation", RID_DLG_ABOUT, 12, 6, 210, 54, WS_VISIBLE | FS_MOUSEALIGN, FCF_SYSMENU | FCF_TITLEBAR
+    BEGIN
+        ICON            RID_GBMV2, DID_ICON, 16, 28, 20, 16, WS_GROUP
+        LTEXT           "Generalised Bitmap Module, Viewer 2", DID_TITLE_TEXT, 56, 38, 154, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        LTEXT           "Version 1.00, using GBM.DLL version 1.00", DID_VERSION_TEXT, 56, 25, 154, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        LTEXT           "Autor: Heiko Nitzsche", DID_AUTHOR_TEXT, 56, 13, 154, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        LTEXT           "Email: Heiko.Nitzsche@gmx.de", DID_TRANSLATE_TEXT, 56, 6, 154, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        DEFPUSHBUTTON   "~OK", DID_OK, 8, 6, 36, 14, WS_GROUP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+    END
+END
+
+/* DLGTEMPLATE RID_DLG_COLOUR */
+DLGTEMPLATE RID_DLG_COLOUR LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Farbraumanpassung", RID_DLG_COLOUR, 12, 6, 172, 158, WS_VISIBLE | FS_MOUSEALIGN,
+            FCF_SYSMENU | FCF_TITLEBAR
+    BEGIN
+        GROUPBOX        "~Art der Anpassung", DID_MAPPING, 4, 60, 164, 90, DT_MNEMONIC
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "IntensitÑt auf L* cyclometric", DID_I_TO_L, 12, 128, 148, 10, WS_TABSTOP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "IntensitÑt auf Gamma korrigiert", DID_I_TO_P, 12, 116, 148, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "L* cyclometric auf IntensitÑt", DID_L_TO_I, 12, 104, 148, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "L* cyclometric auf Gamma korrigiert", DID_L_TO_P, 12, 92, 148, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "Gamma korrigiert auf IntensitÑt", DID_P_TO_I, 12, 80, 148, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "Gamma korrigiert auf L* cyclometric", DID_P_TO_L, 12, 68, 148, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        GROUPBOX        "Gammakorrektur Farbraum", DID_PARAMS, 4, 24, 164, 30
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        RTEXT           "~Gamma", DID_GAMMA_TEXT, 24, 32, 24, 8, DT_MNEMONIC | DT_VCENTER
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        ENTRYFIELD      "", DID_GAMMA, 54, 32, 32, 8, ES_MARGIN
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        RTEXT           "~Shelf", DID_SHELF_TEXT, 100, 32, 20, 8, DT_MNEMONIC | DT_VCENTER
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        ENTRYFIELD      "", DID_SHELF, 126, 32, 32, 8, ES_MARGIN
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        DEFPUSHBUTTON   "~OK", DID_OK, 4, 4, 48, 14, WS_GROUP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        PUSHBUTTON      "Abbruch", DID_CANCEL, 56, 4, 48, 14, NOT WS_TABSTOP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        PUSHBUTTON      "Hilfe", DID_HELP, 120, 4, 48, 14, BS_HELP | BS_NOPOINTERFOCUS | NOT WS_TABSTOP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+    END
+END
+
+/* DLGTEMPLATE RID_DLG_MAP*/
+DLGTEMPLATE RID_DLG_MAP LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Farbraumkonvertierung", RID_DLG_MAP, 12, 6, 222, 188, WS_VISIBLE | FS_MOUSEALIGN,
+            FCF_SYSMENU | FCF_TITLEBAR
+    BEGIN
+        GROUPBOX        "~Konvertiere nach", DID_MAP_TO, 4, 26, 134, 158, DT_MNEMONIC
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "~1 bpp, Schwarz/Wei·", DID_MAP_BW, 12, 164, 118, 10, WS_TABSTOP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "4 bpp, 8 Farben", DID_MAP_8, 12, 152, 118, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "~4 bpp 16 Farben VGA-Palette", DID_MAP_VGA, 12, 140, 118, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "4 bpp, 16 Graustufen", DID_MAP_4G, 12, 128, 118, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "~8 bpp, 7Rx8Gx4B-Palette", DID_MAP_784, 12, 116, 118, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "8 bpp, 6Rx6Gx6B-Palette", DID_MAP_666, 12, 104, 118, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "8 bpp, 4Rx4Gx4B-Palette", DID_MAP_444, 12, 92, 118, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "8 bpp, 256 Graustufen", DID_MAP_8G, 12, 80, 118, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "8 bpp, 64R+64G+64B tri-pel Palette", DID_MAP_TRIPEL, 12, 68, 118, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "24 bpp, Åbernimm Rot, GrÅn, Blau", DID_MAP_RGB, 12, 56, 118, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "8 bpp, N meistvervendete Farben", DID_MAP_FREQ, 12, 44, 118, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "8 bpp, Median-Cut auf N Farben", DID_MAP_MCUT, 12, 32, 118, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        GROUPBOX        "~Werte", DID_VALUES, 146, 110, 72, 74, DT_MNEMONIC
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        RTEXT           "Bits ~R", DID_R_TEXT, 154, 162, 24, 8, DT_VCENTER | DT_MNEMONIC
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        ENTRYFIELD      "", DID_R, 184, 162, 24, 8, ES_MARGIN
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        RTEXT           "Bits ~G", DID_G_TEXT, 154, 148, 24, 8, DT_VCENTER | DT_MNEMONIC
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        ENTRYFIELD      "", DID_G, 184, 148, 24, 8, ES_MARGIN
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        RTEXT           "Bits ~B", DID_B_TEXT, 154, 134, 24, 8, DT_VCENTER | DT_MNEMONIC
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        ENTRYFIELD      "", DID_B, 184, 134, 24, 8, ES_MARGIN
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        RTEXT           "Farben ~F", DID_N_TEXT, 154, 120, 24, 8, DT_VCENTER | DT_MNEMONIC
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        ENTRYFIELD      "", DID_N, 184, 120, 24, 8, ES_MARGIN
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        GROUPBOX        "~Algorithmus", DID_HOW, 146, 26, 72, 52, DT_MNEMONIC
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "~NÑchste Farbe", DID_NEAREST, 154, 56, 60, 10, WS_TABSTOP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "~Halbton", DID_HALFTONE, 154, 44, 60, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTORADIOBUTTON "~Fehlerstreuung", DID_ERRDIFF, 154, 32, 60, 10
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        DEFPUSHBUTTON   "~OK", DID_OK, 4, 4, 48, 14, WS_GROUP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        PUSHBUTTON      "Abbruch", DID_CANCEL, 56, 4, 48, 14, NOT WS_TABSTOP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        PUSHBUTTON      "Hilfe", DID_HELP, 170, 4, 48, 14, BS_HELP | BS_NOPOINTERFOCUS | NOT WS_TABSTOP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+    END
+END
+
+/* DLGTEMPLATE RID_DLG_RESIZE */
+DLGTEMPLATE RID_DLG_RESIZE LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Grî·e", RID_DLG_RESIZE, 12, 6, 201, 108, WS_VISIBLE | FS_MOUSEALIGN,
+            FCF_SYSMENU | FCF_TITLEBAR
+    BEGIN
+        LTEXT           "", DID_CURRENTLY, 4, 92, 188, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        RTEXT           "~Breite", DID_WIDTH_TEXT, 4, 76, 32, 8, DT_VCENTER | DT_MNEMONIC | NOT WS_GROUP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        ENTRYFIELD      "", DID_WIDTH, 42, 76, 32, 8, ES_MARGIN
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        PUSHBUTTON      "* N", DID_WIDTH_MUL, 84, 74, 20, 12, WS_GROUP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        PUSHBUTTON      "/ N", DID_WIDTH_DIV, 108, 74, 20, 12, NOT WS_TABSTOP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        PUSHBUTTON      "An Hîhe anpassen", DID_WIDTH_MATCH, 132, 74, 65, 12, NOT WS_TABSTOP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        RTEXT           "~Hîhe", DID_HEIGHT_TEXT, 4, 60, 32, 8, DT_VCENTER | DT_MNEMONIC
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        ENTRYFIELD      "", DID_HEIGHT, 42, 60, 32, 8, ES_MARGIN
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        PUSHBUTTON      "* N", DID_HEIGHT_MUL, 84, 58, 20, 12, WS_GROUP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        PUSHBUTTON      "/ N", DID_HEIGHT_DIV, 108, 58, 20, 12, NOT WS_TABSTOP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        PUSHBUTTON      "An Breite anpassen", DID_HEIGHT_MATCH, 132, 58, 65, 12, NOT WS_TABSTOP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        RTEXT           "~N", DID_MUL_TEXT, 76, 44, 16, 8, DT_MNEMONIC
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        ENTRYFIELD      "", DID_MUL, 98, 44, 28, 8, ES_MARGIN
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        AUTOCHECKBOX    "Neuab~tasten:", DID_RESIZE_CHECK_INTERPOLATE,
+                        10, 28, 50, 8, BS_AUTOSIZE
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        CONTROL         "", DID_RESIZE_FILTERLIST,
+                        60, 0, 68, 36, WC_COMBOBOX,
+                        CBS_DROPDOWNLIST | WS_TABSTOP | WS_VISIBLE
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        DEFPUSHBUTTON   "~OK", DID_OK, 4, 4, 48, 14, WS_GROUP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        PUSHBUTTON      "Abbruch", DID_CANCEL, 56, 4, 48, 14, NOT WS_TABSTOP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        PUSHBUTTON      "Hilfe", DID_HELP, 149, 4, 48, 14, BS_HELP | BS_NOPOINTERFOCUS | NOT WS_TABSTOP
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+    END
+END
+
+/* HELPTABLEs */
+HELPTABLE RID_HELP_TABLE
+    {
+    /* ID of frame/dialog, ID of HELPSUBTABLE, help panel */
+    HELPITEM RID_GBMV2        , RID_GBMV2      , HID_INTRO
+    HELPITEM RID_DLG_ABOUT    , RID_DLG_ABOUT  , HID_ABOUT_DLG
+    HELPITEM RID_DLG_COLOUR   , RID_DLG_COLOUR , HID_COLOUR_DLG
+    HELPITEM RID_DLG_MAP      , RID_DLG_MAP    , HID_MAP_DLG
+    HELPITEM RID_DLG_RESIZE   , RID_DLG_RESIZE , HID_RESIZE_DLG
+    HELPITEM RID_GBM_FILEDLG  , RID_GBM_FILEDLG, HID_GBM_FILEDLG
+    }
+
+HELPSUBTABLE RID_GBMV2
+    {
+    /* id of control/menuitem, help panel */
+    HELPSUBITEM MID_FILE ,         HID_FILE
+    HELPSUBITEM MID_NEW,           HID_NEW
+    HELPSUBITEM MID_OPEN,          HID_OPEN
+    HELPSUBITEM MID_SAVE,          HID_SAVE
+    HELPSUBITEM MID_SAVE_AS,       HID_SAVE_AS
+    HELPSUBITEM MID_EXPORT_MET,    HID_EXPORT_MET
+    HELPSUBITEM MID_PRINT,         HID_PRINT
+    HELPSUBITEM MID_SNAPSHOT,      HID_SNAPSHOT
+    HELPSUBITEM MID_EDIT,          HID_EDIT
+    HELPSUBITEM MID_UNDO,          HID_UNDO
+    HELPSUBITEM MID_SELECT,        HID_SELECT
+    HELPSUBITEM MID_DESELECT,      HID_DESELECT
+    HELPSUBITEM MID_COPY,          HID_COPY
+    HELPSUBITEM MID_PASTE,         HID_PASTE
+    HELPSUBITEM MID_BITMAP,        HID_BITMAP
+    HELPSUBITEM MID_REF_HORZ,      HID_REF_HORZ
+    HELPSUBITEM MID_REF_VERT,      HID_REF_VERT
+    HELPSUBITEM MID_ROT_90,        HID_ROT_90
+    HELPSUBITEM MID_ROT_180,       HID_ROT_180
+    HELPSUBITEM MID_ROT_270,       HID_ROT_270
+    HELPSUBITEM MID_TRANSPOSE,     HID_TRANSPOSE
+    HELPSUBITEM MID_CROP,          HID_CROP
+    HELPSUBITEM MID_COLOUR,        HID_COLOUR
+    HELPSUBITEM MID_MAP,           HID_MAP
+    HELPSUBITEM MID_REDEYE,        HID_REDEYE
+    HELPSUBITEM MID_RESIZE,        HID_RESIZE
+    HELPSUBITEM MID_VIEW,          HID_VIEW
+    HELPSUBITEM MID_VIEW_NULL,     HID_VIEW_NULL
+    HELPSUBITEM MID_VIEW_HALFTONE, HID_VIEW_HALFTONE
+    HELPSUBITEM MID_VIEW_ERRDIFF,  HID_VIEW_ERRDIFF
+    HELPSUBITEM MID_COPY,          HID_COPY
+    HELPSUBITEM MID_HELP,          HID_HELP
+    HELPSUBITEM MID_HELP_FOR_HELP, HID_HELP_FOR_HELP
+    HELPSUBITEM MID_ABOUT,         HID_ABOUT
+    HELPSUBITEM SC_HELPEXTENDED,   HID_HELPEXTENDED
+    HELPSUBITEM SC_HELPKEYS,       HID_HELPKEYS
+    HELPSUBITEM SC_HELPINDEX,      HID_HELPINDEX
+    HELPSUBITEM WID_SCROLL,        HID_INTRO
+    HELPSUBITEM WID_BITMAP,        HID_INTRO
+    }
+
+HELPSUBTABLE RID_DLG_ABOUT
+    {
+    /* id of control/menuitem, help panel */
+    HELPSUBITEM DID_ICON,          HID_ABOUT_DLG
+    HELPSUBITEM DID_TITLE_TEXT,    HID_ABOUT_DLG
+    HELPSUBITEM DID_VERSION_TEXT,  HID_ABOUT_DLG
+    HELPSUBITEM DID_AUTHOR_TEXT,   HID_ABOUT_DLG
+    HELPSUBITEM DID_OK,            HID_ABOUT_DLG
+    }
+
+HELPSUBTABLE RID_DLG_COLOUR
+    {
+    /* id of control/menuitem, help panel */
+    HELPSUBITEM DID_MAPPING,       HID_COLOUR_DLG
+    HELPSUBITEM DID_I_TO_L,        HID_COLOUR_DLG
+    HELPSUBITEM DID_I_TO_P,        HID_COLOUR_DLG
+    HELPSUBITEM DID_L_TO_I,        HID_COLOUR_DLG
+    HELPSUBITEM DID_L_TO_P,        HID_COLOUR_DLG
+    HELPSUBITEM DID_P_TO_I,        HID_COLOUR_DLG
+    HELPSUBITEM DID_P_TO_L,        HID_COLOUR_DLG
+    HELPSUBITEM DID_PARAMS,        HID_COLOUR_DLG
+    HELPSUBITEM DID_GAMMA_TEXT,    HID_COLOUR_DLG
+    HELPSUBITEM DID_GAMMA,         HID_COLOUR_DLG
+    HELPSUBITEM DID_SHELF_TEXT,    HID_COLOUR_DLG
+    HELPSUBITEM DID_SHELF,         HID_COLOUR_DLG
+    HELPSUBITEM DID_OK,            HID_COLOUR_DLG
+    HELPSUBITEM DID_CANCEL,        HID_COLOUR_DLG
+    HELPSUBITEM DID_HELP,          HID_COLOUR_DLG
+    }
+
+HELPSUBTABLE RID_DLG_MAP
+    {
+    /* id of control/menuitem, help panel */
+    HELPSUBITEM DID_MAP_TO,        HID_MAP_DLG
+    HELPSUBITEM DID_MAP_BW,        HID_MAP_DLG
+    HELPSUBITEM DID_MAP_8,         HID_MAP_DLG
+    HELPSUBITEM DID_MAP_VGA,       HID_MAP_DLG
+    HELPSUBITEM DID_MAP_4G,        HID_MAP_DLG
+    HELPSUBITEM DID_MAP_784,       HID_MAP_DLG
+    HELPSUBITEM DID_MAP_666,       HID_MAP_DLG
+    HELPSUBITEM DID_MAP_8G,        HID_MAP_DLG
+    HELPSUBITEM DID_MAP_TRIPEL,    HID_MAP_DLG
+    HELPSUBITEM DID_MAP_RGB,       HID_MAP_DLG
+    HELPSUBITEM DID_MAP_FREQ,      HID_MAP_DLG
+    HELPSUBITEM DID_MAP_MCUT,      HID_MAP_DLG
+    HELPSUBITEM DID_VALUES,        HID_MAP_DLG
+    HELPSUBITEM DID_R_TEXT,        HID_MAP_DLG
+    HELPSUBITEM DID_R,             HID_MAP_DLG
+    HELPSUBITEM DID_G_TEXT,        HID_MAP_DLG
+    HELPSUBITEM DID_G,             HID_MAP_DLG
+    HELPSUBITEM DID_B_TEXT,        HID_MAP_DLG
+    HELPSUBITEM DID_B,             HID_MAP_DLG
+    HELPSUBITEM DID_N_TEXT,        HID_MAP_DLG
+    HELPSUBITEM DID_N,             HID_MAP_DLG
+    HELPSUBITEM DID_HOW,           HID_MAP_DLG
+    HELPSUBITEM DID_NEAREST,       HID_MAP_DLG
+    HELPSUBITEM DID_HALFTONE,      HID_MAP_DLG
+    HELPSUBITEM DID_ERRDIFF,       HID_MAP_DLG
+    HELPSUBITEM DID_OK,            HID_MAP_DLG
+    HELPSUBITEM DID_CANCEL,        HID_MAP_DLG
+    HELPSUBITEM DID_HELP,          HID_MAP_DLG
+    }
+
+HELPSUBTABLE RID_DLG_RESIZE
+    {
+    /* id of control/menuitem, help panel */
+    HELPSUBITEM DID_CURRENTLY,     HID_RESIZE_DLG
+    HELPSUBITEM DID_WIDTH_TEXT,    HID_RESIZE_DLG
+    HELPSUBITEM DID_WIDTH,         HID_RESIZE_DLG
+    HELPSUBITEM DID_WIDTH_MUL,     HID_RESIZE_DLG
+    HELPSUBITEM DID_WIDTH_DIV,     HID_RESIZE_DLG
+    HELPSUBITEM DID_WIDTH_MATCH,   HID_RESIZE_DLG
+    HELPSUBITEM DID_HEIGHT_TEXT,   HID_RESIZE_DLG
+    HELPSUBITEM DID_HEIGHT,        HID_RESIZE_DLG
+    HELPSUBITEM DID_HEIGHT_MUL,    HID_RESIZE_DLG
+    HELPSUBITEM DID_HEIGHT_DIV,    HID_RESIZE_DLG
+    HELPSUBITEM DID_HEIGHT_MATCH,  HID_RESIZE_DLG
+    HELPSUBITEM DID_MUL_TEXT,      HID_RESIZE_DLG
+    HELPSUBITEM DID_MUL,           HID_RESIZE_DLG
+    HELPSUBITEM DID_OK,            HID_RESIZE_DLG
+    HELPSUBITEM DID_CANCEL,        HID_RESIZE_DLG
+    HELPSUBITEM DID_HELP,          HID_RESIZE_DLG
+    }
+
+HELPSUBTABLE RID_GBM_FILEDLG
+    {
+    /* id of control/menuitem, help panel */
+    HELPSUBITEM DID_GBM_FILEDLG,   HID_GBM_FILEDLG
+    }
+

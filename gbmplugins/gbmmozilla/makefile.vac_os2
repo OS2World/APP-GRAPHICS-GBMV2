@@ -1,0 +1,22 @@
+
+all:
+!ifdef debug
+      (cd os2 && nmake -c -f makefile.vac debug=yes)
+!else
+      (cd os2 && nmake -c -f makefile.vac)
+!endif
+
+clean:
+      (cd os2 && nmake -c -f makefile.vac clean)
+
+clobber:
+      (cd os2 && nmake -c -f makefile.vac clobber)
+
+exepack:
+      (cd os2 && nmake -c -f makefile.vac exepack)
+
+install:
+
+package:
+
+

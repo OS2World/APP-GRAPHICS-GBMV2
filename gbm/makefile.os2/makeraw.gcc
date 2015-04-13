@@ -1,0 +1,74 @@
+# Makefile for libraw library (static)
+
+# This makefile is for GCC 3.x on OS/2 32bit.
+# It builds the library as a statically linkable library (.LIB).
+#
+# Stripped down makefile for the Generalised Bitmap Module.
+
+# set directory where binaries will be placed by target install
+IDIR = bin
+
+CWARNS     = -w -Werror
+CFLAGS     = -c $(CWARNS) -mcpu=i686 -m32 -mfpmath=sse -msse -O3 -Zmt -Zomf -I. -I.. -DLIBRAW_NODLL -DNDEBUG
+CFLAGS_DBG = -c $(CWARNS) -mcpu=i686 -m32 -mfpmath=sse -msse -Zmt -Zomf -g -fbounds-check -I. -I.. -DLIBRAW_NODLL -DDEBUG
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS     = $(CFLAGS_DBG)
+!endif
+
+# Template command for compiling .cpp to .o
+.SUFFIXES:	.cpp .o
+
+.cpp.o:
+		g++ $(CFLAGS) $*.cpp
+
+#
+
+all:   raw.lib
+
+raw.lib: internal\dcraw_common.o internal\dcraw_fileio.o internal\demosaic_packs.o \
+         src\libraw_cxx.o src\libraw_c_api.o src\libraw_datastream.o
+          -del /N $@ 2> nul
+          emxomfar r $@ $**
+
+internal\dcraw_common.o:  internal\dcraw_common.cpp
+                          g++ $(CFLAGS) -o internal\dcraw_common.o internal\dcraw_common.cpp
+
+internal\demosaic_packs.o:  internal\demosaic_packs.cpp
+                          g++ $(CFLAGS) -o internal\demosaic_packs.o internal\demosaic_packs.cpp
+                          
+internal\dcraw_fileio.o:  internal\dcraw_fileio.cpp
+                          g++ $(CFLAGS) -o internal\dcraw_fileio.o internal\dcraw_fileio.cpp
+
+src\libraw_cxx.o:    src\libraw_cxx.cpp
+                     g++ $(CFLAGS) -o src\libraw_cxx.o src\libraw_cxx.cpp
+
+src\libraw_c_api.o:  src\libraw_c_api.cpp
+                     g++ $(CFLAGS) -o src\libraw_c_api.o src\libraw_c_api.cpp
+
+src\libraw_datastream.o:  src\libraw_datastream.cpp
+                     g++ $(CFLAGS) -o src\libraw_datastream.o src\libraw_datastream.cpp
+                     
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+         -del /F /N src\*.o internal\*.o 2>nul
+
+clobber:
+         -del /F /N src\*.o internal\*.o 2>nul
+         -del /F /N *.exe 2>nul
+         -del /F /N *.lib 2>nul
+         -del /F /N $(IDIR)\* 2>nul
+
+install:
+         copy raw.lib     $(IDIR)
+         copy libraw\*.h  $(IDIR)
+
+package:
+         -del /F /N $(IDIR)\libraw.zip 2>nul
+         zip -9 $(IDIR)\libraw.zip raw.lib *.h
+

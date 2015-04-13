@@ -1,0 +1,57 @@
+#
+# GBM program to help generate OS/2 logo files
+#
+# OS/2
+# IBM VisualAge C++, with CTC306, CTD302 and CTU304
+#
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\..\make.opt
+
+GBM  = ..\..\gbm
+IDIR = ..\bin
+
+
+.SUFFIXES:	.c .obj
+
+CWARNS =	/W3 /Wcnd+cns+ord+par+pro+rea+ret+use+
+CFLAGS =	/C+ $(CWARNS) /I$(GBM) /G5 /Gd-e+m+ /Q+ /O+ /Os- /Gf+ /DNDEBUG
+LFLAGS =	/NOLOGO /BASE:0x10000 /NOI /PMTYPE:VIO /STACK:0x8000 /EXEPACK:2 /OPTFUNC /PACKCODE /PACKDATA
+
+.c.obj:
+		icc $(CFLAGS) $*.c
+
+#
+
+gbmlogo.exe:	gbmlogo.obj \
+		$(GBM)\gbm.lib $(GBM)\gbmmem.lib $(GBM)\gbmtrunc.lib $(GBM)\gbmerr.lib \
+		$(GBM)\gbmht.lib $(GBM)\gbmtool.lib
+		ilink $(LFLAGS) /OUT:$@ $**
+
+gbmlogo.obj:	gbmlogo.c $(GBM)\gbm.h $(GBM)\gbmmem.h $(GBM)\gbmtrunc.h $(GBM)\gbmerr.h \
+		$(GBM)\gbmht.h $(GBM)\gbmtool.h
+
+#
+
+clean:
+		-del /F /N *.obj 2>nul
+
+clobber:
+		-del /F /N *.obj *.exe $(IDIR)\gbmlogo.exe 2>nul
+
+#
+
+install:
+		copy *.exe $(IDIR)
+
+#
+
+exepack:
+         $(EXE_PACKER) *.exe
+
+#
+
+package:
+        -del /F /N $(IDIR)\gbmlogo_exe.zip 2>nul
+        zip -9 $(IDIR)\gbmlogo_exe.zip *.exe
+

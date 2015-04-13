@@ -1,0 +1,68 @@
+<HTML><HEAD>
+<TITLE>Network and Streams</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#FF0000" ALINK="#FF0000">
+<H1>Network and Streams</H1>
+
+<P>
+<I>Streams</I> are objects representing URLs and the data in them. Streams
+are associated with a specific instance of a plug-in, and there can
+be more than one stream object per instance.  Streams can be produced
+by Navigator and consumed by a plug-in instance, or produced by an
+instance and consumed by Navigator.  Each stream has an associated MIME type
+identifying the format of the data in the stream.
+<P>
+Streams produced by Navigator can be automatically sent to the instance
+or explicitly requested by the plug-in.  An initial stream is automatically
+sent to each full-page instance (containing the contents of the file that
+invoked the instance) and each embedded instance with a SRC attribute
+in its EMBED tag (containing the contents of the file specified by the
+SRC).  Navigator informs an instance of the creation of a new stream with
+the API call <A HREF="pi2.htm#nppnewstream">NPP_NewStream</A>, and of
+the deletion of a stream with the call
+<A HREF="pi2.htm#nppdestroystream">NPP_DestroyStream</A>.
+<P>
+Streams produced by Navigator can have one of several modes, selectable by
+the plug-in instance.  In the default mode, stream data is "pushed" by
+Navigator to the instance incrementally as it is available, via the API 
+<A HREF="pi2.htm#nppwrite">NPP_Write</A>.   The plug-in instance may
+also place the stream in random-access mode, in which the stream data is
+"pulled" by the plug-in by calling Navigator's
+<A HREF="pi3.htm#npnrequestread">NPN_RequestRead</A> API.
+In general this mode is more expensive, since unless the stream comes from a
+local file or an HTTP server supporting the proposed byte range extension to
+HTTP, the entire stream must be downloaded to a temporary file before use.
+A third mode simply saves the entire stream to a local file and passes the
+plug-in instance the path of the file via the API
+<A HREF="pi3.htm#nppstreamasfile">NPP_StreamAsFile</A>.  The use of this feature
+is strongly discouraged; plug-ins should implement an incremental stream-based
+interface wherever possible.
+<P>
+Streams produced by the plug-in for consumption by Navigator are analagous to
+default-mode streams produced by Navigator, but in reverse.  Instead of Navigator
+calling the plug-in to inform it of the creation of the stream and push more data,
+the plug-in calls the Navigator API calls
+<A HREF="pi3.htm#npnnewstream">NPN_NewStream</A>,
+<A HREF="pi3.htm#npnwrite">NPN_Write</A>, and
+<A HREF="pi3.htm#npndestroystream">NPN_DestroyStream</A> to create a stream,
+push data into the stream, and delete the stream.  Streams produced by
+a plug-in have a specific MIME type and can be sent to a particular Navigator
+window or frame for display.
+<P>
+Plug-ins may also retrieve data from or post data to a URL with all
+the network functionality of the Navigator.  Data retrieved from a URL, via
+the API call <A HREF="pi3.htm#npngeturl">NPN_GetURL</A>, may be sent to
+a particular Navigator window or frame for display, or delivered to the 
+plug-in instance in a new stream.  Plug-ins can use this capability to provide
+hyperlinks to other documents or to retrieve data from anywhere on the network.
+Data posted to a URL, via the API call
+<A HREF="pi3.htm#npnposturl">NPN_PostURL</A>, may be contained in a memory buffer
+or file; the result from the server may also be sent to
+a particular Navigator window or frame for display, or delivered to the 
+plug-in instance in a new stream.  Plug-ins can use this capability to post form
+data to CGI scripts using HTTP or upload files to a remote server using FTP.
+
+</BODY>
+</HTML>
+

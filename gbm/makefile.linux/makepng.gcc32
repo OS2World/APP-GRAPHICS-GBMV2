@@ -1,0 +1,61 @@
+# Makefile for libpng (static)
+
+# This makefile is for GCC on Linux 32/64 bit.
+#
+# Modify this line to point to the zlib library
+ZLIB = ../zlib
+IDIR = bin
+
+# For 64bit compile call make with m64=on
+ifdef m64
+  CFLAGS_MACHINE = -m64 -mtune=generic -fPIC
+else
+  CFLAGS_MACHINE = -m32 -mtune=generic
+endif
+
+CWARNS     = -Wall -Werror
+CFLAGS     = -c $(CWARNS) $(CFLAGS_MACHINE) -mfpmath=sse -msse -O3 -I$(ZLIB) -DPNG_NO_SNPRINTF -DPNG_USER_CONFIG -DNDEBUG
+CFLAGS_DBG = -c $(CWARNS) $(CFLAGS_MACHINE) -mfpmath=sse -msse -g -fbounds-check -I$(ZLIB) -DPNG_NO_SNPRINTF -DPNG_USER_CONFIG -DDEBUG
+
+# For debugging call make with debug=on
+ifdef debug
+CFLAGS     = $(CFLAGS_DBG)
+endif
+
+.SUFFIXES:	.c .o
+
+.c.o:; gcc $(CFLAGS) $*.c
+
+#
+
+OBJS = png.o pngset.o pngget.o pngrutil.o pngtrans.o pngwutil.o \
+       pngread.o pngrio.o pngwio.o pngwrite.o pngrtran.o          \
+       pngwtran.o pngmem.o pngerror.o pngpread.o
+
+all:   png.a
+
+
+png.a:  $(OBJS)
+	@rm -f $@ 2>/dev/null
+	@ar ru $@ $(OBJS)
+
+png.o:  png.c pngusr.h png.h pngconf.h pnglibconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:;		@rm -f $(OBJS) 2>/dev/null
+
+clobber:;  	@rm -f $(OBJS) 2>/dev/null
+		@rm -f png.a  2>/dev/null
+		@rm -f  $(IDIR)/* 2>/dev/null
+
+install:;	@cp png.a       $(IDIR)
+		@cp png.h       $(IDIR)
+		@cp pngconf.h   $(IDIR)
+
+package:;	@rm -f $(IDIR)/libpng.tar.gz 2>/dev/null
+		@tar zcvf $(IDIR)/libpng.tar.gz png.a png.h
+

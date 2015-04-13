@@ -1,0 +1,60 @@
+<HTML><HEAD>
+<TITLE>Overview</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#FF0000" ALINK="#FF0000">
+<H1>Overview </H1>
+
+<P>
+Plug-ins are dynamic code modules, native to a specific platform on
+which Netscape Navigator runs.  The primary goal of the plug-in API is to allow existing
+platform dependent code to seamlessly integrate with and enhance Navigator's core
+functionality by providing support for new data types.  The plug-in API is designed to
+provide the maximum degree of flexibility and be functionally equivalent across all platforms. 
+<P>
+Plug-ins are intended to be complementary to platform-native inter-application architectures
+such as OLE and OpenDoc, and platform-independent programming languages such as Java.
+OLE and OpenDoc are powerful, general-purpose component software systems, and components
+developed for these systems are relatively complex and heavyweight; Netscape
+plug-ins are designed specifically to extend Netscape Navigator and are relatively
+simple and lightweight.  Java applets are secure and inherently cross-platform, but
+developing applets requires coding in a new language with new development tools;  Netscape
+plug-ins can be written in C or C++ using existing development tools, making it easier to
+leverage existing code and platform-specific OS capabilities. 
+<P>
+With the current version of the Plug-in API, plug-ins are capable of:
+<UL>
+<LI>Registering one or more MIME types
+<LI>Drawing into a part of the Navigator window
+<LI>Receiving keyboard and mouse events
+<LI>Obtaining data from the network via URLs
+<LI>Posting data to URLs
+<LI>Adding hyperlinks or hotspots to link to new URLs
+</UL>
+<P>
+Plug-ins can have one of two modes of operation: embedded or full-page.  
+An embedded plug-in is a part of a larger HTML document, and is loaded by Navigator when the
+document is displayed.  The plug-in is then visible as a rectangular subpart of the page.
+Embedded plug-ins are generally used for multimedia images relating to text in the page,
+such as Macromedia Shockwave.
+<P>
+A full-page plug-in is not part of an HTML page and is loaded by Navigator when the user
+opens a file of a MIME type registered by a plug-in, by clicking a URL to the file, dragging
+the file to the Navigator's icon, or opening the file from within Navigator.  The loaded
+plug-in completely fills the Navigator page.  Full-page plug-ins are commonly used for 
+document viewers, such as Adobe Acrobat.
+<P>
+The Netscape user interface remains relatively constant
+regardless of which type of plug-in is used. The part of the application
+window that does not display plug-in data remains familiar to the
+Netscape user. In particular, the basic operations of Navigator,
+such as navigation, history, opening files and the like,
+apply to all pages, regardless of which plug-ins are required to
+view them. However, note that scroll bars are not displayed for a full-page plug-in; if
+scrollbars are necessary in full-page mode, they should be drawn by the plug-in.
+
+</BODY>
+</HTML>
+
+
+

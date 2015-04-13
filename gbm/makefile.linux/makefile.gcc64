@@ -1,0 +1,36 @@
+# Generalised Bitmap Module
+
+# This makefile is for GCC on Linux 64 bit.
+
+# directory of the platform makefiles
+MAKEFILE_SRC = makefile.linux
+
+
+ifdef debug
+
+all:;   $(MAKE) -f $(MAKEFILE_SRC)/makefile.gcc32 all m64=yes debug=yes
+
+clean:;  	$(MAKE) -f $(MAKEFILE_SRC)/makefile.gcc32 clean
+
+clobber:; 	$(MAKE) -f $(MAKEFILE_SRC)/makefile.gcc32 clobber
+
+install:;	$(MAKE) -f $(MAKEFILE_SRC)/makefile.gcc32 install
+
+package:; 	$(MAKE) -f $(MAKEFILE_SRC)/makefile.gcc32 package
+
+else
+
+all:;   $(MAKE) -f $(MAKEFILE_SRC)/makefile.gcc32 all m64=yes
+
+clean:;  	$(MAKE) -f $(MAKEFILE_SRC)/makefile.gcc32 clean
+
+clobber:; 	$(MAKE) -f $(MAKEFILE_SRC)/makefile.gcc32 clobber
+
+install:;	$(MAKE) -f $(MAKEFILE_SRC)/makefile.gcc32 install
+
+package:; 	$(MAKE) -f $(MAKEFILE_SRC)/makefile.gcc32 package
+
+endif
+
+
+

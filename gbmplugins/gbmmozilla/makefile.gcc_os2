@@ -1,0 +1,22 @@
+
+all:
+!ifdef debug
+      (cd os2 && nmake -c -f makefile.gcc debug=yes)
+!else
+      (cd os2 && nmake -c -f makefile.gcc)
+!endif
+
+clean:
+      (cd os2 && nmake -c -f makefile.gcc clean)
+
+clobber:
+      (cd os2 && nmake -c -f makefile.gcc clobber)
+
+exepack:
+      (cd os2 && nmake -c -f makefile.gcc exepack)
+
+install:
+
+package:
+
+

@@ -1,0 +1,61 @@
+# Makefile for Zlib (static)
+
+# This makefile is for GCC on Linux 32/64 bit.
+# It builds the Zlib library as a statically linkable library (.a).
+#
+
+# set directory where binaries will be placed by target install
+IDIR = bin
+
+# For 64bit compile call make with m64=on
+ifdef m64
+  CFLAGS_MACHINE = -m64 -mtune=generic -fPIC
+else
+  CFLAGS_MACHINE = -m32 -mtune=generic
+endif
+
+CWARNS     = -Wall -Werror
+CFLAGS     = -c $(CWARNS) $(CFLAGS_MACHINE) -mfpmath=sse -msse -O3 -DLINUX -DNDEBUG
+CFLAGS_DBG = -c $(CWARNS) $(CFLAGS_MACHINE) -mfpmath=sse -msse -g -fbounds-check -DLINUX -DDEBUG
+
+# For debugging call make with debug=on
+ifdef debug
+  CFLAGS = $(CFLAGS_DBG)
+endif
+
+.SUFFIXES:	.c .o
+
+.c.o:; gcc $(CFLAGS) $*.c
+
+#
+
+OBJS = adler32.o compress.o crc32.o uncompr.o deflate.o trees.o \
+       zutil.o inflate.o infback.o inftrees.o inffast.o \
+       gzclose.o gzlib.o gzread.o gzwrite.o
+
+
+all:   z.a
+
+z.a:   $(OBJS)
+	@rm -f $@ 2>/dev/null
+	@ar ru $@ $(OBJS)
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:;  	@rm -f *.o 2>/dev/null
+
+clobber:; 	@rm -f *.o 2>/dev/null
+	  	@rm -f *.a 2>/dev/null
+	  	@rm -f $(IDIR)/* 2>/dev/null
+
+install:;	@cp z.a     $(IDIR)
+	 	@cp zlib.h  $(IDIR)
+	 	@cp zconf.h $(IDIR)
+
+package:; 	@rm -f $(IDIR)/zlib.tar.gz 2>/dev/null
+		@tar zcvf $(IDIR)/zlib.tar.gz z.a zlib.h zconf.h
+
+

@@ -1,0 +1,37 @@
+<HTML><HEAD>
+<TITLE>Organization</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#FF0000" ALINK="#FF0000">
+<H1>Organization</H1>
+
+Netscape Plug-ins communicate with Navigator via an Application Programming Interface
+(API).  Two types of functions make up the Plug-in API: plug-in methods and Netscape
+methods.  Plug-in methods are functions that you implement in your plug-in and are called
+by Netscape; Netscape methods are functions implemented by Netscape that your plug-in may
+call.  For clarity, the names of all plug-in functions begin with "NPP_", while all
+Netscape functions begin with "NPN_".
+<P>
+In general, all API functions operate identically on all platforms.  However, there are
+several functions, notably <tt>NPP_HandleEvent</tt> and <tt>NPN_MemFlush</tt>, whose
+operation is platform-specific.  All platform-specific differences are described in the
+documentation for the individual functions.
+<P>
+Unless otherwise stated, ownership for all API function parameters remains with the caller
+and values are valid only for the duration of each call.  For example, if Netscape passes
+your plug-in a string, your plug-in should make its own copy of the string if you need to
+reference the string after returning from that function.  If you pass Netscape a string or
+buffer, you are responsible for freeing the memory allocated for the data; Netscape will
+make its own private copy of the data if necessary.
+<P>
+Declarations for all API functions as well as definitions of all types and structures used
+in the API functions are found in the file <tt>npapi.h</tt>.  Since most functions return
+an error value of type <tt>NPError</tt>, definitions for error code values are included in
+<tt>npapi.h</tt> as well.
+<P>
+The plug-in API is organized by type of method. Within each section, the functions are
+listed alphabetically. 
+<P>
+
+</BODY>
+</HTML>

@@ -1,0 +1,104 @@
+#
+# Generalised Bitmap Module
+#
+# This makefile is for GCC 3.x on OS/2 32bit.
+# It builds the OpenJPEG library as a statically linkable library (.LIB).
+# (with JPWL support)
+#
+
+# set directory where binaries will be placed by target install
+IDIR = bin
+
+CWARNS     = -Wall -Werror -Wno-unused-variable
+CFLAGS     = -c $(CWARNS) -mcpu=i686 -m32 -O3 -Zmt -Zomf -I.. -Ijpwl -DNDEBUG -DOPJ_STATIC -DUSE_JPWL -DGBMMEM
+CFLAGS_DBG = -c $(CWARNS) -mcpu=i686 -m32 -Zmt -Zomf -g -fbounds-check -I.. -Ijpwl  -DDEBUG -DOPJ_STATIC -DUSE_JPWL -DGBMMEM
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS   = $(CFLAGS_DBG)
+!endif
+
+# Template command for compiling .c to .o
+.SUFFIXES:	.c .o
+
+.c.o:
+		gcc $(CFLAGS) $*.c
+
+#
+
+INCLS      = bio.h cio.h dwt.h event.h fix.h image.h int.h j2k.h j2k_lib.h jp2.h jpt.h mct.h mqc.h openjpeg.h pi.h raw.h t1.h t2.h tcd.h tgt.h opj_includes.h opj_malloc.h \
+             cidx_manager.h indexbox_manager.h
+SRCS       = bio.c cio.c dwt.c event.c image.c j2k.c j2k_lib.c jp2.c jpt.c mct.c mqc.c openjpeg.c pi.c raw.c t1.c t2.c tcd.c tgt.c \
+             cidx_manager.c phix_manager.c ppix_manager.c thix_manager.c tpix_manager.c
+OBJS       = bio.o cio.o dwt.o event.o image.o j2k.o j2k_lib.o jp2.o jpt.o mct.o mqc.o openjpeg.o pi.o raw.o t1.o t2.o tcd.o tgt.o \
+             cidx_manager.o phix_manager.o ppix_manager.o thix_manager.o tpix_manager.o
+JPWL_INCLS = jpwl\crc.h jpwl\jpwl.h jpwl\jpwl_lib.c jpwl\rs.h
+JPWL_SRCS  = jpwl\crc.c jpwl\jpwl.c jpwl\jpwl_lib.c jpwl\rs.c
+JPWL_OBJS  = jpwl\crc.o jpwl\jpwl.o jpwl\jpwl_lib.o jpwl\rs.o
+
+all:   ojpeg.lib
+
+ojpeg.lib: $(OBJS) $(JPWL_OBJS)
+           -del $@ 2> nul
+           emxomfar r $@ $**
+
+openjpeg.o:     openjpeg.c     $(INCLS)
+bio.o:          bio.c          $(INCLS)
+cidx_manager.o: cidx_manager.c $(INCLS)
+cio.o:          cio.c          $(INCLS)
+dwt.o:          dwt.c          $(INCLS)
+event.o:        event.c        $(INCLS)
+image.o:        image.c        $(INCLS)
+j2k.o:          j2k.c          $(INCLS)
+j2k_lib.o:      j2k_lib.c      $(INCLS)
+mct.o:          mct.c          $(INCLS)
+mqc.o:          mqc.c          $(INCLS)
+phix_manager.o: phix_manager.c $(INCLS)
+ppix_manager.o: ppix_manager.c $(INCLS)
+pi.o:           pi.c           $(INCLS)
+raw.o:          raw.c          $(INCLS)
+t1.o:           t1.c           $(INCLS)
+t2.o:           t2.c           $(INCLS)
+tcd.o:          tcd.c          $(INCLS)
+tgt.o:          tgt.c          $(INCLS)
+thix_manager.o: thix_manager.c $(INCLS)
+tpix_manager.o: tpix_manager.c $(INCLS)
+jpt.o:          jpt.c          $(INCLS)
+jp2.o:          jp2.c          $(INCLS)
+
+jpwl\crc.o:      jpwl\crc.c $(JPWL_INCLS)
+	              gcc $(CFLAGS) jpwl\crc.c -o jpwl\crc.o
+
+jpwl\jpwl.o:     jpwl\jpwl.c $(JPWL_INCLS)
+	              gcc $(CFLAGS) jpwl\jpwl.c -o jpwl\jpwl.o
+
+jpwl\jpwl_lib.o: jpwl\jpwl_lib.c $(JPWL_INCLS)
+	              gcc $(CFLAGS) jpwl\jpwl_lib.c -o jpwl\jpwl_lib.o
+
+jpwl\rs.o:       jpwl\rs.c $(JPWL_INCLS)
+	              gcc $(CFLAGS) jpwl\rs.c -o jpwl\rs.o
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+	 -del /F /N $(OBJS) $(JPWL_OBJS) 2>nul
+	 -del /F /N *.lst 2>nul
+
+clobber:
+	 -del /F /N $(OBJS) $(JPWL_OBJS) 2>nul
+	 -del /F /N ojpeg.lib 2>nul
+	 -del /F /N *.lst 2>nul
+	 -del /F /N $(IDIR)\* 2>nul
+
+install:
+#         copy ojpeg.lib  $(IDIR)
+#         copy openjpeg.h $(IDIR)
+
+package:
+#         -del /F /N $(IDIR)\libojpeg.zip 2>nul
+#         zip -9 $(IDIR)\libojpeg.zip ojpeg.lib openjpeg.h
+
+

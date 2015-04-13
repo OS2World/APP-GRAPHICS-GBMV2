@@ -1,0 +1,30 @@
+# Makefile for Zlib (static)
+
+# This makefile is for GCC on Linux 64 bit.
+
+
+ifdef debug
+
+all:;   $(MAKE) -f makezlib.gcc32 all m64=yes debug=yes
+
+clean:;  	$(MAKE) -f makezlib.gcc32 clean
+
+clobber:; 	$(MAKE) -f makezlib.gcc32 clobber
+
+install:;	$(MAKE) -f makezlib.gcc32 install
+
+package:; 	$(MAKE) -f makezlib.gcc32 package
+
+else
+
+all:;   $(MAKE) -f makezlib.gcc32 all m64=yes
+
+clean:;  	$(MAKE) -f makezlib.gcc32 clean
+
+clobber:; 	$(MAKE) -f makezlib.gcc32 clobber
+
+install:;	$(MAKE) -f makezlib.gcc32 install
+
+package:; 	$(MAKE) -f makezlib.gcc32 package
+
+endif

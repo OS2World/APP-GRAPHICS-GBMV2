@@ -1,0 +1,34 @@
+<HTML><HEAD>
+<TITLE>Run-time Model</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#FF0000" ALINK="#FF0000">
+<H1>Run-time Model</H1>
+ 
+<P>
+Plug-ins are dynamic code modules that are associated with one or more MIME types.
+When Netscape Navigator starts, it enumerates the available plug-ins in a platform-specific
+manner, reads one or more string resources out of each plug-in file to determine the MIME
+types for that plug-in, and registers each plug-in for its MIME types.
+<P>
+When Navigator encounters data of a MIME type registered for a plug-in (either embedded in an
+HTML page or in a separate file), it loads the plug-in code into memory (if it hasn't been
+loaded already) and creates a new <I>instance</I> of the plug-in.  Netscape calls the plug-in
+API function <A HREF="pi2.htm#nppinitialize">NPP_Initialize</A> when the plug-in code is
+first loaded, and the function <A HREF="pi2.htm#nppnew">NPP_New</A> when the instance is
+created.  There may be multiple instances of the same plug-in if there are multiple embedded
+objects on a single page, or if several Netscape windows are open with each displaying
+the same data type.
+<P>
+A plug-in instance is deleted when a user leaves the instance's page or
+closes the instance's window; Netscape will call the function
+<A HREF="pi2.htm#nppdestroy">NPP_Destroy</A> to inform the plug-in that the instance is
+being deleted.
+When the last instance of a plug-in is deleted, the plug-in
+code is unloaded from memory and Netscape calls the function
+<A HREF="pi2.htm#nppshutdown">NPP_Shutdown</A>.
+Plug-ins consume no resources (other than disk space) if not referenced. 
+
+</BODY>
+</HTML>
+

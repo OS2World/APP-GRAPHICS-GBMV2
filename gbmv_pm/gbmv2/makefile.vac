@@ -1,0 +1,113 @@
+#
+# Simple bitmap viewer II (German/English)
+#
+# OS/2
+# IBM VisualAge C++, with CTC306, CTD302 and CTU304
+#
+# For English build call nmake with lang=en (default is lang=de)
+#
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\..\make.opt
+
+GBM    = ..\..\gbm
+GBMDLG = ..\gbmdlg
+IDIR   = ..\bin
+
+
+.SUFFIXES:    .c .obj
+
+CWARNS =    /W3 /Wcnd+cns+ord-par+pro+rea+ret+use+
+CFLAGS =    /C+ /I. /I$(GBM) /I$(GBMDLG) /G5 /Gd-e+m+ $(CWARNS) /Q+ /O+ /Os- /Gf+ /DNDEBUG
+LFLAGS =    /NOLOGO /BASE:0x10000 /STACK:0x10000 /NOI /EXEPACK:2 /OPTFUNC /PACKCODE /PACKDATA
+
+# For debugging call nmake with debug=on
+!ifdef debug
+CFLAGS =    /C+ /I. /I$(GBM) /I$(GBMDLG) /G5 /Gd-e+m+ $(CWARNS) /Q+ /Os- /Gf+ /Ti+ /Tm+ /DEbug
+LFLAGS =    /NOLOGO /BASE:0x10000 /STACK:0x10000 /NOI /DEbug
+!endif
+
+# For English build call nmake with lang=en
+LANG_DIR=de
+IPFCOPT=/country=049 /codepage=850 /language=DEU /X /W1
+
+!ifdef lang
+!if ( "$(lang)" == "en" )
+LANG_DIR=en
+IPFCOPT=/country=001 /codepage=437 /language=ENG /X /W1
+!endif
+!endif
+
+LANG_DIR_RES=$(LANG_DIR)\WarpSans
+
+#
+
+.c.obj:
+        icc $(CFLAGS) $*.c
+
+#
+
+all:    gbmv2.exe gbmv2.hlp
+
+OBJS =  scroll.obj model.obj bmputils.obj help.obj gbmv2.obj
+
+LIBS =  $(GBM)\gbm.lib $(GBM)\gbmmem.lib $(GBM)\gbmmthrd.lib \
+        $(GBM)\gbmtrunc.lib $(GBM)\gbmerr.lib $(GBM)\gbmht.lib \
+        $(GBM)\gbmhist.lib $(GBM)\gbmmcut.lib \
+        $(GBM)\gbmmir.lib $(GBM)\gbmrect.lib $(GBM)\gbmscale.lib \
+        $(GBM)\gbmtool.lib $(GBMDLG)\gbmdlg.lib
+
+gbmv2.exe:    $(OBJS) $(LIBS) gbmv2$(LANG_DIR)_vac.def gbmv2.res
+        ilink $(LFLAGS) /OUT:$@ $(OBJS) $(LIBS) gbmv2$(LANG_DIR)_vac.def
+        rc -n -x2 gbmv2.res $@
+
+scroll.obj:    scroll.c scroll.h
+
+model.obj:    model.c model.h \
+        $(GBM)\gbm.h $(GBM)\gbmmem.h \
+        $(GBM)\gbmtrunc.h $(GBM)\gbmerr.h $(GBM)\gbmht.h \
+        $(GBM)\gbmhist.h $(GBM)\gbmmcut.h \
+        $(GBM)\gbmmir.h $(GBM)\gbmrect.h $(GBM)\gbmscale.h
+
+bmputils.obj:    bmputils.c bmputils.h
+
+help.obj:  $(LANG_DIR)\help.c gbmv2hlp.h
+           icc $(CFLAGS) /Fo$@ $(LANG_DIR)\help.c
+
+gbmv2.obj: $(LANG_DIR)\gbmv2.c gbmv2.h scroll.h model.h bmputils.h help.h \
+           $(GBM)\gbm.h $(GBM)\gbmtool.h \
+           $(GBMDLG)\gbmdlg.h $(GBMDLG)\gbmdlgrc.h
+           icc $(CFLAGS) /Fo$@ $(LANG_DIR)\gbmv2.c
+
+gbmv2.res: $(LANG_DIR_RES)\gbmv2.rc gbmv2.ico $(GBMDLG)\gbmdlgrc.h gbmv2.h gbmv2hlp.h
+           (set INCLUDE=$(GBMDLG);$(INCLUDE) && rc -n -r -x2 $(LANG_DIR_RES)\gbmv2.rc $@)
+
+gbmv2.hlp: $(LANG_DIR)\gbmv2.scr gbmv2hlp.h $(GBMDLG)\gbmdlgrc.h
+           (set INCLUDE=$(GBMDLG);$(INCLUDE) && ipfcprep $(LANG_DIR)\gbmv2.scr gbmv2.ipf)
+           ipfc $(IPFCOPT) gbmv2.ipf
+
+#
+
+clean:
+        -del /F /N *.obj *.res *.ipf 2>nul
+
+clobber:
+        -del /F /N *.obj *.res *.ipf *.exe *.hlp 2>nul
+        -del /F /N $(IDIR)\gbmv2.exe $(IDIR)\gbmv2.hlp 2>nul
+
+
+install:
+        copy *.exe $(IDIR)
+        copy *.hlp $(IDIR)
+
+#
+
+exepack:
+         $(EXE_PACKER) *.exe
+
+#
+
+package:
+        -del /F /N $(IDIR)\gbmv2_exe.zip 2>nul
+        zip -9 $(IDIR)\gbmv2_exe.zip *.exe *.hlp
+

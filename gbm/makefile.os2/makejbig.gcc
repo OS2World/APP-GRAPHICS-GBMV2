@@ -1,0 +1,65 @@
+# Makefile for JBIG Kit library
+
+# This makefile is for GCC 3.x on OS/2 32bit.
+# It builds the library as a statically linkable library (.LIB).
+#
+# Stripped down makefile for the subset used by
+# the OS/2 version of the Generalised Bitmap Module.
+
+# set directory where binaries will be placed by target install
+IDIR = bin
+
+#
+# Using GCC 3.x
+#
+CC = gcc
+
+# Compile objects suitable for multithreaded GBM.DLL
+CWARNS     = -Wall -Werror -Wno-main
+CFLAGS     = -c $(CWARNS) -I.. -mcpu=i686 -m32 -mfpmath=sse -msse -O3 -Zmt -Zomf -DGBMMEM
+CFLAGS_DBG = -c $(CWARNS) -I.. -mcpu=i686 -m32 -mfpmath=sse -msse -Zmt -Zomf -g -fbounds-check -DGBMMEM -DDEBUG
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS     = $(CFLAGS_DBG)
+!endif
+
+# Template command for compiling .c to .o
+.c.o :
+	$(CC) $(CFLAGS) $*.c
+
+
+all: jbig.c jbig_ar.c jbig.lib
+
+jbig.lib: jbig.o jbig_ar.o
+         -del /N $@ 2> nul
+          emxomfar r $@ $**
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+	 -del /F /N jbig.o jbig_ar.o 2>nul
+	 -del /F /N *.lst 2>nul
+
+clobber:
+	 -del /F /N jbig.o jbig_ar.o 2>nul
+	 -del /F /N jbig.lib 2>nul
+	 -del /F /N *.lst 2>nul
+	 -del /F /N $(IDIR)\* 2>nul
+
+install:
+         copy jbig.lib     $(IDIR)
+         copy jbig.h       $(IDIR)
+         copy jbig_ar.h    $(IDIR)
+
+package:
+         -del /F /N $(IDIR)\libjbig.zip 2>nul
+         zip -9 $(IDIR)\libjbig.zip jbig.lib jbig.h jbig_ar.h
+
+
+jbig.o:    jbig.c jbig.h jbig_ar.h
+jbig_ar.o: jbig_ar.c jbig_ar.h
+
+

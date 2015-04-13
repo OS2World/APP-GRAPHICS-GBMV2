@@ -1,0 +1,804 @@
+.*
+.* gbmv2.scr - Help for GbmV2
+.*
+.* Important: Only edit the original .SCR file.
+.* If this file is not by the filename given above, then it has been put
+.* through IPFCPREP and so will be regenerated next MAKE.
+.*
+.imd gbmdlgrc.h
+.*...vgbmdlgrc\46\h:0:
+.imd gbmv2hlp.h
+.*...vgbmv2hlp\46\h:0:
+:userdoc.
+.*...sprolog:0:
+:prolog.
+:title.GbmV2 Help
+:author.Andy Key, German translation and enhancements&colon. Heiko Nitzsche
+:eprolog.
+.*...e
+:toc.
+:body.
+.*...sHID_INTRO         \45\ Introduction to GbmV2:0:
+:h1 res=&HID_INTRO..Introduction to GbmV2
+:i1.Introduction to GbmV2
+:p.This is a simple bitmap viewer.
+:p.Bitmap files in various formats may be loaded into memory.
+This is the :hp2.actual bitmap data:ehp2..
+:p.The program displays a view of the bitmap in its window.
+This is called the :hp2.view bitmap:ehp2..
+The choice of how the view is made from the actual data may be changed
+from the
+:link reftype=hd res=&HID_VIEW..View menu:elink..
+:p.If the bitmap is smaller than the window, it is displayed centralised
+within the window.
+:p.If the bitmap is larger than the window, then scrollbars may be used to
+pick the visible part of the bitmap.
+:p.Once a bitmap is loaded, it may be printed to the default PM printer.
+:p.All, or a part of, the current bitmap can be selected, and then copied
+to the clipboard.
+:p.1bpp bitmaps are typically tricky to handle under OS/2 PM.
+:p.This program will display a 1bpp bitmap using the 2 colours in the
+bitmap files header, rather than the users current PM colour scheme.
+:p.While files are loading, saving, printing etc., this program prevents you
+from using its other functions.
+:p.From the menu bar you can use&colon.
+:dl compact tsize=7 break=all.
+:dt.:link reftype=hd res=&HID_FILE..File:elink.
+:dd.To transfer the bitmap to and from disk
+:dt.:link reftype=hd res=&HID_EDIT..Edit:elink.
+:dd.To transfer some or all of the bitmap to the OS/2 clipboard
+:dt.:link reftype=hd res=&HID_BITMAP..Bitmap:elink.
+:dd.To perform simple operations on the bitmap
+:dt.:link reftype=hd res=&HID_VIEW..View:elink.
+:dd.To select how you see the current bitmap
+:dt.:link reftype=hd res=&HID_HELP..Help:elink.
+:dd.To display various types of help for using this utility.
+:edl.
+:p.You can display online help for GbmV2 by using the following methods.
+:ul compact.
+:li.For help about any pull-down option, highlight it and press F1.
+:li.For help about any displayed dialog box, select the Help pushbutton or press F1.
+:li.To see the Help Index, use the Help pull-down.
+:li.To see the Help table of contents, display a help panel and use the
+Help viewer to show it.
+:eul.
+.*...e
+.*...sHID_FILE          \45\ File menu:0:
+:h1 res=&HID_FILE..File menu
+:i1 id=file.File menu
+:p.The File menu allows you to load a new bitmap, to save to a bitmap file,
+and to print.
+You can use&colon.
+:dl tsize=7 break=all.
+:dt.:link reftype=hd res=&HID_NEW..New:elink.
+:dd.To clear out the current bitmap.
+:dt.:link reftype=hd res=&HID_OPEN..Open:elink.
+:dd.To discard the current bitmap and read a new file from disk.
+The file to load is selected via the
+:link reftype=hd res=&HID_GBM_FILEDLG..Bitmap File dialog:elink..
+:dt.:link reftype=hd res=&HID_SAVE..Save:elink.
+:dd.To save the current bitmap to a file, under the current filename.
+The actual bitmap data, rather than the view what you see of it that is saved.
+:dt.:link reftype=hd res=&HID_SAVE_AS..Save as:elink.
+:dd.To save the current bitmap to a file with a filename you specify.
+The filename to save to is specified via the
+:link reftype=hd res=&HID_GBM_FILEDLG..Bitmap File dialog:elink..
+The actual bitmap data, rather than the view what you see of it that is saved.
+:dt.:link reftype=hd res=&HID_EXPORT_MET..Export to MetaFile:elink.
+:dd.To save the current bitmap in PM metafile form.
+:dt.:link reftype=hd res=&HID_PRINT..Print:elink.
+:dd.To print the current bitmap to the default PM printer.
+:dt.:link reftype=hd res=&HID_SNAPSHOT..Snapshot:elink.
+:dd.To take a snapshot of the screen.
+:edl.
+.*...e
+.*...sHID_NEW           \45\   New:0:
+:h2 res=&HID_NEW..New
+:i2 refid=file.New
+:p.Will clear any loaded bitmap from memory.
+:p.Operations for transferring the bitmap to and from the disk can be accessed from the
+:link reftype=hd res=&HID_FILE..File menu:elink..
+.*...e
+.*...sHID_OPEN          \45\   Open:0:
+:h2 res=&HID_OPEN..Open
+:i2 refid=file.Open
+:p.Brings up a dialog box which allows you to specify the bitmap file to
+load.
+The file to load to is specified via the
+:link reftype=hd res=&HID_GBM_FILEDLG..Bitmap File dialog:elink..
+:p.Other operations for transferring the bitmap to and from the disk can be accessed from the
+:link reftype=hd res=&HID_FILE..File menu:elink..
+.*...e
+.*...sHID_SAVE          \45\   Save:0:
+:h2 res=&HID_SAVE..Save
+:i2 refid=file.Save
+:p.Saves the currently loaded bitmap.
+:p.It is the actual bitmap data, not the view you see, that is actually
+saved. For example, the actual bitmap map can be 24 bit, but you may be looking
+at an (8 bit) error diffused version on the screen.
+:p.If you wish to save under a new filename, use
+:link reftype=hd res=&HID_SAVE_AS..Save as:elink. instead.
+:p.Other operations for transferring the bitmap to and from the disk can be accessed from the
+:link reftype=hd res=&HID_FILE..File menu:elink..
+.*...e
+.*...sHID_SAVE_AS       \45\   Save As:0:
+:h2 res=&HID_SAVE_AS..Save As
+:i2 refid=file.Save As
+:p.Saves the currently loaded bitmap, but under a new filename.
+The filename to save to is specified via the
+:link reftype=hd res=&HID_GBM_FILEDLG..Bitmap File dialog:elink..
+:p.If you wish to save under the current name, use
+:link reftype=hd res=&HID_SAVE..Save:elink. instead.
+:p.It is the actual bitmap data, not the view you see, that is actually
+saved. For example, the actual bitmap can map be 24 bit, but you may be looking
+at an (8 bit) error diffused version on the screen.
+:p.Other operations for transferring the bitmap to and from the disk can be accessed from the
+:link reftype=hd res=&HID_FILE..File menu:elink..
+.*...e
+.*...sHID_EXPORT_MET    \45\   Export to MetaFile:0:
+:h2 res=&HID_EXPORT_MET..Export MetaFile
+:i2 refid=file.Export MetaFile
+:p.This allows you to write a PM MetaFile, which contains the current bitmap.
+You can only do this when GbmV2 has a bitmap loaded.
+:p.It is the view bitmap which gets placed into the metafile.
+:p.This option is provided because some programs will not accept bitmaps
+correctly or at all.
+:p.Other operations for transferring the bitmap to and from the disk can be accessed from the
+:link reftype=hd res=&HID_FILE..File menu:elink..
+.*...e
+.*...sHID_PRINT         \45\   Print:0:
+:h2 res=&HID_PRINT..Print
+:i2 refid=file.Print
+:p.Prints the currently loaded bitmap to the default PM printer.
+:p.It is the screen view of the bitmap, not the actual bitmap data itself,
+that is transferred to the printer.
+:p.Works best when the default PM printer is a PostScript printer, as they
+typically can simulate 26 gray-scale levels via halftoning.
+:p.Operations for transferring the bitmap to and from the disk can be accessed from the
+:link reftype=hd res=&HID_FILE..File menu:elink..
+.*...e
+.*...sHID_SNAPSHOT      \45\   Snapshot:0:
+:h2 res=&HID_SNAPSHOT..Snapshot
+:i2 refid=file.Snapshot
+:p.This discards any currently loaded bitmap, and then replaces it with a
+snapshot of the current desktop.
+:p.This can then be cropped to the desired size by using the
+:link reftype=hd res=&HID_SELECT..Select:elink.
+menuitem to pick a subrectangle, and then the
+:link reftype=hd res=&HID_CROP..Crop to selection:elink.
+menuitem to trim to that size.
+:p.When you select Snapshot, GbmV2 does the following &colon.-
+:sl.
+:li.Makes itself invisible.
+:li.Waits 1 second, to allow windows that were previously obscured by GbmV2
+to repaint themselves.
+:li.Copies the screen to an internal bitmap.
+:li.Makes itself visible again.
+:li.Queries the data from this bitmap.
+:esl.
+:p.As the Snapshotted data has come from the screen, GbmV2 will set the
+viewing mode to
+:link reftype=hd res=&HID_VIEW_NULL..Raw PM mapping:elink..
+For a description of viewing modes, select the help on the
+:link reftype=hd res=&HID_VIEW..View menu:elink..
+:p.Operations for transferring the bitmap to and from the disk or for printing
+can be accessed from the :link reftype=hd res=&HID_FILE..File menu:elink..
+.*...e
+.*...sHID_EDIT          \45\ Edit menu:0:
+:h1 res=&HID_EDIT..Edit menu
+:i1 id=edit.Edit menu
+:p.The Edit menu allows you to select a sub-rectangle of the bitmap.
+Some functions on the
+:link reftype=hd res=&HID_BITMAP..Bitmap menu:elink.
+behave differently depending upon whether there is a current selection
+or not.
+For example,
+:link reftype=hd res=&HID_REF_HORZ..Reflect horizontally:elink.
+will reflect just the selection if a selection is defined, else it will
+reflect the whole image.
+:p.It is also possible to copy selections to the clipboard.
+You can use&colon.
+:dl tsize=7 break=all.
+:dt.:link reftype=hd res=&HID_UNDO..Undo:elink.
+:dd.To undo the last operation performed on the bitmap.
+:dt.:link reftype=hd res=&HID_SELECT..Select:elink.
+:dd.To select a part of the current bitmap.
+:dt.:link reftype=hd res=&HID_DESELECT..Deselect:elink.
+:dd.To cancel the current selection.
+:dt.:link reftype=hd res=&HID_COPY..Copy:elink.
+:dd.This copies the current selection to the clipboard.
+:dt.:link reftype=hd res=&HID_PASTE..Paste:elink.
+:dd.This replaces the current bitmap with the clipboard contents.
+:edl.
+.*...e
+.*...sHID_UNDO          \45\   Undo:0:
+:h2 res=&HID_UNDO..Undo
+:i2 refid=edit.Undo
+:p.The Undo operation undoes the last change to the bitmap.
+:p.It is only selectable after a change has been done to the bitmap,
+such as those provided under the
+:link reftype=hd res=&HID_BITMAP..Bitmap menu:elink..
+:p.In low memory situations, it may be impossible to undo a
+previous operation.
+:p.Certain operations, such as
+:link reftype=hd res=&HID_NEW..New:elink.
+and
+:link reftype=hd res=&HID_OPEN..Open:elink.
+are not undoable.
+.*...e
+.*...sHID_SELECT        \45\   Select:0:
+:h2 res=&HID_SELECT..Select
+:i2 refid=edit.Select
+:p.After choosing this menu selection, the mouse pointer changes into a
+angle-bracket-L shape which you move to the bottom left of the region of the
+bitmap you wish to select, and then press the left mouse button.
+Then it changes to an angle-bracket-7 shape, which you then move to the top
+right of the region you wish to select, and then press the left mouse button.
+:p.This newly selected region becomes selected and is marked with a
+rectangle.
+:p.This is the region that can subsequently become copied to the clipboard
+using
+:link reftype=hd res=&HID_COPY..Copy:elink..
+:p.The Esc key cancels the selection process.
+.*...e
+.*...sHID_DESELECT      \45\   Deselect:0:
+:h2 res=&HID_DESELECT..Deselect
+:i2 refid=edit.Deselect
+:p.This menu item removes the current selection.
+:p.
+You can also deselect by pressing Esc key, or
+by clicking the right mouse button on the bitmap.
+.*...e
+.*...sHID_COPY          \45\   Copy:0:
+:h2 res=&HID_COPY..Copy
+:i2 refid=edit.Copy
+:p.If there is a current selection, then it is copied to the clipboard.
+:p.Otherwise the whole bitmap is copied to the clipboard.
+:p.A region can be selected using
+:link reftype=hd res=&HID_SELECT..Select:elink..
+:p.It is the version you see on the screen that is copied to the clipboard,
+not the actual original bitmap data itself.
+.*...e
+.*...sHID_PASTE         \45\   Paste:0:
+:h2 res=&HID_PASTE..Paste
+:i2 refid=edit.Paste
+:p.This can only occur if there is bitmap data in the clipboard.
+:p.The current bitmap is replaced by the data from the clipboard.
+:p.:hp2.Note&colon.:ehp2.
+Bitmap data in the clipboard is only kept to the same quality (or less)
+as the screen.
+ie&colon. if the screen is 8bpp (as in super VGA for example)
+and you place a 24bpp bitmap in the clipboard, it is actually only held by
+Presentation Manager at 8bpp.
+Accordingly GBM considers the pasted bitmap to be of the lower number of
+bits per pixel.
+.*...e
+.*...sHID_BITMAP        \45\ Bitmap menu:0:
+:h1 res=&HID_BITMAP..Bitmap menu
+:i1 id=bmp.Bitmap menu
+:p.The Bitmap menu allows you to perform simple operations on the
+current bitmap.
+:p.You can use&colon.
+:dl tsize=7 break=all.
+:dt.:link reftype=hd res=&HID_REF_HORZ..Reflect horizontally:elink.
+:dd.To reflect the bitmap left-to-right.
+:dt.:link reftype=hd res=&HID_REF_VERT..Reflect vertically:elink.
+:dd.To reflect the bitmap left-to-right.
+:dt.:link reftype=hd res=&HID_TRANSPOSE..Transpose x for y:elink.
+:dd.To transpose the bitmap x for y.
+:dt.:link reftype=hd res=&HID_ROT_90..Rotate 90 degrees:elink.
+:dd.To rotate the bitmap 90 degrees anticlockwise.
+:dt.:link reftype=hd res=&HID_ROT_180..Rotate 180 degrees:elink.
+:dd.To rotate the bitmap 180 degrees.
+:dt.:link reftype=hd res=&HID_ROT_270..Rotate 270 degrees:elink.
+:dd.To rotate the bitmap 90 degrees clockwise.
+:dt.:link reftype=hd res=&HID_COLOUR..Colour space...:elink.
+:dd.To map bitmap pixels / palettes between colour spaces.
+:dt.:link reftype=hd res=&HID_MAP..Map...:elink.
+:dd.To map between various numbers of bits per pixel and between
+various palettes.
+:dt.:link reftype=hd res=&HID_REDEYE..Fix red eye:elink.
+:dd.To fix red eyes which may appear while taking pictures with flash.
+:dt.:link reftype=hd res=&HID_CROP..Crop to selection:elink.
+:dd.To discard all but the selected part of the bitmap.
+:dt.:link reftype=hd res=&HID_RESIZE..Resize...:elink.
+:dd.To change the size of, ie&colon. to scale the current bitmap.
+:edl.
+:p.The
+:link reftype=hd res=&HID_UNDO..Undo:elink.
+menuitem can be used to undo the last operation performed on
+a bitmap.
+.*...e
+.*...sHID_REF_HORZ      \45\   Reflect horizontally:0:
+:h2 res=&HID_REF_HORZ..Reflect horizontally
+:i2 refid=bmp.Reflect horizontally
+:p.If there is a current selection, it is reflected left-to-right.
+:p.Otherwise the whole bitmap is reflected left-to-right.
+:p.Reflecting vertically can be done using the similar
+:link reftype=hd res=&HID_REF_VERT..Reflect vertically:elink.
+selection.
+:p.Other operations on the bitmap can be accessed from the
+:link reftype=hd res=&HID_BITMAP..Bitmap menu:elink..
+.*...e
+.*...sHID_REF_VERT      \45\   Reflect vertically:0:
+:h2 res=&HID_REF_VERT..Reflect vertically
+:i2 refid=bmp.Reflect vertically
+:p.If there is a current selection, it is reflected top-to-bottom.
+:p.Otherwise the whole bitmap is reflected top-to-bottom.
+:p.Reflecting horizontally can be done using the similar
+:link reftype=hd res=&HID_REF_HORZ..Reflect horizontally:elink.
+selection.
+:p.Other operations on the bitmap can be accessed from the
+:link reftype=hd res=&HID_BITMAP..Bitmap menu:elink..
+.*...e
+.*...sHID_TRANSPOSE     \45\   Transpose x for y:0:
+:h2 res=&HID_TRANSPOSE..Transpose x for y
+:i2 refid=bmp.Transpose x for y
+:p.If there is a current selection, and it is square, it can be transposed
+x for y.
+Non square selections can not be transposed.
+:p.If there is no selection, then the whole bitmap is transposed.
+:p.Other operations on the bitmap can be accessed from the
+:link reftype=hd res=&HID_BITMAP..Bitmap menu:elink..
+.*...e
+.*...sHID_ROT_90       \45\   Rotate 90 degrees:0:
+:h2 res=&HID_ROT_90..Rotate 90 degrees
+:i2 refid=bmp.Rotate 90 degrees
+:p.If there is a current selection, and it is square, it can be rotated through
+90 degrees anticlockwise (270 degrees clockwise).
+Non square selections can not be rotated through 90 degrees.
+:p.If there is no selection, then the whole bitmap is rotated through
+90 degrees anticlockwise (270 degrees clockwise).
+:p.Other rotations may be achieved via the
+:link reftype=hd res=&HID_ROT_180..Rotate 180 degrees:elink. and
+:link reftype=hd res=&HID_ROT_270..Rotate 270 degrees:elink. commands.
+:p.Other operations on the bitmap can be accessed from the
+:link reftype=hd res=&HID_BITMAP..Bitmap menu:elink..
+.*...e
+.*...sHID_ROT_180       \45\   Rotate 180 degrees:0:
+:h2 res=&HID_ROT_180..Rotate 180 degrees
+:i2 refid=bmp.Rotate 180 degrees
+:p.If there is a current selection, it is rotated through 180 degrees.
+:p.Otherwise the whole bitmap is rotated through 180 degrees.
+:p.Other rotations may be acheived via the
+:link reftype=hd res=&HID_ROT_90..Rotate 90 degrees:elink. and
+:link reftype=hd res=&HID_ROT_270..Rotate 270 degrees:elink. commands.
+:p.Other operations on the bitmap can be accessed from the
+:link reftype=hd res=&HID_BITMAP..Bitmap menu:elink..
+.*...e
+.*...sHID_ROT_270        \45\   Rotate 270 degrees:0:
+:h2 res=&HID_ROT_270..Rotate 270 degrees
+:i2 refid=bmp.Rotate 270 degrees
+:p.If there is a current selection, and it is square, it can be rotated through
+90 degrees clockwise (270 degrees anticlockwise).
+Non square selections can not be rotated through 90 degrees.
+:p.If there is no selection, then the whole bitmap is rotated through
+90 degrees clockwise (270 degrees anticlockwise).
+:p.Other rotations may be achieved via the
+:link reftype=hd res=&HID_ROT_90..Rotate 90 degrees:elink. and
+:link reftype=hd res=&HID_ROT_180..Rotate 180 degrees:elink. commands.
+:p.Other operations on the bitmap can be accessed from the
+:link reftype=hd res=&HID_BITMAP..Bitmap menu:elink..
+.*...e
+.*...sHID_COLOUR        \45\   Colour space\46\\46\\46\:0:
+:h2 res=&HID_COLOUR..Colour space...
+:i2 refid=bmp.Colour space...
+:p.This menuitem will cause the
+:link reftype=hd res=&HID_COLOUR_DLG..Colour space dialog:elink.
+to appear.
+From here mappings between :hp2.intensity:ehp2., :hp2.L* cyclometric:ehp2.
+and :hp2.gamma corrected:ehp2. colour spaces may be performed.
+:p.This always applies to the whole bitmap.
+You cannot colour space map just the current selection.
+:p.Other operations on the bitmap can be accessed from the
+:link reftype=hd res=&HID_BITMAP..Bitmap menu:elink..
+.*...e
+.*...sHID_MAP           \45\   Map\46\\46\\46\:0:
+:h2 res=&HID_MAP..Map...
+:i2 refid=bmp.Map...
+:p.This menuitem will cause the
+:link reftype=hd res=&HID_MAP_DLG..Map dialog:elink.
+to appear.
+From here mappings between various numbers of bits per pixel and
+various palettes may be performed.
+:p.This always applies to the whole bitmap.
+You cannot map just the current selection.
+:p.Other operations on the bitmap can be accessed from the
+:link reftype=hd res=&HID_BITMAP..Bitmap menu:elink..
+.*...e
+.*...sHID_REDEYE       \45\   Fix red eye:0:
+:h2 res=&HID_REDEYE..Fix red eye
+:i2 refid=bmp.Fix red eye
+:p.This menu item allows correction of the red eye effect which may appear while taking
+pictures with flash. The red colour is caused by the reflexion of the flash light from
+the eye background. Upfront the area to correct must be selected. The selection
+should cover the eye to be fixed as accurately as possible.
+:p.Other operations on the bitmap can be accessed from the
+:link reftype=hd res=&HID_BITMAP..Bitmap menu:elink..
+.*...e
+.*...sHID_CROP          \45\   Crop to selection:0:
+:h2 res=&HID_CROP..Crop to selection
+:i2 refid=bmp.Crop to selection
+:p.This discards all the bitmap except the selected bit.
+:p.Other operations on the bitmap can be accessed from the
+:link reftype=hd res=&HID_BITMAP..Bitmap menu:elink..
+.*...e
+.*...sHID_RESIZE        \45\   Resize\46\\46\\46\:0:
+:h2 res=&HID_RESIZE..Resize...
+:i2 refid=bmp.Resize...
+:p.This menuitem will cause the
+:link reftype=hd res=&HID_RESIZE_DLG..Resize dialog:elink.
+to appear.
+From here the size of the current bitmap may be changed.
+:p.This always applies to the whole bitmap.
+You cannot resize just the current selection.
+:p.Other operations on the bitmap can be accessed from the
+:link reftype=hd res=&HID_BITMAP..Bitmap menu:elink..
+.*...e
+.*...sHID_VIEW          \45\ View menu:0:
+:h1 res=&HID_VIEW..View menu
+:i1 id=view.View menu
+:p.The View menu allows you to choose what representation (or view) of the
+bitmap you have loaded will be used for display on the screen.
+:p.
+You can use&colon.
+:dl tsize=7 break=all.
+:dt.:link reftype=hd res=&HID_VIEW_NULL..Raw PM mapping:elink.
+:dd.To tell this program to perform no image enhancment for display
+purposes. The view bitmap is displayed as good as PM will, with no improvement.
+:dt.:link reftype=hd res=&HID_VIEW_HALFTONE..Halftoned:elink.
+:dd.To tell this program to show a halftoned version of the bitmap to the
+user, rather than the actual bitmap data itself.
+This generally looks slightly better and is quick to do.
+:dt.:link reftype=hd res=&HID_VIEW_ERRDIFF..Error diffused:elink.
+:dd.To tell this program to show a error-diffused version of the bitmap to the
+user, rather than the actual bitmap data itself.
+This generally looks much better, but takes longer to do.
+:edl.
+:p.This program makes a guess at the type of display adaptor you are using
+and chooses the most appropriate form of halftoning or error-diffusion to
+use.
+Specifically, it has algorithms known to work well on &colon.-
+:sl.
+:li.16 colour VGA
+:li.256 colour 8514/A, XGA and Image Adaptor/A.
+:li.65536 direct colour XGA-2.
+:esl.
+:p.If you actually wish to change the bitmap data itself, then you can use the
+:link reftype=hd res=&HID_MAP_DLG..Map dialog:elink. to do this.
+.*...e
+.*...sHID_VIEW_NULL     \45\   Raw PM mapping:0:
+:h2 res=&HID_VIEW_NULL..Raw PM mapping
+:i2 refid=view.Raw PM mapping
+:p.This tells this program to not perform any image enhancement that will make
+a bitmap look closer to its true colours and shades on the screen.
+:p.It is possible to select other views from the
+:link reftype=hd res=&HID_VIEW..View menu:elink..
+.*...e
+.*...sHID_VIEW_HALFTONE \45\   Halftoned:0:
+:h2 res=&HID_VIEW_HALFTONE..Halftoned
+:i2 refid=view.Halftoned
+:p.This tells this program that it should present a halftoned view
+of the current bitmap to the user.
+:p.The actual bitmap data itself is not affected, only what you see on the
+screen.
+:p.Hence if
+:link reftype=hd res=&HID_SAVE..Save:elink. or
+:link reftype=hd res=&HID_SAVE_AS..Save as:elink.
+are used, the unchanged actual bitmap data is saved.
+:p.Halftoning is generally quicker than error diffusion.
+:p.It is possible to select other views from the
+:link reftype=hd res=&HID_VIEW..View menu:elink..
+.*...e
+.*...sHID_VIEW_ERRDIFF  \45\   Error diffused:0:
+:h2 res=&HID_VIEW_ERRDIFF..Error diffused
+:i2 refid=view.Error diffused
+:p.This tells this program that it should present an error-diffused picture
+of the current bitmap to the user.
+:p.The actual bitmap data itself is not affected, only what you see on the
+screen.
+:p.Hence if
+:link reftype=hd res=&HID_SAVE..Save:elink. or
+:link reftype=hd res=&HID_SAVE_AS..Save as:elink.
+are used, the unchanged actual bitmap data is saved.
+:p.Error diffusion takes longer than halftoning, but the quality is
+generally higher, especially on continuous tone images.
+:p.It is possible to select other views from the
+:link reftype=hd res=&HID_VIEW..View menu:elink..
+.*...e
+.*...sHID_HELP          \45\ Help menu:0:
+:h1 res=&HID_HELP..Help menu
+:i1 id=help.Help menu
+:p.Use this menu to bring up the help system.
+.*...e
+.*...sHID_HELP_FOR_HELP \45\   Help for help:0:
+:h2 res=&HID_HELP_FOR_HELP..Help for help
+:i2 refid=help.Help for help
+:p.Use this choice to bring up the help for the help system.
+.*...e
+.*...sHID_HELPEXTENDED  \45\   Extended Help:0:
+:h2 res=&HID_HELPEXTENDED..Extended Help
+:i2 refid=help.Extended Help
+:p.Use this choice to bring up general help for GbmV2.
+.*...e
+.*...sHID_HELPKEYS      \45\   Keys help:0:
+:h2 res=&HID_HELPKEYS..Keys help
+:i2 refid=help. Keys Help
+:p.The following keys may be used in the main window &colon.
+:p.Menu File&colon.
+:ul compact.
+:li.:hp2.Ctrl+N:ehp2.         (Menu item :link reftype=hd res=&HID_NEW..New:elink.)
+:li.:hp2.Ctrl+O:ehp2.         (Menu item :link reftype=hd res=&HID_OPEN..Open...:elink.)
+:li.:hp2.Ctrl+S:ehp2.         (Menu item :link reftype=hd res=&HID_SAVE..Save:elink.)
+:li.:hp2.Ctrl+A:ehp2.         (Menu item :link reftype=hd res=&HID_SAVE_AS..Save as...:elink.)
+:li.:hp2.Ctrl+P:ehp2.         (Menu item :link reftype=hd res=&HID_PRINT..Print:elink.)
+:eul.
+:p.Menu Edit&colon.
+:ul compact.
+:li.:hp2.Ctrl+Z:ehp2.         (Menu item :link reftype=hd res=&HID_UNDO..Undo:elink.)
+:li.:hp2.Shift+A:ehp2.       (Menu item :link reftype=hd res=&HID_SELECT..Select:elink.)
+:li.:hp2.Esc:ehp2.              (Menu item :link reftype=hd res=&HID_DESELECT..Deselect:elink.)
+:li.:hp2.Ctrl+Ins:ehp2.       (Menu item :link reftype=hd res=&HID_COPY..Copy:elink.)
+:li.:hp2.Shift+Ins:ehp2.     (Menu item :link reftype=hd res=&HID_PASTE..Paste:elink.)
+:eul.
+:p.Menu Bitmap&colon.
+:ul compact.
+:li.:hp2.Ctrl+H:ehp2.         (Menu item :link reftype=hd res=&HID_REF_HORZ..Reflect horizontally:elink.)
+:li.:hp2.Ctrl+V:ehp2.         (Menu item :link reftype=hd res=&HID_REF_VERT..Reflect vertically:elink.)
+:li.:hp2.Ctrl+D:ehp2.         (Menu item :link reftype=hd res=&HID_TRANSPOSE..Transpose x for y:elink.)
+:li.:hp2.Ctrl+L:ehp2.         (Menu item :link reftype=hd res=&HID_ROT_90..Rotate 90ø degrees:elink.)
+:li.:hp2.Ctrl+R:ehp2.         (Menu item :link reftype=hd res=&HID_ROT_270..Rotate 270ø degrees:elink.)
+:li.:hp2.Ctrl+G:ehp2.         (Menu item :link reftype=hd res=&HID_COLOUR..Colour space...:elink.)
+:li.:hp2.Ctrl+F:ehp2.         (Menu item :link reftype=hd res=&HID_MAP..Map...:elink.)
+:li.:hp2.Ctrl+K:ehp2.         (Menu item :link reftype=hd res=&HID_REDEYE..Fix red eye:elink.)
+:li.:hp2.Alt+X:ehp2.          (Menu item :link reftype=hd res=&HID_CROP..Crop to selection:elink.)
+:li.:hp2.Ctrl+E:ehp2.         (Menu item :link reftype=hd res=&HID_RESIZE..Resize...:elink.)
+:eul.
+:p.Menu View&colon.
+:ul compact.
+:li.:hp2.Shift+R:ehp2.     (Menu item :link reftype=hd res=&HID_VIEW_NULL..Raw PM mapping:elink.)
+:li.:hp2.Shift+H:ehp2.     (Menu item :link reftype=hd res=&HID_VIEW_HALFTONE..Halftone:elink.)
+:li.:hp2.Shift+E:ehp2.     (Menu item :link reftype=hd res=&HID_VIEW_ERRDIFF..Error diffused:elink.)
+:eul.
+:p.
+:p.
+:ul compact.
+:li.The :hp2.Arrow:ehp2. keys may be used to scroll around the bitmap.
+Note that :hp2.Shift+Arrows:ehp2. behave like page up/down/left or right.
+:li.:hp2.F3:ehp2. to close GbmV2.
+:eul.
+.*...e
+.*...sHID_HELPINDEX     \45\   Help index:0:
+:h2 res=&HID_HELPINDEX..Help index
+:i2 refid=help.Help index
+:p.Use this to bring up an index of the help.
+.*...e
+.*...sHID_ABOUT         \45\   Product Information:0:
+:h2 res=&HID_ABOUT..Product Information
+:i2 refid=about.Product Information
+:p.Use this to bring up the
+:link reftype=hd res=&HID_ABOUT_DLG..Product Information dialog box:elink..
+.*...e
+.*...sHID_ABOUT_DLG     \45\ Product Information dialog:0:
+:h1 res=&HID_ABOUT_DLG..Product Information dialog
+:i1 id=aboutb.Product Information dialog
+:p.This dialog box gives information on the programs version and
+who wrote it.
+:p.This dialog is brought up from the
+:link reftype=hd res=&HID_ABOUT..Product Information:elink. menuitem.
+.*...e
+.*...sHID_COLOUR_DLG    \45\ Colour space dialog:0:
+:h1 res=&HID_COLOUR_DLG..Colour space dialog
+:i1 id=cspace.Colour space dialog
+:p.If a light is physically twice as bright, the eye does not
+necessarily see it as twice as bright. Also, if a pixel is
+written onto a monitor screen with twice the value, the physical
+intensity of the pixel is not necessarily double.
+:p.How exactly should numbers inside a bitmap file relate to
+physical or perceived intensitys when displayed on the screen?
+:p.In OS/2 PM perceived intensitys are proportional to the values
+in the bitmap file.
+Pixels in such a bitmap are in the :hp2.L* cyclometric:ehp2. colour space.
+This is done to ensure that an even scale of pixel values gives an even
+scale of brightness, when viewed by the human eye.
+:p.Ray Tracers often write pixel values in the bitmap proportional to
+the physical intensity computed for that ray.
+Also this may be more suitable if certain image processing/enhancement
+techniques are to be applied to the image data.
+Such data is in the :hp2.intensity:ehp2. colour space.
+:p.Finally, if a bitmap holds values computed in such a way as to
+compensate for the gamma of the monitor (ie: intensitys transformed
+to cancel out the gamma of the monitor), then the data is in
+a :hp2.gamma corrected:ehp2. colour space.
+Bitmap data that has come directly from a greyscale or colour scanner may
+also be in a gamma corrected colour space.
+:p.Of course, despite OS/2 PM using the L* cyclometric colour space, this
+machine is attached to a monitor with specific characteristics and your eyes
+also have their own characteristics.
+But it is the responsibility of OS/2 PM screen drivers to perform the mapping
+from the L* cyclometric colour space to suitable palette entrys which take
+into account both the gamma (and shelf) of the monitor in use, and the
+visual characteristics of the human eye.
+This is done transparently to PM applications.
+:p.The various :hp2.mappings:ehp2. allow you map between any 2 of these
+3 colour spaces. Examples of typical usage follow &colon.-
+:dl tsize=7 break=all.
+:dt.Intensity to L* cyclometric
+:dd.You have loaded a bitmap file where the pixel values are proportional
+to the physical intensity.
+Such bitmaps often tend to look too dark under OS/2 PM.
+This will map the pixels to the L* cyclometric colour space, giving a better
+rendition under OS/2 PM.
+:dt.Intensity to gamma corrected
+:dd.The resulting bitmap, may still look too dark/light under OS/2 PM, but
+when saved, and displayed on a monitor with the relevant
+:hp2.gamma:ehp2. and :hp2.shelf:ehp2. with a program that directly controls
+the hardware, the correct rendition will result.
+:dt.L* cyclometric to Intensity
+:dd.You have a regular OS/2 PM bitmap, and wish to make the pixel values in
+the file directly proportional to the physical intensity.
+You might do this to generate a bitmap suitable for feeding into a
+Ray Tracer as a 2D texture map.
+:dt.L* cyclometric to gamma corrected
+:dd.As above, but generating bitmap bits suitable for directly placing in
+hardware registers.
+:dt.Gamma corrected to Intensity
+:dd.You have loaded a bitmap that has come directly from some scanner
+hardware, and wish to make bitmap where bits are proportional to intensity.
+:dt.Gamma corrected to L* cyclometric
+:dd.You have loaded a bitmap from a scanner, and wish to make a bitmap
+best suited for OS/2 PM.
+:edl.
+:p.When mapping to or from the gamma corrected colour space, the
+:hp2.gamma:ehp2. and :hp2.shelf:ehp2. values are significant.
+When the gamma corrected colour space is not involved, the gamma and
+shelf parameters are greyed.
+For example, the gamma of the 8514 monitor is about 2.1.
+:p.The shelf parameter will normally be left 0.0, but has significance for
+some monitors.
+For example, on some 8514 monitors, if a greyscale of bitmap pixels 0 to 255
+is displayed, the first 35 values come out equally black. So, here a shelf
+of 0.136 (as 0.136*255=35) should be used.
+:p.Mapping of this sort should really be done on 24 bit data, before
+error-diffusion or halftoning takes place.
+:p.If the current bitmap is 24 bpp, then each bitmap pixel is mapped.
+Otherwise, the palette entrys are mapped.
+:p.This dialog is brought up from the
+:link reftype=hd res=&HID_COLOUR..Colour space...:elink. menuitem.
+.*...e
+.*...sHID_MAP_DLG       \45\ Map dialog:0:
+:h1 res=&HID_MAP_DLG..Map dialog
+:i1 id=map.Map dialog
+:p.When the :hp2.Convert:ehp2. pushbutton is pressed on this dialog,
+the current bitmap is expanded from however many bits per pixel it
+currently is to 24 bits per pixel (with no palette).
+:p.Then a mapping is performed, to the desired number of bits per pixel
+and palette specified.
+:p.For some mappings, some or all of the values in the :hp2.Values:ehp2.
+part of the dialog box are used.
+Those which have no effect are greyed.
+:p.Also, when mapping to some palettes, the option of using
+:hp2.halftoning:ehp2. or :hp2.error diffusion:ehp2. may be available.
+When these are unavailable, they are greyed.
+:dl tsize=7 break=all.
+:dt.1bpp, black and white
+:dd.The bitmap is mapped to black and white.
+This is done by mapping each pixel to a grey value, and then seeing
+if the brightness is in the high 50% or not.
+:dt.4bpp, 8 colours
+:dd.This maps each pixel to one of black, white, red, green, blue, cyan,
+magenta or yellow.
+This option is handy for generating bitmaps to be fed into colour printers.
+:dt.4bpp, 16 colour VGA palette
+:dd.Each pixel is mapped to a colour in the VGA palette used by DOS, Windows
+and OS/2 PM.
+:dt.4bpp, 16 shades of grey
+:dd.Each pixel is mapped to one of 16 shades of grey.
+:dt.8bpp, 7Rx8Gx4B palette
+:dd.This is a palette consisting of 7 levels of red, 8 levels of green and
+4 levels of blue.
+It is constructed this way because the eye is most sensitive to green, then
+to red, and least to blue.
+Most 32 bit OS/2 PM drivers, and the old 16 bit 8514/A driver
+use a palette with these colours in.
+:dt.8bpp, 6Rx6Gx6B palette
+:dd.The old 16 bit XGA-1 OS/2 PM driver used a
+6 red by 6 green by 6 blue palette.
+:dt.8bpp, 4Rx4Gx4B-Palette
+:dd.This is a palette consisting of 4 levels of red, 4 levels of green and
+4 levels of blue.
+:dt.8bpp, 256 shades of grey
+:dd.Each pixel is mapped to a greyscale via a weighted sum of the red, green
+and blue components.
+Grey = 30% red + 59% green + 11% blue.
+These correspond to the eyes relative sensitivities to these primary colours.
+:dt.8bpp, 64R+64G+64B tri-pel palette
+:dd.The palette of the resulting bitmap has 64 shades of red, 64 of green
+and 64 of blue.
+Pixels in the source alternately have their red, green or blue component
+considered and a pixel written out from the relevant part of the palette.
+Therefore colour resolution is 6 bits of each of red, green and blue, at
+the expense of artifacts produced caused by the alternation and also at the
+expense of reducing the image brightness by a factor of 3.
+:dt.24 bpp, keep R bits red, G green, B blue
+:dd.Although the resulting image has 24bpp, only R bits of red, G of green
+and B of blue are non-zero.
+XGA-2 in its 16bpp mode has 65536 colours, which are composed from 32 levels
+of red, 64 of green and 32 of blue.
+Thus R=5, G=6, B=5 can be used to transform an image into what can be
+displayed on XGA-2.
+:dt.8bpp, as above, find N most used cols.
+:dd.After performing the above step, the 24bpp data is analysed to find the
+N most frequently occuring colours.
+Any pixels in the image in the N most used colours are mapped directly to
+that colour.
+Any pixel not in the N most used colours is mapped to the closest colour
+in the N most used.
+This may be used to make a good rendition for display by a program
+that uses VGA 320x200 8bpp mode by setting R=6, G=6, B=6, N=256, since only
+6 bits are significant in the VGA palette DACs, and we only have 256
+colours in the palette.
+:dt.8bpp, median cut to N cols.
+:dd.First the image is quantised to 5 bits of red, green and blue.
+Then a palette of N colours is computed using the median cut algorithm.
+The image is mapped to this palette.
+For this to produce acceptable results, large values of N may be necessary.
+This may also be used to make a good rendition for display by a program
+that uses VGA 320x200 8bpp mode by setting N=256, since we only have 256
+colours in the palette.
+:edl.
+:p.:hp9.Important:ehp9.
+:p.These mappings apply to the :hp2.actual bitmap data:ehp2. and are
+nothing to do with the viewing options available from the
+:link reftype=hd res=&HID_VIEW..View menu:elink..
+Therefore, if you load a bitmap, error diffuse via this dialog box,
+and then save, the saved file is error-diffused.
+This directly contrasts the View menu, where the error diffusion is
+purely for display purposes.
+:p.This dialog is brought up from the
+:link reftype=hd res=&HID_MAP..Map...:elink. menuitem.
+.*...e
+.*...sHID_RESIZE_DLG    \45\ Resize dialog:0:
+:h1 res=&HID_RESIZE_DLG..Resize dialog
+:i1 id=resize.Resize dialog
+:p.When the :hp2.Resize:ehp2. pushbutton is pressed, the current bitmap is
+scaled to the new size specified in the entryfields.
+:p.This function always operates on the whole bitmap, not just the selected
+part (if there is a selection).
+:p.Expansion is done by pixel replication, and reduction is done by dropping
+pixels. For grayscale and true colour bitmaps a photographic quality
+resampling can be selected. For colour palette images this can't be done.
+There are several filters available, Nearest Neighbor, Bilinear, Bell, BSpline,
+Quadratic, Gaussian, Mitchell, Catmull/Rom, Lanczos, Kaiser and Blackman. The selection
+of the best filter type mainly depends on the bitmap content.
+:p.The bitmap has other buttons to help you pick the new sizes.
+:p.By entering a number in the :hp2.N:ehp2. entryfield, and pressing a
+:hp2.x N:ehp2. button, the width or height can be multiplied by that number.
+Similarly, to scale down by a number, use a :hp2./ N:ehp2. button.
+:p.The :hp2.Match height:ehp2. and :hp2.Match width:ehp2. buttons are
+designed to make it easy to pick either the width or the height, and then
+work out the corresponding height or width that will preserve the
+1&colon.1 aspect ratio.
+An example of the :hp2.Match Width:ehp2. feature &colon.-
+:sl.
+:li.Given bitmap is currently 600x400
+:li.User types in 800 in the Width entryfield.
+:li.User presses :hp2.Match Width:ehp2.
+:li.533 appears in the Height entryfield.
+:esl.
+:p.This was worked out as follows &colon.-
+:xmp.
+   Factor    = NewWidth / OldWidth
+             = 800 / 600
+             = 1.33 approx
+   NewHeight = Factor x OldHeight
+             = 1.33 x 400
+             = 533 approx
+:exmp.
+:p.These features are designed to avoid the need to use a calculator to
+work out the new sizes.
+:p.This dialog is brought up from the
+:link reftype=hd res=&HID_RESIZE..Resize...:elink. menuitem.
+.*...e
+:index.
+:euserdoc.

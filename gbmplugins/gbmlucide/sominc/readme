@@ -1,0 +1,2 @@
+This directory contain SOM include files (from OS/2 toolkit) modified to
+enable compilation of Lucide plugins using gcc in C++ mode.

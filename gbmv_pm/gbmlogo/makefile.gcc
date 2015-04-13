@@ -1,0 +1,66 @@
+#
+# GBM program to help generate OS/2 logo files
+#
+# This makefile is for GCC 3.x on OS/2 32bit.
+#
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\..\make.opt
+
+GBM  = ..\..\gbm
+IDIR = ..\bin
+
+CWARNS     = -Wall -Werror
+CFLAGS     = -c $(CWARNS) -I$(GBM) -mcpu=i686 -m32 -O2 -Zomf -DNDEBUG
+CFLAGS_DBG = -c $(CWARNS) -I$(GBM) -mcpu=i686 -m32 -Zomf -g  -DDEBUG
+
+LFLAGS         = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /EXEPACK:2 -Zlinker /OPTFUNC -Zlinker /PACKCODE -Zlinker /PACKDATA
+LFLAGS_DBG     = -Zmt -Zomf -Zlinker /NOE -Zlinker /NOI -Zlinker /DEBUG -Zlinker /DBGPACK
+LFLAGS_EXE     = $(LFLAGS) -Zlinker /BASE:0x10000 -Zlinker /STACK:0x8000 -Zlinker /PMTYPE:VIO
+LFLAGS_EXE_DBG = $(LFLAGS_DBG) -Zlinker /BASE:0x10000 -Zlinker /STACK:0x8000 -Zlinker /PMTYPE:VIO
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS     = $(CFLAGS_DBG)
+LFLAGS_EXE = $(LFLAGS_EXE_DBG)
+!endif
+
+.SUFFIXES:	.c .o
+
+.c.o:
+		gcc $(CFLAGS) $*.c
+
+#
+
+gbmlogo.exe:	gbmlogo.o \
+		$(GBM)\gbm.lib $(GBM)\gbmmem.lib $(GBM)\gbmtrunc.lib $(GBM)\gbmerr.lib \
+		$(GBM)\gbmht.lib $(GBM)\gbmtool.lib
+		gcc $(LFLAGS_EXE) -o $@ gbmlogo.o -L$(GBM) -lgbm.lib -lgbmmem.lib -lgbmtrunc.lib -lgbmerr.lib -lgbmht.lib -lgbmtool.lib
+
+gbmlogo.o:	gbmlogo.c $(GBM)\gbm.h $(GBM)\gbmmem.h $(GBM)\gbmtrunc.h $(GBM)\gbmerr.h \
+		$(GBM)\gbmht.h $(GBM)\gbmtool.h
+
+#
+
+clean:
+		-del /F /N *.o 2>nul
+
+clobber:
+		-del /F /N *.o *.exe $(IDIR)\gbmlogo.exe 2>nul
+
+#
+
+install:
+		copy *.exe $(IDIR)
+
+#
+
+exepack:
+         $(EXE_PACKER) *.exe
+
+#
+
+package:
+        -del /F /N $(IDIR)\gbmlogo_exe.zip 2>nul
+        zip -9 $(IDIR)\gbmlogo_exe.zip *.exe
+

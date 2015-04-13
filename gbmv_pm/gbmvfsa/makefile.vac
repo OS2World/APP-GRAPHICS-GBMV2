@@ -1,0 +1,58 @@
+#
+# Simple full screen bitmap animation viewer
+#
+# OS/2
+# IBM VisualAge C++, with CTC306, CTD302 and CTU304
+#
+# /O+ /Os- on VAC++ GA causes trap.
+# /O+ /Os- may be used safely, on CTC305 or later.
+#
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\..\make.opt
+
+GBM    = ..\..\gbm
+IDIR   = ..\bin
+
+
+.SUFFIXES:	.c .obj
+
+CWARNS = /W3 /Wcnd+cns+ord+par+pro+rea+ret+use+
+CFLAGS = /C+ /I$(GBM) /G5 /Gd-m+ $(CWARNS) /O+ /Os- /Q+ /Gf+ /Ge+ /DNDEBUG
+LFLAGS = /NOI /BASE:0x10000 /STACK:0x16384 /NOLOGO /EXEPACK:2 /OPTFUNC /PACKCODE /PACKDATA
+
+.c.obj:
+		icc $(CFLAGS) $*.c
+
+#
+
+gbmvfsa.exe:	gbmvfsa.obj gbmvfsa_vac.def $(GBM)\gbm.lib $(GBM)\gbmtool.lib
+		ilink $(LFLAGS) /OUT:$@ $**
+
+gbmvfsa.obj:	gbmvfsa.c $(GBM)\gbm.h $(GBM)\gbmtool.h
+
+#
+
+clean:
+		-del /F /N *.obj 2>nul
+
+clobber:
+		-del /F /N *.obj *.exe $(IDIR)\gbmvfsa.exe 2>nul
+
+#
+
+
+install:
+		copy gbmvfsa.exe $(IDIR)
+
+#
+
+exepack:
+         $(EXE_PACKER) *.exe
+
+#
+
+package:
+        -del /F /N $(IDIR)\gbmvfsa_exe.zip 2>nul
+        zip -9 $(IDIR)\gbmvfsa_exe.zip gbmvfsa.exe
+

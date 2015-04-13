@@ -1,0 +1,33 @@
+# Makefile for libpng (static)
+
+# This makefile is for GCC on Linux 64 bit.
+
+
+ifdef debug
+
+all:;   $(MAKE) -f makepng.gcc32 all m64=yes debug=yes
+
+clean:;  	$(MAKE) -f makepng.gcc32 clean
+
+clobber:; 	$(MAKE) -f makepng.gcc32 clobber
+
+install:;	$(MAKE) -f makepng.gcc32 install
+
+package:; 	$(MAKE) -f makepng.gcc32 package
+
+else
+
+all:;   $(MAKE) -f makepng.gcc32 all m64=yes
+
+clean:;  	$(MAKE) -f makepng.gcc32 clean
+
+clobber:; 	$(MAKE) -f makepng.gcc32 clobber
+
+install:;	$(MAKE) -f makepng.gcc32 install
+
+package:; 	$(MAKE) -f makepng.gcc32 package
+
+endif
+
+
+

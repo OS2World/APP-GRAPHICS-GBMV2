@@ -1,0 +1,33 @@
+# It builds the IJG library as a statically linkable library (.LIB).
+
+# This makefile is for GCC on Linux 64 bit.
+
+
+ifdef debug
+
+all:;   $(MAKE) -f makeijg.gcc32 all m64=yes debug=yes
+
+clean:;  	$(MAKE) -f makeijg.gcc32 clean
+
+clobber:; 	$(MAKE) -f makeijg.gcc32 clobber
+
+install:;	$(MAKE) -f makeijg.gcc32 install
+
+package:; 	$(MAKE) -f makeijg.gcc32 package
+
+else
+
+all:;   $(MAKE) -f makeijg.gcc32 all m64=yes
+
+clean:;  	$(MAKE) -f makeijg.gcc32 clean
+
+clobber:; 	$(MAKE) -f makeijg.gcc32 clobber
+
+install:;	$(MAKE) -f makeijg.gcc32 install
+
+package:; 	$(MAKE) -f makeijg.gcc32 package
+
+endif
+
+
+

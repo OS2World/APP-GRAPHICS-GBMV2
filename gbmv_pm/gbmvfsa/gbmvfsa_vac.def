@@ -1,0 +1,9 @@
+NAME GbmVFSA NOTWINDOWCOMPAT NEWFILES
+
+DESCRIPTION '@#Heiko Nitzsche:1.41#@ View Full Screen Animation (GBMVFSA,VAC)'
+
+PROTMODE
+
+STUB 'os2stub.exe'
+
+STACKSIZE 16384

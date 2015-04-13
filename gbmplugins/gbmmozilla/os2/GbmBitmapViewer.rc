@@ -1,0 +1,483 @@
+/***************************************************
+* Mozilla GBM plug-in: GbmBitmapViewer.rc
+*
+* Copyright (C) 2006-2012 Heiko Nitzsche
+*
+*   This software is provided 'as-is', without any express or implied
+*   warranty.  In no event will the author be held liable for any damages
+*   arising from the use of this software.
+*
+*   Permission is granted to anyone to use this software for any purpose,
+*   including commercial applications, and to alter it and redistribute it
+*   freely, subject to the following restrictions:
+*
+*   1. The origin of this software must not be misrepresented; you must not
+*      claim that you wrote the original software. If you use this software
+*      in a product, an acknowledgment in the product documentation would be
+*      appreciated but is not required.
+*   2. Altered source versions must be plainly marked as such, and must not be
+*      misrepresented as being the original software.
+*   3. This notice may not be removed or altered from any source distribution.
+***************************************************/
+
+#ifndef OS2_INCLUDED
+   #include <os2.h>
+#endif
+
+#include "GbmBitmapViewer_rc.h"
+#include "GbmSaveFileDialog_rc.h"
+
+/* --------------------------- */
+/* Menus */
+/* --------------------------- */
+
+/* Define viewer window menu */
+
+/* English (also fallback if a language is missing) */
+MENU RID_GBMVIEWER_EN PRELOAD MOVEABLE
+{
+    SUBMENU "~File"                               , MID_FILE
+    {
+        MENUITEM "~Export page...\tCtrl+A"        , MID_FILE_SAVE_AS
+    }
+    SUBMENU "~Bitmap"                             , MID_BITMAP
+    {
+        MENUITEM "Flip ~horizontal\tCtrl+H"       , MID_BITMAP_REF_HORZ
+        MENUITEM "Flip ~vertical\tCtrl+V"         , MID_BITMAP_REF_VERT
+        MENUITEM "Transpose x for y\tCtrl+D"      , MID_BITMAP_TRANSPOSE
+        MENUITEM SEPARATOR
+        MENUITEM "Rotate 90¯ ~CW\tCtrl+R"         , MID_BITMAP_ROT_P90
+        MENUITEM "Rotate 90¯ CC~W\tCtrl+L"        , MID_BITMAP_ROT_M90
+    }
+    SUBMENU "~View"                               , MID_VIEW
+    {
+        MENUITEM "Fi~rst page\tCtrl+Home"         , MID_VIEW_PAGE_FIRST
+        MENUITEM "Pre~vious page\tCtrl+-"         , MID_VIEW_PAGE_PREV
+        MENUITEM "~Next page\tCtrl++"             , MID_VIEW_PAGE_NEXT
+        MENUITEM "~Last page\tCtrl+End"           , MID_VIEW_PAGE_LAST
+        MENUITEM SEPARATOR
+        MENUITEM "Smaller (~-10%)\t-"             , MID_VIEW_ZOOM_DOWN
+        MENUITEM "Larger  (~+10%)\t+"             , MID_VIEW_ZOOM_UP
+        MENUITEM SEPARATOR
+        MENUITEM "~Actual size\tCtrl+1"           , MID_VIEW_ZOOM_NONE
+        MENUITEM "~Fit in Window\tCtrl+2"         , MID_VIEW_ZOOM_FITWIN
+        MENUITEM "Fit ~width\tCtrl+3"             , MID_VIEW_ZOOM_FITWIDTH
+        MENUITEM SEPARATOR
+        MENUITEM "Preferences..."                 , MID_VIEW_PREFERENCES
+    }
+    SUBMENU "~Help"                               , MID_HELP
+    {
+        MENUITEM "~Image info..."                 , MID_HELP_IMAGEINFO
+        MENUITEM "~About..."                      , MID_HELP_ABOUT
+    }
+}
+
+/* German */
+MENU RID_GBMVIEWER_DE PRELOAD MOVEABLE
+{
+    SUBMENU "~Datei"                              , MID_FILE
+    {
+        MENUITEM "Seite ~exportieren...\tStrg+A"  , MID_FILE_SAVE_AS
+    }
+    SUBMENU "~Bild"                               , MID_BITMAP
+    {
+        MENUITEM "~Horizontal spiegeln\tStrg+H"   , MID_BITMAP_REF_HORZ
+        MENUITEM "~Vertikal spiegeln\tStrg+V"     , MID_BITMAP_REF_VERT
+        MENUITEM "~Diagonal spiegeln\tStrg+D"     , MID_BITMAP_TRANSPOSE
+        MENUITEM SEPARATOR
+        MENUITEM "90¯ ~im UZS drehen\tStrg+R"     , MID_BITMAP_ROT_P90
+        MENUITEM "90¯ ~gegen UZS drehen\tStrg+L"  , MID_BITMAP_ROT_M90
+    }
+    SUBMENU "~Ansicht"                            , MID_VIEW
+    {
+        MENUITEM "E~rste Seite\tStrg+Pos1"        , MID_VIEW_PAGE_FIRST
+        MENUITEM "~Vorhergehende Seite\tStrg+-"   , MID_VIEW_PAGE_PREV
+        MENUITEM "~NÑchste Seite\tStrg++"         , MID_VIEW_PAGE_NEXT
+        MENUITEM "~Letzte Seite\tStrg+Ende"       , MID_VIEW_PAGE_LAST
+
+        MENUITEM SEPARATOR
+        MENUITEM "Verkleinern (~-10%)\t-"         , MID_VIEW_ZOOM_DOWN
+        MENUITEM "Vergrî·ern  (~+10%)\t+"         , MID_VIEW_ZOOM_UP
+        MENUITEM SEPARATOR
+        MENUITEM "Origin~algrî·e\tStrg+1"         , MID_VIEW_ZOOM_NONE
+        MENUITEM "Ganze ~Seite\tStrg+2"           , MID_VIEW_ZOOM_FITWIN
+        MENUITEM "Seiten~breite\tStrg+3"          , MID_VIEW_ZOOM_FITWIDTH
+        MENUITEM SEPARATOR
+        MENUITEM "Einstellungen..."               , MID_VIEW_PREFERENCES
+    }
+    SUBMENU "~Hilfe"                              , MID_HELP
+    {
+        MENUITEM "~Bildinformation..."            , MID_HELP_IMAGEINFO
+        MENUITEM "~Produktinformation..."         , MID_HELP_ABOUT
+    }
+}
+
+/* --------------------------- */
+
+/* Define viewer window accelerator table */
+
+/* English (also fallback if a language is missing) */
+ACCELTABLE RID_GBMVIEWER_EN PRELOAD MOVEABLE
+{
+    /* File menu */
+    "a",         MID_FILE_SAVE_AS,        CONTROL
+    "A",         MID_FILE_SAVE_AS,        CONTROL
+
+    /* Bitmap menu */
+    "h",         MID_BITMAP_REF_HORZ,     CONTROL
+    "H",         MID_BITMAP_REF_HORZ,     CONTROL
+    "v",         MID_BITMAP_REF_VERT,     CONTROL
+    "V",         MID_BITMAP_REF_VERT,     CONTROL
+    "d",         MID_BITMAP_TRANSPOSE,    CONTROL
+    "D",         MID_BITMAP_TRANSPOSE,    CONTROL
+
+    "r",         MID_BITMAP_ROT_P90,      CONTROL
+    "R",         MID_BITMAP_ROT_P90,      CONTROL
+    "l",         MID_BITMAP_ROT_M90,      CONTROL
+    "L",         MID_BITMAP_ROT_M90,      CONTROL
+
+    /* View menu */
+    VK_HOME,     MID_VIEW_PAGE_FIRST,     VIRTUALKEY, CONTROL
+    "-",         MID_VIEW_PAGE_PREV,      CONTROL
+    "+",         MID_VIEW_PAGE_NEXT,      CONTROL
+    VK_END,      MID_VIEW_PAGE_LAST,      VIRTUALKEY, CONTROL
+
+    "-",         MID_VIEW_ZOOM_DOWN,      CHAR
+    "+",         MID_VIEW_ZOOM_UP,        CHAR
+    "1",         MID_VIEW_ZOOM_NONE,      CONTROL
+    "2",         MID_VIEW_ZOOM_FITWIN,    CONTROL
+    "3",         MID_VIEW_ZOOM_FITWIDTH,  CONTROL
+}
+
+/* German */
+ACCELTABLE RID_GBMVIEWER_DE PRELOAD MOVEABLE
+{
+    /* File menu */
+    "a",        MID_FILE_SAVE_AS,         CONTROL
+    "A",        MID_FILE_SAVE_AS,         CONTROL
+
+    /* Bitmap menu */
+    "h",        MID_BITMAP_REF_HORZ,      CONTROL
+    "H",        MID_BITMAP_REF_HORZ,      CONTROL
+    "v",        MID_BITMAP_REF_VERT,      CONTROL
+    "V",        MID_BITMAP_REF_VERT,      CONTROL
+    "d",        MID_BITMAP_TRANSPOSE,     CONTROL
+    "D",        MID_BITMAP_TRANSPOSE,     CONTROL
+
+    "r",        MID_BITMAP_ROT_P90,       CONTROL
+    "R",        MID_BITMAP_ROT_P90,       CONTROL
+    "l",        MID_BITMAP_ROT_M90,       CONTROL
+    "L",        MID_BITMAP_ROT_M90,       CONTROL
+
+    /* View menu */
+    VK_HOME,     MID_VIEW_PAGE_FIRST,     VIRTUALKEY, CONTROL
+    "-",         MID_VIEW_PAGE_PREV,      CONTROL
+    "+",         MID_VIEW_PAGE_NEXT,      CONTROL
+    VK_END,      MID_VIEW_PAGE_LAST,      VIRTUALKEY, CONTROL
+
+    "-",         MID_VIEW_ZOOM_DOWN,      CHAR
+    "+",         MID_VIEW_ZOOM_UP,        CHAR
+    "1",         MID_VIEW_ZOOM_NONE,      CONTROL
+    "2",         MID_VIEW_ZOOM_FITWIN,    CONTROL
+    "3",         MID_VIEW_ZOOM_FITWIDTH,  CONTROL
+}
+
+/* --------------------------- */
+
+/* Define viewer window popup menu in embedded mode */
+
+/* English (also fallback if a language is missing) */
+MENU RID_GBMVIEWER_SMALL_POPUP_EN PRELOAD MOVEABLE
+{
+    MENUITEM "~Export page...\tCtrl+A"  , MID_FILE_SAVE_AS
+    MENUITEM SEPARATOR
+    MENUITEM "Flip ~horizontal\tCtrl+H" , MID_BITMAP_REF_HORZ
+    MENUITEM "Flip ~vertical\tCtrl+V"   , MID_BITMAP_REF_VERT
+    MENUITEM SEPARATOR
+    MENUITEM "Fi~rst page\tCtrl+Home"   , MID_VIEW_PAGE_FIRST
+    MENUITEM "Pre~vious page\tCtrl+-"   , MID_VIEW_PAGE_PREV
+    MENUITEM "~Next page\tCtrl++"       , MID_VIEW_PAGE_NEXT
+    MENUITEM "~Last page\tCtrl+End"     , MID_VIEW_PAGE_LAST
+    MENUITEM SEPARATOR
+    MENUITEM "Preferences..."           , MID_VIEW_PREFERENCES
+    MENUITEM SEPARATOR
+    MENUITEM "~Image info..."           , MID_HELP_IMAGEINFO
+    MENUITEM "~About..."                , MID_HELP_ABOUT
+}
+
+
+/* German */
+MENU RID_GBMVIEWER_SMALL_POPUP_DE PRELOAD MOVEABLE
+{
+    MENUITEM "Seite ~exportieren...\tStrg+A" , MID_FILE_SAVE_AS
+    MENUITEM SEPARATOR
+    MENUITEM "~Horizontal spiegeln\tStrg+H"  , MID_BITMAP_REF_HORZ
+    MENUITEM "~Vertikal spiegeln\tStrg+V"    , MID_BITMAP_REF_VERT
+    MENUITEM SEPARATOR
+    MENUITEM "E~rste Seite\tStrg+Pos1"        , MID_VIEW_PAGE_FIRST
+    MENUITEM "~Vorhergehende Seite\tStrg+-"   , MID_VIEW_PAGE_PREV
+    MENUITEM "~NÑchste Seite\tStrg++"         , MID_VIEW_PAGE_NEXT
+    MENUITEM "~Letzte Seite\tStrg+Ende"       , MID_VIEW_PAGE_LAST
+    MENUITEM SEPARATOR
+    MENUITEM "Einstellungen..."               , MID_VIEW_PREFERENCES
+    MENUITEM SEPARATOR
+    MENUITEM "~Bildinformation..."            , MID_HELP_IMAGEINFO
+    MENUITEM "~Produktinformation..."         , MID_HELP_ABOUT
+}
+
+/* --------------------------- */
+
+/* Define viewer window popup menu in full mode */
+
+/* English (also fallback if a language is missing) */
+MENU RID_GBMVIEWER_FULL_POPUP_EN PRELOAD MOVEABLE
+{
+    SUBMENU "~Page"                      , MID_VIEW_PAGE
+    {
+        MENUITEM "Fi~rst\tCtrl+Home"     , MID_VIEW_PAGE_FIRST
+        MENUITEM "Pre~vious\tCtrl+-"     , MID_VIEW_PAGE_PREV
+        MENUITEM "~Next\tCtrl++"         , MID_VIEW_PAGE_NEXT
+        MENUITEM "~Last\tCtrl+End"       , MID_VIEW_PAGE_LAST
+    }
+    MENUITEM SEPARATOR
+    MENUITEM "~Export page...\tCtrl+A"   , MID_FILE_SAVE_AS
+    MENUITEM SEPARATOR
+    MENUITEM "Flip ~horizontal\tCtrl+H"  , MID_BITMAP_REF_HORZ
+    MENUITEM "Flip ~vertical\tCtrl+V"    , MID_BITMAP_REF_VERT
+    MENUITEM "Transpose x for y\tCtrl+D" , MID_BITMAP_TRANSPOSE
+    MENUITEM SEPARATOR
+    MENUITEM "Rotate 90¯ ~CW\tCtrl+R"    , MID_BITMAP_ROT_P90
+    MENUITEM "Rotate 90¯ CC~W\tCtrl+L"   , MID_BITMAP_ROT_M90
+    MENUITEM SEPARATOR
+    MENUITEM "Smaller (~-10%)\t-"        , MID_VIEW_ZOOM_DOWN
+    MENUITEM "Larger  (~+10%)\t+"        , MID_VIEW_ZOOM_UP
+    MENUITEM SEPARATOR
+    MENUITEM "~Actual size\tCtrl+1"      , MID_VIEW_ZOOM_NONE
+    MENUITEM "~Fit in Window\tCtrl+2"    , MID_VIEW_ZOOM_FITWIN
+    MENUITEM "Fit width\tCtrl+3"         , MID_VIEW_ZOOM_FITWIDTH
+    MENUITEM SEPARATOR
+    MENUITEM "Preferences..."            , MID_VIEW_PREFERENCES
+    MENUITEM SEPARATOR
+    MENUITEM "~Image info..."            , MID_HELP_IMAGEINFO
+    MENUITEM "~About..."                 , MID_HELP_ABOUT
+}
+
+/* German */
+MENU RID_GBMVIEWER_FULL_POPUP_DE PRELOAD MOVEABLE
+{
+    SUBMENU "~Seite"                         , MID_VIEW_PAGE
+    {
+        MENUITEM "E~rste\tStrg+Pos1"         , MID_VIEW_PAGE_FIRST
+        MENUITEM "~Vorhergehende\tStrg+-"    , MID_VIEW_PAGE_PREV
+        MENUITEM "~NÑchste\tStrg++"          , MID_VIEW_PAGE_NEXT
+        MENUITEM "~Letzte\tStrg+Ende"        , MID_VIEW_PAGE_LAST
+    }
+    MENUITEM SEPARATOR
+    MENUITEM "Seite ~exportieren...\tStrg+A" , MID_FILE_SAVE_AS
+    MENUITEM SEPARATOR
+    MENUITEM "~Horizontal spiegeln\tStrg+H"  , MID_BITMAP_REF_HORZ
+    MENUITEM "~Vertikal spiegeln\tStrg+V"    , MID_BITMAP_REF_VERT
+    MENUITEM "~Diagonal spiegeln\tStrg+D"    , MID_BITMAP_TRANSPOSE
+    MENUITEM SEPARATOR
+    MENUITEM "90¯ ~im UZS drehen\tStrg+R"    , MID_BITMAP_ROT_P90
+    MENUITEM "90¯ ~gegen UZS drehen\tStrg+L" , MID_BITMAP_ROT_M90
+    MENUITEM SEPARATOR
+    MENUITEM "Verkleinern (~-10%)\t-"        , MID_VIEW_ZOOM_DOWN
+    MENUITEM "Vergrî·ern  (~+10%)\t+"        , MID_VIEW_ZOOM_UP
+    MENUITEM SEPARATOR
+    MENUITEM "Origin~algrî·e\tStrg+1"        , MID_VIEW_ZOOM_NONE
+    MENUITEM "Ganze ~Seite\tStrg+2"          , MID_VIEW_ZOOM_FITWIN
+    MENUITEM "Seiten~breite\tStrg+3"         , MID_VIEW_ZOOM_FITWIDTH
+    MENUITEM SEPARATOR
+    MENUITEM "Einstellungen..."              , MID_VIEW_PREFERENCES
+    MENUITEM SEPARATOR
+    MENUITEM "~Bildinformation..."           , MID_HELP_IMAGEINFO
+    MENUITEM "~Produktinformation..."        , MID_HELP_ABOUT
+}
+
+
+/* --------------------------- */
+/* Dialogs */
+/* --------------------------- */
+
+/* GBM Bitmap Viewer Format Info dialog box */
+
+/* English (also fallback if a language is missing) */
+DLGTEMPLATE RID_GBMVIEWER_FORMATINFO_EN LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "GBM Bitmap Viewer", RID_GBMVIEWER_FORMATINFO_EN, 0, 0, 186, 76,
+            WS_VISIBLE, FCF_SYSMENU | FCF_TITLEBAR | FCF_NOBYTEALIGN
+    BEGIN
+        GROUPBOX        "Image Information", 212, 2, 21, 182, 52, NOT WS_GROUP
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        RTEXT           "Format:", 201, 6, 55, 24, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        RTEXT           "Width:", 202, 6, 47, 24, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        RTEXT           "Height:", 203, 6, 39, 24, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        RTEXT           "Bits:", 204, 6, 31, 24, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        RTEXT           "Pages:", 209, 6, 23, 24, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        LTEXT           "Microsoft/Aldus Tagged Image File Format support",
+                        TID_FORMATINFO_FORMAT, 35, 55, 148, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        LTEXT           "Text", TID_FORMATINFO_WIDTH, 35, 47, 148, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        LTEXT           "Text", TID_FORMATINFO_HEIGHT, 35, 39, 148, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        LTEXT           "Text", TID_FORMATINFO_BPP, 35, 31, 148, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        LTEXT           "Text", TID_FORMATINFO_PAGES, 35, 23, 148, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        DEFPUSHBUTTON   "~OK", DID_OK, 67, 3, 52, 14
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+    END
+END
+
+/* German */
+DLGTEMPLATE RID_GBMVIEWER_FORMATINFO_DE LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "GBM Bitmap Viewer", RID_GBMVIEWER_FORMATINFO_DE, 0, 0, 186, 76,
+            WS_VISIBLE, FCF_SYSMENU | FCF_TITLEBAR | FCF_NOBYTEALIGN
+    BEGIN
+        GROUPBOX        "Bildinformation", 212, 2, 21, 182, 52, NOT WS_GROUP
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        RTEXT           "Format:", 201, 6, 55, 24, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        RTEXT           "Breite:", 202, 6, 47, 24, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        RTEXT           "Hîhe:", 203, 6, 39, 24, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        RTEXT           "Bits:", 204, 6, 31, 24, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        RTEXT           "Seiten:", 209, 6, 23, 24, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        LTEXT           "Microsoft/Aldus Tagged Image File Format support",
+                        TID_FORMATINFO_FORMAT, 35, 55, 148, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        LTEXT           "Text", TID_FORMATINFO_WIDTH, 35, 47, 148, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        LTEXT           "Text", TID_FORMATINFO_HEIGHT, 35, 39, 148, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        LTEXT           "Text", TID_FORMATINFO_BPP, 35, 31, 148, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        LTEXT           "Text", TID_FORMATINFO_PAGES, 35, 23, 148, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        DEFPUSHBUTTON   "~OK", DID_OK, 67, 3, 52, 14
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+    END
+END
+
+/* GBM Bitmap Viewer preferences dialog box */
+
+/* English (also fallback if a language is missing) */
+DLGTEMPLATE RID_GBMVIEWER_PREFS_EN LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "GBM Bitmap Viewer", RID_GBMVIEWER_PREFS_EN, 0, 0, 155, 69,
+            WS_VISIBLE, FCF_SYSMENU | FCF_TITLEBAR | FCF_NOBYTEALIGN
+    BEGIN
+        GROUPBOX        "Options",          308, 3, 22, 149, 43, NOT WS_GROUP
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        RTEXT           "Zoom Algorithm:",  302, 8, 45, 60, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        CONTROL         "Nearest Neighbor", TID_PREFERENCES_ALGO, 75, 0, 71, 55,
+                        WC_COMBOBOX, CBS_DROPDOWNLIST | WS_GROUP | WS_TABSTOP | WS_VISIBLE
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        RTEXT           "Prefetch Pages:", 304, 8, 29, 60, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        SPINBUTTON      TID_PREFERENCES_PAGESUD, 75, 29, 31, 12,
+                        SPBS_NUMERICONLY | SPBS_MASTER | SPBS_JUSTRIGHT | WS_GROUP
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        LTEXT           "Pages", 307, 111, 28, 30, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        DEFPUSHBUTTON   "~OK", DID_OK, 5, 3, 40, 14
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        PUSHBUTTON      "Cancel", DID_CANCEL, 48, 3, 40, 14
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+    END
+END
+
+/* German */
+DLGTEMPLATE RID_GBMVIEWER_PREFS_DE LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "GBM Bitmap Viewer", RID_GBMVIEWER_PREFS_DE, 0, 0, 155, 69,
+            WS_VISIBLE, FCF_SYSMENU | FCF_TITLEBAR | FCF_NOBYTEALIGN
+    BEGIN
+        GROUPBOX        "Optionen",         308, 3, 22, 149, 43, NOT WS_GROUP
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        RTEXT           "Zoom-Algorithmus:",  302, 8, 45, 60, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        CONTROL         "Benachbarte Pixel", TID_PREFERENCES_ALGO, 75, 0, 71, 55,
+                        WC_COMBOBOX, CBS_DROPDOWNLIST | WS_GROUP | WS_TABSTOP | WS_VISIBLE
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        RTEXT           "Seiten Vorausladen:", 304, 8, 29, 60, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        SPINBUTTON      TID_PREFERENCES_PAGESUD, 75, 29, 31, 12,
+                        SPBS_NUMERICONLY | SPBS_MASTER | SPBS_JUSTRIGHT | WS_GROUP
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        LTEXT           "Seiten", 307, 111, 28, 30, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        DEFPUSHBUTTON   "~OK", DID_OK, 5, 3, 40, 14
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+        PUSHBUTTON      "Abbruch", DID_CANCEL, 48, 3, 40, 14
+                        PRESPARAMS PP_FONTNAMESIZE, "9.WarpSans"
+    END
+END
+
+/* --------------------------- */
+
+STRINGTABLE PRELOAD MOVEABLE
+BEGIN
+  /* English (also fallback if a language is missing) */
+  SID_GBMVIEWER_STRING_UNSUPPORTED_FMT_EN    "Unsupported file format"
+  SID_GBMVIEWER_STRING_SAVEAS_EN             "Export page as..."
+  SID_GBMVIEWER_STRING_OVERRIDE_FILE_EN      "File exists already, override?"
+  SID_GBMVIEWER_STRING_ALL_FILES_EN          "<All Supported Types>"
+  SID_GBMVIEWER_STRING_FMT_EXT_ERROR_EN      "Couldn't determine the file format based on the specified file extension. Please use one of the supported file extensions."
+  SID_GBMVIEWER_STRING_SCALE_SIMPLE_EN       "Simple"
+  SID_GBMVIEWER_STRING_SCALE_NEARNEIGHBOR_EN "Nearest Neighbor"
+
+  /* German */
+  SID_GBMVIEWER_STRING_UNSUPPORTED_FMT_DE    "Nicht unterstÅtztes Dateiformat"
+  SID_GBMVIEWER_STRING_SAVEAS_DE             "Seite exportieren unter..."
+  SID_GBMVIEWER_STRING_OVERRIDE_FILE_DE      "Datei existiert bereits, Åberschreiben?"
+  SID_GBMVIEWER_STRING_ALL_FILES_DE          "<Alle unterstÅtzten Formate>"
+  SID_GBMVIEWER_STRING_FMT_EXT_ERROR_DE      "Basierend auf der angebenenen Dateiendung konnte das Dateiformat nicht bestimmt werden. Bitte verwenden Sie eine der unterstÅtzten Dateiendungen."
+  SID_GBMVIEWER_STRING_SCALE_SIMPLE_DE       "Einfach"
+  SID_GBMVIEWER_STRING_SCALE_NEARNEIGHBOR_DE "Benachbarte Pixel"
+END
+
+
+/* --------------------------------------------- */
+/* --- Help table referrer to GBMDLG handler --- */
+/* --------------------------------------------- */
+
+/* English */
+HELPTABLE RID_GBMVIEWER_GBMDLG_HELPTABLE_EN
+{
+  /* ID of frame/dialog, ID of HELPSUBTABLE, help panel */
+  HELPITEM RID_GBM_FILEDLG_EN, RID_GBM_FILEDLG, HID_GBM_FILEDLG
+}
+HELPSUBTABLE RID_GBM_FILEDLG_EN
+{
+  /* id of control/menuitem, help panel */
+  HELPSUBITEM DID_GBM_FILEDLG, HID_GBM_FILEDLG
+}
+
+/* German */
+HELPTABLE RID_GBMVIEWER_GBMDLG_HELPTABLE_DE
+{
+  /* ID of frame/dialog, ID of HELPSUBTABLE, help panel */
+  HELPITEM RID_GBM_FILEDLG_DE, RID_GBM_FILEDLG, HID_GBM_FILEDLG
+}
+HELPSUBTABLE RID_GBM_FILEDLG_DE
+{
+  /* id of control/menuitem, help panel */
+  HELPSUBITEM DID_GBM_FILEDLG, HID_GBM_FILEDLG
+}
+
+
+
+

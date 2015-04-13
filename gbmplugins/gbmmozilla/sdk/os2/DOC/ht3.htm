@@ -1,0 +1,157 @@
+<HTML><HEAD>
+<TITLE>Macintosh Steps, Files</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#FF0000" ALINK="#FF0000">
+<H1>Macintosh Steps, Files</H1>
+
+<UL>
+<LI><a href="#C1">Creating a Macintosh Plug-In</a>
+<LI><a href="#C2">Macintosh Files</a>
+</UL>
+
+<HR>
+<a name="C1"><h2>Creating A Macintosh Plug-In</h2></a>
+<P>
+In order to create a Macintosh plug-in you need a C++ complier (the
+following procedures assume that you are using Metrowerks'
+CodeWarrior), the application Stuffit Expander (which is
+automatically installed on your machine when you install Navigator),
+and a resource editor, such as ResEdit or Resourcer
+<OL>
+<LI>Download the Macintosh Sample Source Code. If you have Stuffit
+Expander installed, the folder New SDK is automatically created. The
+Sample Source Code file is decompressed and its contents are placed
+in the folder. Four folders, Documentation, Plugin Template,
+Examples, and Include, are automatically created in the folder New
+SDK. The Documentation folder includes additional information on
+creating plug-ins. Plugin Template contains the files you use to
+create a new plug-in. The Examples folder contains example files for
+creating a plug-in. Include is comprised of files required for
+compiling.
+<LI>Duplicate the Plugin Template folder and rename it myplug. The
+folder contains the shell files that provides a compilable framework
+for creating a plug-in. By working in these files you simply fill in
+the necessary code for basic plug-in functionality.
+<LI>Copy into this folder any auxiliary plug-in specific files you
+have created. For example, you may have written code to implement
+window handling functionality. 
+<LI>In the folder myplug, rename the file PluginTemplate68K.u to
+Myplugin68K.u and delete the files PluginTemplate, PluginTemplate68K,
+PluginTemplate.xSYM, PluginTemplate68K.SYM. These files will be
+automatically recreated when you build your project.
+<LI>Using your resource editor, open the file PluginTemplate.rsrc. 
+<LI>Edit the resource file to include the correct information. You
+must change the MIME type and file extension values by editing str
+#128. To do so, change string #1 to MIME type and string #2 to
+extension. 
+<LI>Save the resource file. The resource file allows Netscape to
+query the plug-in without having to load it in memory. 
+<LI>Open the file Myplugin68K.u. Using your compiler, open
+npshell.cpp. This is the compilable shell file. 
+<LI>Using the Save As command, copy and rename npshell.cpp as
+myplugin.cpp in the folder myplug.
+<LI>In myplugin.cpp, write the code for the functions needed for your
+plug-in. The Plug-In Application Programming Interface provides a
+detailed description of each function. You may want to take a look at
+the files in the Examples and Plugins folders.
+<LI>Save the myplugin.cpp file.
+<LI>Change the Preferences associated with myplugin.cpp by choosing
+Preferences from the Edit menu. Select 68k Project Preferences. Make
+the following changes:
+
+<UL>
+<LI><LI>Rename the file name to myplugin68K. 
+<LI><LI>Rename they sym name to myplugin68K.sym
+<LI><LI>Save the settings
+</UL>
+
+<LI>Using your compiler, build the project. The file myplugin68K is
+created.
+<LI>If you want to create a fat PowerPC native application, open the
+file mypluginppc.u. Next use the Project menu to:
+
+<UL>
+<LI><LI>Delete the file PluginTemplate68K. 
+<LI><LI>Add the file myplugin68K. This ensures that your plugin can run on
+<LI>both PowerPC and 68K code.
+<LI><LI>Delete npshell.cpp.
+<LI><LI>Add the file myplugin.cpp.
+</UL>
+
+Now recompile the project.
+<LI>Drag the file myplugin68K into the plugins folder of Navigator.
+If this folder doesn't exist, create it in the same location as
+netscape.exe. If the plug-in has associated files, create a separate
+folder and places the files there.
+<LI>Restart Navigator. When Netscape Navigator starts up, it checks
+for plug-in modules in the netscape\plugins directory.
+<LI>From the Help menu of Navigator, choose About Plug-ins. A list of
+all plug-ins in the directory is displayed. You should see your Mime
+type listed.
+<LI>Test your plug-in by creating an HTML document. 
+</OL>
+
+<HR>
+<a name="C2"><h2>Macintosh Files</h2></a>
+<P>
+When you download the Macintosh sample source code, four folders are
+automatically created in the folder New SDK. The contents of each
+folder include:
+<H4>Documentation Folder</H4>
+<UL>
+<LI>Mac Plug-in SDK Doc.html - contains additional Macintosh-specific
+information.
+<LI>plugin_design.html - describes information on plug-ins that can
+also be accessed from the Netscape home page.
+</UL>
+<H4>Plugin Template Folder</H4>
+<UL>
+<LI>PluginTemplate.rsrc - contains the STR# 128 resource with dummy 0
+and 1 strings.
+<LI>PluginTemplate68K.u - includes the Metrowerks CodeWarrior 7
+project used to build a shell 68K plug-in. The project is made up of
+the files npshell.cp, npmac.cpp, PluginTemplate.rsrc, and the
+standard MacOS library.
+<LI>PluginTemplatePPPC.u - includes the Metrowerks CodeWarrior 7
+project used to build a shell PowerPC plug-in. The project is made up
+of the files npshell.cp, npmac.cpp, PluginTemplate.rsrc, the standard
+MacOS library, and PluginTemplate68K.
+<LI>PluginTemplatePPC.u.exp - made up of the export list file for
+PluginTemplatePPC.u with the main entry point of the plug-in,
+implemented in npmac.cpp. You should not need to change this file.
+<LI>plugin_design.html - describes information on plug-ins that can
+also be accessed from the Netscape home page.
+</UL>
+<H4>Include Folder</H4>
+<UL>
+<LI>npapi.h - The main plug-in header file. It contains prototypes for
+all plug-in and Netscape Method functions. It also contains typedefs
+for all types and structures passed to and from these functions, as
+well as error codes and other definitions.
+<LI>npupp.h - Procedure typedefs and function creation and calling
+macros. Since this file is included by npmac.h, your plug-in sources
+don't need to reference it directly.
+<LI>npmac.cpp - A glue file containing the main entry point to your
+plug-in, which handles version checking, setting up the function
+tables used internally in this file, and setting up the plug-in's
+globals. This file also contains wrapper functions for all API entry
+and exit points, so your plug-in doesn't have to explicitly set up
+its globals or deal with UniversalProcPtrs. You should not need to
+change this file.
+<LI>npshell.cpp - Shell implementation of all plug-in methods. This
+file also includes suggestions (as comments) on plug-in development
+as applicable to a specific method. You use this file to create your
+own plug-in.
+</UL>
+<H4>Examples Folder</H4>
+<UL>
+<LI>CharFlipper - Reads in a stream of characters and displays them on
+the screen one at a time during idle time. Demonstrates simple
+streams, drawing, and idle event handling.
+<LI>ViewPict -Reads in a stream of data into a Macintosh PicHandle
+and displays the picture when the stream is complete.
+</UL>
+
+</BODY>
+</HTML>

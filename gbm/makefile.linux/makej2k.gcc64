@@ -1,0 +1,34 @@
+# It builds the OpenJPEG library as a statically linkable library (.a).
+# (with JPWL support)
+#
+# This makefile is for GCC on Linux 64 bit.
+
+
+ifdef debug
+
+all:;   $(MAKE) -f makej2k.gcc32 all m64=yes debug=yes
+
+clean:;  	$(MAKE) -f makej2k.gcc32 clean
+
+clobber:; 	$(MAKE) -f makej2k.gcc32 clobber
+
+install:;	$(MAKE) -f makej2k.gcc32 install
+
+package:; 	$(MAKE) -f makej2k.gcc32 package
+
+else
+
+all:;   $(MAKE) -f makej2k.gcc32 all m64=yes
+
+clean:;  	$(MAKE) -f makej2k.gcc32 clean
+
+clobber:; 	$(MAKE) -f makej2k.gcc32 clobber
+
+install:;	$(MAKE) -f makej2k.gcc32 install
+
+package:; 	$(MAKE) -f makej2k.gcc32 package
+
+endif
+
+
+

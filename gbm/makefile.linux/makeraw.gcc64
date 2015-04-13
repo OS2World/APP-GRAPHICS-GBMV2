@@ -1,0 +1,33 @@
+# It builds the RAW library as a statically linkable library (.a).
+
+# This makefile is for GCC on Linux 64 bit.
+
+
+ifdef debug
+
+all:;   $(MAKE) -f makeraw.gcc32 all m64=yes debug=yes
+
+clean:;  	$(MAKE) -f makeraw.gcc32 clean
+
+clobber:; 	$(MAKE) -f makeraw.gcc32 clobber
+
+install:;	$(MAKE) -f makeraw.gcc32 install
+
+package:; 	$(MAKE) -f makeraw.gcc32 package
+
+else
+
+all:;   $(MAKE) -f makeraw.gcc32 all m64=yes
+
+clean:;  	$(MAKE) -f makeraw.gcc32 clean
+
+clobber:; 	$(MAKE) -f makeraw.gcc32 clobber
+
+install:;	$(MAKE) -f makeraw.gcc32 install
+
+package:; 	$(MAKE) -f makeraw.gcc32 package
+
+endif
+
+
+

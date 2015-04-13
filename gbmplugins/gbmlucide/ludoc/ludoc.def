@@ -1,0 +1,21 @@
+LIBRARY     LUDOC.DLL
+
+EXPORTS
+    LuDocumentNewClass
+    LuDocumentClassData
+    LuDocumentCClassData
+    _LuDocumentClassData
+    _LuDocumentCClassData
+    LuPixbufNewClass
+    LuPixbufClassData
+    LuPixbufCClassData
+    _LuPixbufClassData
+    _LuPixbufCClassData
+    LuIndexNodeNewClass
+    LuIndexNodeClassData
+    LuIndexNodeCClassData
+    _LuIndexNodeClassData
+    _LuIndexNodeCClassData
+    uniConvertSpChars
+    uniLigaturesLength
+    uniReplaceLigatures

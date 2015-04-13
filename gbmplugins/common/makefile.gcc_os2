@@ -1,0 +1,111 @@
+#
+# Generalised Bitmap Module C++ adapter for GBM plugins,
+#
+# Copyright (C) 2006-2010 Heiko Nitzsche
+#
+#   This software is provided 'as-is', without any express or implied
+#   warranty.  In no event will the author be held liable for any damages
+#   arising from the use of this software.
+#
+#   Permission is granted to anyone to use this software for any purpose,
+#   including commercial applications, and to alter it and redistribute it
+#   freely, subject to the following restrictions:
+#
+#   1. The origin of this software must not be misrepresented; you must not
+#      claim that you wrote the original software. If you use this software
+#      in a product, an acknowledgment in the product documentation would be
+#      appreciated but is not required.
+#   2. Altered source versions must be plainly marked as such, and must not be
+#      misrepresented as being the original software.
+#   3. This notice may not be removed or altered from any source distribution.
+#
+# This makefile is for GCC 3.x on OS/2 32bit.
+#
+
+# Builds the adapter library to GBM.DLL.
+
+# As GBM.DLL is built multithreaded, all users should also be multithreaded.
+
+# include configuration setting for nmake (except compiler options)
+!INCLUDE ..\..\make.opt
+
+# Location of gbm libs and public header files
+GBM     = ..\..\gbm
+GBMDLG  = ..\..\gbmv_pm\gbmdlg
+
+# ------------------
+# Configure compiler
+# ------------------
+
+CWARNS         = -Wall -Werror
+CFLAGS_DLL     = -c $(CWARNS) -I. -I$(GBM) -I$(GBMDLG) -mcpu=i686 -m32 -O3 -Zomf -DOS2 -DNDEBUG
+CFLAGS_DLL_DBG = -c $(CWARNS) -I. -I$(GBM) -I$(GBMDLG) -mcpu=i686 -m32 -Zomf -g  -DOS2 -DDEBUG
+
+# For debugging call nmake or wmake with debug=on
+!ifdef debug
+CFLAGS_DLL = $(CFLAGS_DLL_DBG)
+!endif
+
+#
+
+.SUFFIXES: .cpp .o
+
+.cpp.o:
+               g++ $(CFLAGS_DLL) $*.cpp
+
+#
+
+all:           common.lib
+
+#
+
+common.lib:    ConfigHandler.o Semaphore.o Thread.o \
+               GbmAccessor.o GbmDialogAccessor.o GbmException.o \
+               GbmDocument.o GbmDocumentPage.o GbmRenderer.o
+               -del /N $@ 2> nul
+               emxomfar r $@ $**
+
+ConfigHandler.o: ConfigHandler.cpp ConfigHandler.hpp os2defs.h
+
+Semaphore.o:     Semaphore.cpp Semaphore.hpp os2defs.h
+
+Thread.o:        Thread.cpp Thread.hpp os2defs.h
+
+# GBM files
+GbmAccessor.o:        GbmAccessor.cpp GbmAccessor.hpp os2defs.h $(GBM)\gbm.h
+
+GbmDialogAccessor.o:  GbmDialogAccessor.cpp GbmDialogAccessor.hpp os2defs.h $(GBMDLG)\gbmdlg.h
+
+GbmException.o:       GbmException.cpp GbmException.hpp os2defs.h $(GBM)\gbm.h
+
+GbmDocument.o:        GbmDocument.cpp GbmDocument.hpp os2defs.h $(GBM)\gbm.h
+
+GbmDocumentPage.o:    GbmDocumentPage.cpp GbmDocumentPage.hpp os2defs.h $(GBM)\gbm.h $(GBM)\gbmmem.h
+
+GbmRenderer.o:        GbmRenderer.cpp GbmRenderer.hpp os2defs.h \
+                          $(GBM)\gbm.h $(GBM)\gbmmem.h $(GBM)\gbmscale.h $(GBM)\gbmmir.h $(GBM)\gbmrect.h
+
+
+# ------------------------
+# Build management targets
+# ------------------------
+
+clean:
+    -del /F /N *.o *.err 2>nul
+
+clobber:
+    -del /F /N *.o *.lib *.err 2>nul
+
+#
+
+install:
+
+#
+
+exepack:
+
+#
+
+package:
+
+

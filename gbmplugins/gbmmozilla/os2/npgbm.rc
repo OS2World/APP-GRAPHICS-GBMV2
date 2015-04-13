@@ -1,0 +1,54 @@
+/***************************************************
+* Mozilla GBM plug-in: npgbm.rc
+*
+* Copyright (C) 2006-2012 Heiko Nitzsche
+*
+*   This software is provided 'as-is', without any express or implied
+*   warranty.  In no event will the author be held liable for any damages
+*   arising from the use of this software.
+*
+*   Permission is granted to anyone to use this software for any purpose,
+*   including commercial applications, and to alter it and redistribute it
+*   freely, subject to the following restrictions:
+*
+*   1. The origin of this software must not be misrepresented; you must not
+*      claim that you wrote the original software. If you use this software
+*      in a product, an acknowledgment in the product documentation would be
+*      appreciated but is not required.
+*   2. Altered source versions must be plainly marked as such, and must not be
+*      misrepresented as being the original software.
+*   3. This notice may not be removed or altered from any source distribution.
+***************************************************/
+
+#include "npapi.h"
+
+/* RC_DATA types for version info - required (keep this formatting: rc.exe bug) */
+RCDATA NP_INFO_ProductVersion    { 1,4,7,0
+}
+
+/* Keep in sync with the table inside of lugbm.cpp !!! */
+RCDATA NP_INFO_MIMEType          {"image/bmp|image/x-bmp|image/x-windows-bmp|image/gif|image/pcx|image/x-pcx|image/tif|image/tiff|image/x-tiff|image/tga|image/x-tga|image/iff|image/x-iff|image/vid|image/x-portable-bitmap|image/x-portable-graymap|image/x-portable-greymap|image/x-portable-pixmap|image/x-portable-anymap|image/png|image/x-png|image/kps|image/x-xbm|image/xbm|image/x-xbitmap|image/xpm|image/x-xpm|image/x-xpixmap|image/spr|image/pseg|image/img|image/cvp|image/jpeg|image/pjpeg|image/jp2|image/x-jp2|image/jpeg2000|image/j2k|image/x-j2k|image/jpt|image/x-jpt|image/jbig|image/x-jbig|image/x-adobe-dng|image/x-hasselblad-3fr|image/x-sony-arw|image/x-casio-bay|image/x-phaseone-cap|image/x-canon-crw|image/x-canon-cr2|image/x-kodak-dcr|image/x-kodak-dcs|image/x-kodak-drf|image/x-epson-erf|image/x-kodak-kdc|image/x-minolta-mdc|image/x-raw|image/x-leaf-mos|image/x-minolta-mrw|image/x-nikon-nef|image/x-nikon-nrw|image/x-olympus-orf|image/x-pentax-pef|image/x-fuji-raf|image/x-panasonic-raw|image/x-leica-raw|image/x-panasonic-rw2|image/x-leica-rwl|image/x-sony-srf|image/x-sony-sr2\0"}
+RCDATA NP_INFO_FileOpenName      {"OS/2, Windows Bitmap|OS/2, Windows Bitmap|Windows Bitmap|CompuServe Graphics Interchange Format|ZSoft PC Paintbrush|ZSoft PC Paintbrush|Tagged Image File Format|Tagged Image File Format|Tagged Image File Format|Truevision Targa/Vista|Truevision Targa/Vista|Amiga IFF|Amiga IFF|YUV12C M-Motion Frame Buffer|Portable Bit-Map|Portable Greyscale-Map|Portable Greyscale-Map|Portable Pixel-Map|Portable Any-Map|Portable Network Graphics|Portable Network Graphics|IBM KIPS|X Windows Bitmap B/W|X Windows Bitmap B/W|X Windows Bitmap B/W|X Windows PixMap - XPM2/XPM3|X Windows PixMap - XPM2/XPM3|X Windows PixMap - XPM2/XPM3|Archimedes Sprite (RiscOS)|IBM Printer Page Segment|GEM Raster|Portrait|JPEG Interchange File Format|JPEG Interchange File Format|JPEG2000 Graphics File Format|JPEG2000 Graphics File Format|JPEG2000 Graphics File Format/JPEG2000 Codestream|JPEG2000 Codestream|JPEG2000 Codestream|JPT Stream - JPIP/JPEG2000|JPT Stream - JPIP/JPEG2000|JBIG - Joint Bi-level Image experts Group|JBIG - Joint Bi-level Image experts Group|RAW - Adobe DNG|RAW - Hasselblad 3FR |RAW - Sony ARW|RAW - Casio BAY|RAW - Phase One CAP|RAW - Canon CRW|RAW - Canon CR2|RAW - Kodak DCR|RAW - Kodak DCS|RAW - Kodak DRF|RAW - EPSON ERF|RAW - Kodak KDC|RAW - Minolta MDC|RAW - Mamiya MEF|RAW - Leaf MOS|RAW - Minolta MRW|RAW - Nikon NEF|RAW - Nikon NRW|RAW - Olympus ORF|RAW - Pentax PEF|RAW - Fuji RAF|RAW - Panasonic RAW|RAW - Leica RAW|RAW - Panasonic RW2|RAW - Leica RWL|RAW - Sony SRF|RAW - Sony SR2\0"}
+RCDATA NP_INFO_FileExtents       {"bmp,vga,bga,rle,dib,rl4,rl8|bmp,vga,bga,rle,dib,rl4,rl8|bmp,vga,bga,rle,dib,rl4,rl8|gif|pcx,pcc|pcx,pcc|tif,tiff|tif,tiff|tif,tiff|tga,vst,afi|tga,vst,afi|iff,lbm|iff,lbm|vid|pbm|pgm|pgm|ppm|pnm|png|png|kps|xbm|xbm|xbm|xpm|xpm|xpm|spr,sprite|pse,pseg,pseg38pp,pseg3820|img,ximg|cvp|jpg,jpeg,jpe|jpg,jpeg,jpe|jp2|jp2|jp2,j2k,j2c|j2k,j2c|j2k,j2c|jpt|jpt|jbg|jbg|dng|3fr|arw|bay|cap|crw|cr2|dcr|dcs|drf|erf|kdc|mdc|mef|mos|mrw|nef|nrw|orf|pef|raf|raw|raw|rw2|rwl|srf|sr2\0"}
+
+/* RC_DATA types for version info - used if found */
+RCDATA NP_INFO_FileDescription   { "The GBM Plugin allows you to view a variety of image formats.\0" }
+RCDATA NP_INFO_ProductName       { "Generalised Bitmap Module Plugin\0" }
+
+/* RC_DATA types for version info - optional (keep this formatting: rc.exe bug) */
+RCDATA NP_INFO_CompanyName       { "Heiko Nitzsche\0" }
+RCDATA NP_INFO_FileVersion       { 1,4,7,0
+}
+RCDATA NP_INFO_InternalName      { "NPGBM\0" }
+RCDATA NP_INFO_LegalCopyright    { "Copyright \270 2006-2012 Heiko Nitzsche\0" }
+RCDATA NP_INFO_OriginalFilename  { "NPGBM.DLL\0" }
+
+
+/* GBM Bitmap Viewer resources */
+RCINCLUDE "GbmBitmapViewer.rc"
+
+/* GBM File Dialog resources */
+RCINCLUDE "GbmSaveFileDialog.rc"
+
+
+
